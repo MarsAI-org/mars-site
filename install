@@ -240,13 +240,18 @@ install_binary() {
 
     BINARY="mars-${PLATFORM}-${ARCH}"
     # Get release tag
-    CURL_AUTH=()
+    AUTH_HEADER=""
     if [ -n "$GITHUB_TOKEN" ]; then
-        CURL_AUTH=(-H "Authorization: token $GITHUB_TOKEN")
+        AUTH_HEADER="Authorization: token $GITHUB_TOKEN"
     fi
     if [ -n "$REF" ]; then
         echo "Fetching release $REF..."
-        if RELEASE_JSON=$(curl -fsSL -H "User-Agent: Mars-Installer" "${CURL_AUTH[@]}" --connect-timeout 10 --max-time 60 "https://api.github.com/repos/${REPO}/releases/tags/${REF}"); then
+        if [ -n "$AUTH_HEADER" ]; then
+            RELEASE_JSON=$(curl -fsSL -H "User-Agent: Mars-Installer" -H "$AUTH_HEADER" --connect-timeout 10 --max-time 60 "https://api.github.com/repos/${REPO}/releases/tags/${REF}")
+        else
+            RELEASE_JSON=$(curl -fsSL -H "User-Agent: Mars-Installer" --connect-timeout 10 --max-time 60 "https://api.github.com/repos/${REPO}/releases/tags/${REF}")
+        fi
+        if [ -n "$RELEASE_JSON" ]; then
             LATEST=$(echo "$RELEASE_JSON" | grep '"tag_name"' | sed -E 's/.*"tag_name"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/')
         else
             echo "Release tag not found: $REF"
@@ -255,7 +260,11 @@ install_binary() {
         fi
     else
         echo "Fetching latest release..."
-        RELEASE_JSON=$(curl -fsSL -H "User-Agent: Mars-Installer" "${CURL_AUTH[@]}" --connect-timeout 10 --max-time 60 "https://api.github.com/repos/${REPO}/releases/latest")
+        if [ -n "$AUTH_HEADER" ]; then
+            RELEASE_JSON=$(curl -fsSL -H "User-Agent: Mars-Installer" -H "$AUTH_HEADER" --connect-timeout 10 --max-time 60 "https://api.github.com/repos/${REPO}/releases/latest")
+        else
+            RELEASE_JSON=$(curl -fsSL -H "User-Agent: Mars-Installer" --connect-timeout 10 --max-time 60 "https://api.github.com/repos/${REPO}/releases/latest")
+        fi
         LATEST=$(echo "$RELEASE_JSON" | grep '"tag_name"' | sed -E 's/.*"tag_name"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/')
     fi
 
