@@ -1,0 +1,42 @@
+name: Installer Smoke Test
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag to test"
+        required: true
+        default: "v0.1.0-rc.1"
+
+permissions:
+  contents: read
+
+jobs:
+  smoke_posix:
+    name: "Smoke Test Installer: ${{ matrix.os }}"
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Run POSIX installer
+        run: |
+          chmod +x install
+          ./install --binary --ref "${{ inputs.tag }}"
+          ~/.local/bin/mars --version
+          ~/.local/bin/mars --help
+
+  smoke_windows:
+    name: "Smoke Test Installer: windows-latest"
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Run Windows installer
+        shell: pwsh
+        run: |
+          & .\install.ps1 -Binary -Ref "${{ inputs.tag }}"
+          $InstallDir = "$env:LOCALAPPDATA\mars"
+          & "$InstallDir\mars.exe" --version
+          & "$InstallDir\mars.exe" --help
