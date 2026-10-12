@@ -28,6 +28,18 @@ Set `MARS_INSTALL_DIR` to install somewhere else. `PI_INSTALL_DIR` is still
 honored as a legacy fallback, but new scripts and docs should use
 `MARS_INSTALL_DIR`.
 
+## Installer output
+
+Both installers print a step line for each phase (fetch release, download,
+verify checksum, install) and print the downloaded size once the transfer
+finishes:
+
+- POSIX (`install`): shows a `curl --progress-bar` meter when stderr is a TTY,
+  and stays line-oriented when piped (`curl ... | sh`) so output is not
+  corrupted by control characters.
+- Windows (`install.ps1`): relies on `Invoke-WebRequest`'s built-in progress
+  bar, and always prints the byte count of the downloaded binary.
+
 ## Development
 
 `index.html` is a single self-contained page with an inline `<style>` block and

@@ -313,7 +313,16 @@ function Install-Binary {
     $ChecksumUrl = "https://github.com/$Repo/releases/download/$Latest/SHA256SUMS.txt"
     Write-Host "Downloading $BinaryName..."
     $OutPath = Join-Path $InstallDir "mars.exe"
-    Invoke-WebRequest -Uri $BinaryUrl -OutFile $OutPath -TimeoutSec 900
+    if ($ProgressPreference -eq 'SilentlyContinue') {
+        # Non-interactive host: download without a progress bar.
+        Invoke-WebRequest -Uri $BinaryUrl -OutFile $OutPath -TimeoutSec 900
+    } else {
+        # Interactive host: Invoke-WebRequest renders a transfer progress bar by
+        # default; leave it on so the download shows activity.
+        Invoke-WebRequest -Uri $BinaryUrl -OutFile $OutPath -TimeoutSec 900
+    }
+    $DownloadedInfo = Get-Item -LiteralPath $OutPath
+    Write-Host ("Downloaded {0} ({1:N0} bytes)" -f $BinaryName, $DownloadedInfo.Length)
 
     Write-Host "Verifying checksum..."
     try {
