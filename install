@@ -71,6 +71,21 @@ has_bun() {
     command -v bun >/dev/null 2>&1
 }
 
+# Render a byte count as a short human-readable size (e.g. 37562240 -> "36 MiB").
+# Pure shell so it works on any POSIX system without coreutils' numfmt.
+numfmt_bytes() {
+    BYTES="$1"
+    if [ "$BYTES" -lt 1024 ]; then
+        echo "${BYTES} B"
+    elif [ "$BYTES" -lt 1048576 ]; then
+        echo "$((BYTES / 1024)) KiB"
+    elif [ "$BYTES" -lt 1073741824 ]; then
+        echo "$((BYTES / 1048576)) MiB"
+    else
+        echo "$((BYTES / 1073741824)) GiB"
+    fi
+}
+
 # Normalized host architecture (x64|arm64). On macOS this uses
 # `sysctl hw.optional.arm64` so it stays correct inside a Rosetta session,
 # where `uname -m` reports the translated x86_64.
@@ -278,9 +293,23 @@ install_binary() {
     # Download binary and SHA256SUMS.txt for checksum verification
     BINARY_URL="https://github.com/${REPO}/releases/download/${LATEST}/${BINARY}"
     CHECKSUM_URL="https://github.com/${REPO}/releases/download/${LATEST}/SHA256SUMS.txt"
-    echo "Downloading ${BINARY}..."
-    curl -fsSL --connect-timeout 10 --speed-limit 1024 --speed-time 30 "$BINARY_URL" -o "${INSTALL_DIR}/mars"
-    
+    if [ -t 2 ]; then
+        # Interactive terminal: show a progress meter.
+        echo "Downloading ${BINARY}..."
+        if curl -fL --connect-timeout 10 --speed-limit 1024 --speed-time 30 --progress-bar "$BINARY_URL" -o "${INSTALL_DIR}/mars"; then
+            # Progress meter writes to stderr; close it out with a summary line.
+            DOWNLOADED_SIZE=$(wc -c < "${INSTALL_DIR}/mars" 2>/dev/null | tr -d ' ')
+            case "$DOWNLOADED_SIZE" in
+                ''|*[!0-9]*) ;;
+                *) echo "Downloaded ${BINARY} ($(numfmt_bytes "$DOWNLOADED_SIZE"))" ;;
+            esac
+        fi
+    else
+        # Piped (curl | sh): keep stderr quiet, but still report stall-safe progress.
+        echo "Downloading ${BINARY}..."
+        curl -fsSL --connect-timeout 10 --speed-limit 1024 --speed-time 30 "$BINARY_URL" -o "${INSTALL_DIR}/mars"
+    fi
+
     echo "Verifying checksum..."
     CHECKSUMS_DATA=$(curl -fsSL --connect-timeout 10 --max-time 30 "$CHECKSUM_URL" || true)
     if [ -n "$CHECKSUMS_DATA" ]; then
