@@ -4,9 +4,9 @@
 # Or with options:
 #   & ([scriptblock]::Create((irm https://getmars.eu.cc/install.ps1))) -Source
 #   & ([scriptblock]::Create((irm https://getmars.eu.cc/install.ps1))) -Binary
-#   & ([scriptblock]::Create((irm https://getmars.eu.cc/install.ps1))) -Source -Ref v3.20.1
+#   & ([scriptblock]::Create((irm https://getmars.eu.cc/install.ps1))) -Source -Ref v0.1.0
 #   & ([scriptblock]::Create((irm https://getmars.eu.cc/install.ps1))) -Source -Ref main
-#   & ([scriptblock]::Create((irm https://getmars.eu.cc/install.ps1))) -Binary -Ref v3.20.1
+#   & ([scriptblock]::Create((irm https://getmars.eu.cc/install.ps1))) -Binary -Ref v0.1.0
 
 param(
     [switch]$Source,
@@ -26,7 +26,13 @@ if ($PSVersionTable.PSVersion -lt [version]"5.1") {
 
 $Repo = "MarsAI-org/mars-agent"
 $Package = "@marsai-org/coding-agent"
-$InstallDir = if ($env:PI_INSTALL_DIR) { $env:PI_INSTALL_DIR } else { "$env:LOCALAPPDATA\mars" }
+$InstallDir = if ($env:MARS_INSTALL_DIR) {
+    $env:MARS_INSTALL_DIR
+} elseif ($env:PI_INSTALL_DIR) {
+    $env:PI_INSTALL_DIR
+} else {
+    "$env:LOCALAPPDATA\mars"
+}
 # Windows PowerShell 5.1 (.NET Framework) does not reliably resolve
 # [System.Runtime.InteropServices.RuntimeInformation] without an
 # assembly-qualified name, while PowerShell 7+ (Core) loads that type from a
