@@ -27,6 +27,7 @@
       --bg-soft: #10151d;
       --card-bg: #161b22;
       --card-bg-hover: #1b222c;
+      --badge-bg: rgba(22, 27, 34, 0.75);
       --border: #30363d;
       --border-soft: #232a34;
       --text: #c9d1d9;
@@ -91,8 +92,21 @@
       outline-offset: 3px;
       border-radius: 6px;
     }
-    code, pre, .mono {
+    code, pre {
       font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    }
+    /* Keeps a heading in the accessibility tree without painting it. */
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      clip-path: inset(50%);
+      white-space: nowrap;
+      border: 0;
     }
 
     /* ── Navigation ───────────────────────────────────────────── */
@@ -266,7 +280,7 @@
       border: 1px solid var(--border);
       border-radius: 999px;
       padding: 0.25rem 0.75rem;
-      background: rgba(22, 27, 34, 0.75);
+      background: var(--badge-bg);
       white-space: nowrap;
     }
     .hero-badges strong {
@@ -319,9 +333,8 @@
     }
 
     /* ── Sections ─────────────────────────────────────────────── */
-    section {
-      scroll-margin-top: calc(var(--nav-height) + 1.5rem);
-    }
+    /* Anchor offset is handled once by scroll-padding-top on <html>. Adding
+       scroll-margin-top here would stack the two and leave a large gap. */
     .section-title {
       font-size: clamp(1.5rem, 4vw, 2rem);
       color: var(--heading);
@@ -516,6 +529,10 @@
       color: #3fb950;
       border-color: rgba(63, 185, 80, 0.4);
     }
+    .copy-btn[data-copy-failed="true"] {
+      color: #f85149;
+      border-color: rgba(248, 81, 73, 0.4);
+    }
     .install-note {
       margin: 0;
       font-size: 0.8125rem;
@@ -544,7 +561,7 @@
       border: 1px solid var(--border);
       border-radius: 999px;
       padding: 0.3rem 0.85rem;
-      background: rgba(22, 27, 34, 0.75);
+      background: var(--badge-bg);
     }
     .feature-stats strong {
       color: var(--heading);
@@ -743,9 +760,9 @@
         </div>
       </section>
 
-      <section aria-labelledby="install-title">
+      <section id="install" aria-labelledby="install-title">
         <h2 class="section-title" id="install-title">Install</h2>
-        <p class="section-lead">One command. The script downloads the prebuilt binary for your platform, verifies its checksum, and puts it on your PATH.</p>
+        <p class="section-lead">One command. The script downloads the prebuilt binary for your platform and verifies its checksum. On Windows it also adds the install directory to your user PATH.</p>
         <div class="install-grid">
           <div class="install-card">
             <h3><span class="os-dot" aria-hidden="true"></span>macOS &amp; Linux</h3>
@@ -756,7 +773,7 @@
                 <span class="copy-label">Copy</span>
               </button>
             </div>
-            <p class="install-note">Installs to <code>~/.local/bin</code>. Override it with <code>MARS_INSTALL_DIR</code> (legacy <code>PI_INSTALL_DIR</code> is still honored).</p>
+            <p class="install-note">Installs to <code>~/.local/bin</code> and tells you if that directory is not on your <code>PATH</code>. Override the location with <code>MARS_INSTALL_DIR</code> (legacy <code>PI_INSTALL_DIR</code> is still honored).</p>
           </div>
           <div class="install-card">
             <h3><span class="os-dot" aria-hidden="true"></span>Windows (PowerShell)</h3>
@@ -773,7 +790,7 @@
         <p class="section-lead" style="margin-top:1rem;">Prefer to do it by hand? Grab the archive for your platform from <a href="https://github.com/MarsAI-org/mars-agent/releases" target="_blank" rel="noopener">GitHub Releases</a> — <code>mars-&lt;platform&gt;-&lt;arch&gt;</code> for linux-x64, linux-arm64, darwin-x64, darwin-arm64, win32-x64, and win32-arm64.</p>
       </section>
 
-      <section aria-labelledby="features-title">
+      <section id="features" aria-labelledby="features-title">
         <h2 class="section-title" id="features-title">What you get</h2>
         <p class="section-lead">Out of the box, with nothing to wire up.</p>
         <ul class="feature-stats">
@@ -815,7 +832,7 @@
         </div>
       </section>
 
-      <section aria-labelledby="links-title">
+      <section id="links" aria-labelledby="links-title">
         <h2 class="section-title" id="links-title">Links</h2>
         <div class="link-grid">
           <a class="link-card" href="https://github.com/MarsAI-org/mars-agent" target="_blank" rel="noopener">
@@ -933,35 +950,61 @@
     })();
 
     (function () {
+      var RESET_MS = 1600;
       document.querySelectorAll(".copy-btn").forEach(function (btn) {
+        var label = btn.querySelector(".copy-label");
+        var baseLabel = btn.getAttribute("aria-label") || "Copy";
+        var timer = 0;
+
+        // The visible span and the accessible name must change together, or
+        // screen-reader users never learn the copy succeeded or failed.
+        function announce(state, text) {
+          btn.removeAttribute("data-copied");
+          btn.removeAttribute("data-copy-failed");
+          if (state === "copied") btn.setAttribute("data-copied", "true");
+          if (state === "failed") btn.setAttribute("data-copy-failed", "true");
+          if (label) label.textContent = text;
+          btn.setAttribute("aria-label", state === "idle" ? baseLabel : text);
+          window.clearTimeout(timer);
+          if (state !== "idle") {
+            timer = window.setTimeout(function () {
+              announce("idle", "Copy");
+            }, RESET_MS);
+          }
+        }
+
         btn.addEventListener("click", function () {
           var target = document.getElementById(btn.getAttribute("data-copy"));
-          if (!target) return;
-          var text = target.textContent;
-          var label = btn.querySelector(".copy-label");
-          function done() {
-            btn.setAttribute("data-copied", "true");
-            if (label) label.textContent = "Copied";
-            window.setTimeout(function () {
-              btn.removeAttribute("data-copied");
-              if (label) label.textContent = "Copy";
-            }, 1600);
+          if (!target) {
+            announce("failed", "Copy failed");
+            return;
           }
+          var text = target.textContent;
           function fallback() {
             var range = document.createRange();
             range.selectNodeContents(target);
             var selection = window.getSelection();
             selection.removeAllRanges();
             selection.addRange(range);
+            var copied = false;
             try {
-              document.execCommand("copy");
-              done();
+              copied = document.execCommand("copy") === true;
+            } catch (err) {
+              copied = false;
             } finally {
               selection.removeAllRanges();
             }
+            // execCommand reports failure through its return value, not by
+            // throwing, so the result has to be checked explicitly.
+            announce(copied ? "copied" : "failed", copied ? "Copied" : "Copy failed");
           }
           if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(text).then(done, fallback);
+            navigator.clipboard.writeText(text).then(
+              function () {
+                announce("copied", "Copied");
+              },
+              fallback
+            );
           } else {
             fallback();
           }
