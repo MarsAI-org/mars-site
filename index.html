@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mars — A coding agent with the IDE wired in</title>
-  <meta name="description" content="Mars is a coding agent with the IDE wired in. Language servers on every write, real debuggers, and a native Rust core in one binary for macOS, Linux, and Windows.">
+  <meta name="description" content="Mars is a coding agent with the IDE wired in. Language servers on every write, real debuggers, a native Rust core, one binary for macOS, Linux, and Windows.">
   <meta name="color-scheme" content="dark">
   <meta name="theme-color" content="#0a090d">
   <link rel="canonical" href="https://getmars.eu.cc/">
@@ -1131,14 +1131,13 @@
           <i data-stage="3" data-on="false"></i>
           <i data-stage="4" data-on="false"></i>
         </div>
-        <span class="hud-track-label" id="hud-stage">Surface</span>
+        <span class="hud-track-label" id="hud-stage">Overview</span>
       </div>
 
-      <nav class="hud-links" aria-label="Sections">
-        <a href="#level-01">IDE</a>
+      <nav class="hud-links" aria-label="Page sections">
+        <a href="#level-01">Rename</a>
         <a href="#level-02">Native</a>
         <a href="#level-03">Tools</a>
-        <a href="#install">Install</a>
       </nav>
 
       <a class="hud-cta" href="#install">
@@ -1150,7 +1149,7 @@
 
   <main id="main">
     <!-- ── Hero ─────────────────────────────────────────────────── -->
-    <section class="hero" id="top" data-stage="0" data-stage-label="Surface">
+    <section class="hero" id="top" data-stage="0" data-stage-label="Overview">
       <div class="shell hero-stage">
         <div class="hero-copy">
           <h1>A coding agent with the <em>IDE</em> wired in.</h1>
@@ -1159,7 +1158,7 @@
           <div class="installer" id="installer">
             <div class="installer-head">
               <div class="os-switch" role="tablist" aria-label="Install command for your platform">
-                <button type="button" role="tab" id="tab-posix" aria-controls="panel-posix" aria-selected="true" tabindex="0">macOS / Linux</button>
+                <button type="button" role="tab" id="tab-posix" aria-controls="panel-posix" aria-selected="true" tabindex="0">macOS &amp; Linux</button>
                 <button type="button" role="tab" id="tab-win" aria-controls="panel-win" aria-selected="false" tabindex="-1">Windows</button>
               </div>
               <span class="installer-file" id="installer-file">install.sh</span>
@@ -1190,7 +1189,7 @@
 
           <ul class="hero-meta">
             <li>MIT licensed</li>
-            <li>75 providers</li>
+            <li>75 model providers</li>
             <li>36 built-in tools</li>
             <li>Checksum verified</li>
           </ul>
@@ -1211,7 +1210,7 @@
         <img src="assets/mars-mark-256.png" alt="The Mars mascot: a pixel-art red planet with two square eyes and two feet." width="256" height="256">
       </figure>
 
-      <nav class="trail" aria-label="Stages">
+      <nav class="trail" aria-label="Stage trail">
         <div class="trail-inner">
           <a href="#level-01" data-trail="1"><span class="trail-flag" aria-hidden="true"></span><span class="trail-no">01</span><span class="trail-name">Rename</span></a>
           <a href="#level-02" data-trail="2"><span class="trail-flag" aria-hidden="true"></span><span class="trail-no">02</span><span class="trail-name">Native core</span></a>
@@ -1242,7 +1241,7 @@
     </section>
 
     <!-- ── Level 01 ─────────────────────────────────────────────── -->
-    <section class="level" id="level-01" data-stage="1" data-stage-label="Language servers">
+    <section class="level" id="level-01" data-stage="1" data-stage-label="Rename">
       <div class="shell">
         <div class="level-head">
           <h2><span class="stage-no" aria-hidden="true">01</span><span class="vh">Stage 01: </span>A rename is a rename, not a find and replace.</h2>
@@ -1393,7 +1392,7 @@
             </button>
           </div>
           <div>
-            <h4>Pinned with mise</h4>
+            <h4>mise</h4>
             <code id="cmd-mise">mise use -g <span class="nw">github:MarsAI-org/mars-agent</span></code>
             <button class="copy" type="button" data-copy="cmd-mise" aria-label="Copy the mise install command">
               <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8"/><path d="M10.5 5.5v-3h-8v8h3"/></svg>
@@ -1403,9 +1402,9 @@
         </div>
 
         <p style="margin-top:1.5rem;max-width:62ch;color:var(--dust);font-size:0.9375rem;">
-          Prefer to do it by hand? Grab the archive for your platform from
+          Prefer to do it by hand? Download the binary for your platform from
           <a href="https://github.com/MarsAI-org/mars-agent/releases" target="_blank" rel="noopener">GitHub Releases</a> —
-          <code>mars-&lt;platform&gt;-&lt;arch&gt;</code> for linux-x64, linux-arm64, darwin-x64, darwin-arm64, win32-x64, and win32-arm64.
+          <code>mars-linux-x64</code>, <code>mars-linux-arm64</code>, <code>mars-darwin-x64</code>, <code>mars-darwin-arm64</code>, <code>mars-windows-x64.exe</code>, or <code>mars-windows-arm64.exe</code>.
         </p>
       </div>
     </section>
@@ -1413,7 +1412,7 @@
     <!-- ── Close ────────────────────────────────────────────────── -->
     <section class="close" aria-labelledby="close-title">
       <div class="shell">
-        <h2 id="close-title">Start the run.</h2>
+        <h2 id="close-title">Start building.</h2>
         <div class="close-actions">
           <a class="btn btn-primary" href="#install">
             Install Mars
@@ -1424,7 +1423,7 @@
             View source
           </a>
           <a class="btn" href="https://www.npmjs.com/package/@marsai-org/coding-agent" target="_blank" rel="noopener">
-            npm
+            View on npm
           </a>
         </div>
       </div>
@@ -1433,7 +1432,7 @@
 
   <footer>
     <div class="shell footer-grid">
-      <p>MIT licensed. Mars is a fork of <a href="https://github.com/can1357/oh-my-pi" target="_blank" rel="noopener">oh-my-pi</a> by can1357, which is a fork of <a href="https://github.com/badlogic/pi-mono" target="_blank" rel="noopener">Pi</a> by Mario Zechner. Both are MIT licensed.</p>
+      <p>Mars is a fork of <a href="https://github.com/can1357/oh-my-pi" target="_blank" rel="noopener">oh-my-pi</a> by can1357, which is a fork of <a href="https://github.com/badlogic/pi-mono" target="_blank" rel="noopener">Pi</a> by Mario Zechner. Both are MIT licensed.</p>
       <div class="footer-links">
         <a href="https://github.com/MarsAI-org/mars-agent" target="_blank" rel="noopener">GitHub</a>
         <a href="https://github.com/MarsAI-org/mars-agent/releases" target="_blank" rel="noopener">Releases</a>

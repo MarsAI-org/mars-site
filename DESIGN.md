@@ -211,7 +211,7 @@ Two silhouettes break the rectangle: the stage flag, a 0.75rem pennant cut with 
 ### Buttons
 - **Shape:** square (0 radius), 1px border, no shadow.
 - **Primary:** rust fill, `#150609` text, 700 weight at 0.9375rem, `0.7rem 1.1rem` padding, 1px rust border. Hover swaps both fill and border to Rust Glow. The HUD variant is the same plate at `0.5rem 1rem` with `min-height: 2.75rem`.
-- **Secondary:** transparent fill, 1px `--line-2` border, bone text. Hover fills `--ink-3` and keeps the border. Used for "View source" and npm.
+- **Secondary:** transparent fill, 1px `--line-2` border, bone text. Hover fills `--ink-3` and keeps the border. Used for "View source" and "View on npm".
 - **Focus:** a 2px `--focus` outline at 3px offset, applied globally via `:focus-visible`; buttons do not define their own ring.
 - **Icons:** 1rem inline SVG with `stroke-linecap: square`; the GitHub mark is filled.
 
@@ -227,9 +227,9 @@ Two silhouettes break the rectangle: the stage flag, a 0.75rem pennant cut with 
 - **Internal Padding:** 1.25rem for install cards, 1.75rem at 75rem, 1rem 1.1rem for alternative install cards.
 
 ### Navigation
-The HUD is a fixed bar, 3.75rem tall (3.25rem below 30rem), with a 1px bottom seam and an opaque `--ink` fill — no blur. It carries the pixel mark and Silkscreen "MARS" wordmark, a five-segment stage bar with a live Silkscreen label, section links (dust at rest, bone on hover with an `--ink-3` fill, bone when `aria-current`), and the rust install plate. Below 56rem the section links disappear and the CTA takes the right edge; below 34rem the track label is dropped and the bar segments narrow.
+The HUD is a fixed bar, 3.75rem tall (3.25rem below 30rem), with a 1px bottom seam and an opaque `--ink` fill — no blur. It carries the pixel mark and Silkscreen "MARS" wordmark, a five-segment stage bar with a live Silkscreen label, section links (dust at rest, bone on hover with an `--ink-3` fill, bone when `aria-current`), and the rust install plate. The links name stages 01–03 only; Install lives in the plate alone, so the bar never shows the same label twice. Below 56rem the section links disappear and the CTA takes the right edge; below 34rem the track label is dropped and the bar segments narrow.
 
-The stage trail below the hero is a second navigation: a horizontal rail on `--ink-2`, each stop separated by a 1px right seam, with a pennant flag, a Silkscreen numeral in Rust Glow, and a name in Anybody. The current stop gets bone text, a rust flag, and a 2px rust underline sitting on the rail's bottom seam. The rail fades only on a side that is actually clipped — the `data-edge` attribute is measured from `scrollLeft`, so a fully visible first or last label is never dimmed.
+The stage trail below the hero is a second navigation: a horizontal rail on `--ink-2`, each stop separated by a 1px right seam, with a pennant flag, a Silkscreen numeral in Rust Glow, and a name in Anybody. The current stop gets bone text, a rust flag, and a 2px rust underline sitting on the rail's bottom seam. The HUD track label reuses the trail's name for the stage in view, so one name per stage reaches the reader from both navs. The rail fades only on a side that is actually clipped — the `data-edge` attribute is measured from `scrollLeft`, so a fully visible first or last label is never dimmed.
 
 **No hash on click.** Every in-page link scrolls without writing a fragment, so the address stays at `/` while the reader moves through the stages. The ids remain in the markup: a shared `/#install` link still lands on the section at load, and the anchors still work with JS disabled. A click moves focus to the destination heading (given `tabindex="-1"` only while focused) so keyboard and screen-reader users arrive inside the section without a full-width focus ring under the HUD; a modified click is left to the browser.
 
@@ -239,7 +239,7 @@ The page's working action, shown in its working form rather than described.
 - **Head:** OS tabs in Silkscreen 0.6875rem uppercase — selected tab takes `--ink-4` fill and a `--line-2` border, unselected is dust on transparent. A filename label (`install.sh` / `install.ps1`) sits right-aligned in monospace and swaps with the tab.
 - **Body:** a `$` or `>` sigil in Rust Glow, then the command in monospace bone. The copy action is a `--ink-4` plate separated by a 1px left seam, Silkscreen uppercase, with a 16px inline copy icon.
 - **States:** the copy button swaps to "Copied" (`#8ee08e` on `#16201a`) or "Copy failed" (`#ff9d9d` on `#241417`), resets after 1.8s, and updates its `aria-label` to match the visible label. A successful copy also triggers the mascot's hop.
-- **Narrow behaviour:** below 30rem the copy plate moves under the command, the filename is dropped, and the command keeps `overflow-wrap: normal` so a URL never breaks mid-token.
+- **Narrow behavior:** below 30rem the copy plate moves under the command, the filename is dropped, and the command keeps `overflow-wrap: normal` so a URL never breaks mid-token.
 
 ### Alternative Install Cards
 - **Style:** 1px `--line` border, `--ink` body, Silkscreen heading in dust, command in monospace bone.
