@@ -231,6 +231,8 @@ The HUD is a fixed bar, 3.75rem tall (3.25rem below 30rem), with a 1px bottom se
 
 The stage trail below the hero is a second navigation: a horizontal rail on `--ink-2`, each stop separated by a 1px right seam, with a pennant flag, a Silkscreen numeral in Rust Glow, and a name in Anybody. The current stop gets bone text, a rust flag, and a 2px rust underline sitting on the rail's bottom seam. The rail fades only on a side that is actually clipped — the `data-edge` attribute is measured from `scrollLeft`, so a fully visible first or last label is never dimmed.
 
+**No hash on click.** Every in-page link scrolls without writing a fragment, so the address stays at `/` while the reader moves through the stages. The ids remain in the markup: a shared `/#install` link still lands on the section at load, and the anchors still work with JS disabled. A click moves focus to the destination heading (given `tabindex="-1"` only while focused) so keyboard and screen-reader users arrive inside the section without a full-width focus ring under the HUD; a modified click is left to the browser.
+
 ### Installer Panel (signature)
 The page's working action, shown in its working form rather than described.
 - **Frame:** 1px `--line-2`, `--ink-2` body, `--ink-3` head bar with a 1px bottom seam. In the install band the same plate sits on `--ink` with 0.4rem of padding, so the frame reads as an inset panel.
