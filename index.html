@@ -1445,6 +1445,55 @@
   <script>
     document.documentElement.classList.add("js");
 
+    /* ── In-page navigation that leaves the URL alone ──────────── */
+    /* Section links scroll the page but never write a hash, so clicking
+       through the HUD or the trail cannot turn the address into /#install.
+       The ids stay in the markup, so a shared /#install link still lands in
+       the right place on load, and the anchors still work without JS. */
+    (function () {
+      var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      function go(id) {
+        var target = document.getElementById(id);
+        if (!target) return false;
+        /* Focus the destination's heading, not the section box: a stage
+           section spans the viewport, so its focus ring would read as a
+           stray rule under the HUD. The heading gives keyboard and
+           screen-reader users the same arrival point at a size the ring can
+           outline. A non-section target, such as the skip link's <main>,
+           keeps focus on itself. */
+        var focusEl = target.matches("[data-stage]") && target.querySelector("h1, h2") || target;
+        /* The element is only focusable while it holds focus. */
+        if (!focusEl.hasAttribute("tabindex")) {
+          focusEl.setAttribute("tabindex", "-1");
+          focusEl.addEventListener("blur", function () {
+            focusEl.removeAttribute("tabindex");
+          }, { once: true });
+        }
+        focusEl.focus({ preventScroll: true });
+        target.scrollIntoView({ block: "start", behavior: reduce ? "auto" : "smooth" });
+        return true;
+      }
+
+      document.addEventListener("click", function (event) {
+        /* Leave modified clicks and non-primary buttons to the browser. */
+        if (event.defaultPrevented || event.button !== 0) return;
+        if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        var link = event.target.closest && event.target.closest('a[href^="#"]');
+        if (!link) return;
+        var id = link.getAttribute("href").slice(1);
+        if (!id || !go(id)) return;
+        event.preventDefault();
+        /* An anchor left over from a shared link would otherwise linger in
+           the address bar while the reader is somewhere else. */
+        if (window.location.hash) {
+          try {
+            window.history.replaceState(null, "", window.location.pathname + window.location.search);
+          } catch (err) { /* file:// and some embedded contexts refuse this. */ }
+        }
+      });
+    })();
+
     /* ── Install tabs ──────────────────────────────────────────── */
     (function () {
       var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
