@@ -44,9 +44,15 @@ finishes:
 
 `index.html` is a single self-contained page with an inline `<style>` block and
 no build step. Brand assets live in `assets/` and are also served from the site
-root (`/favicon.ico`, `/favicon.svg`, `/favicon-32x32.png`). The Pages workflow
-in `.github/workflows/pages.yml` copies `index.html`, the installers, `CNAME`,
+root (`/favicon.ico`, `/favicon.svg`, `/favicon-32x32.png`). Fonts are
+self-hosted from `assets/fonts/` (Anybody and Silkscreen, SIL OFL 1.1), so the
+page makes no third-party requests. The Pages workflow in
+`.github/workflows/pages.yml` copies `index.html`, the installers, `CNAME`,
 `LICENSE`, and both asset directories into the `_site` publishing directory.
+
+`DESIGN.md` records the page's design system; `PRODUCT.md` records the product
+truth it must not contradict. `.impeccable/review/` holds the last screenshot
+pass and is git-ignored.
 
 ## Credits
 

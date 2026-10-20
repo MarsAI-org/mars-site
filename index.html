@@ -4,1012 +4,1605 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mars — A coding agent with the IDE wired in</title>
-  <meta name="description" content="Mars is a coding agent with the IDE wired in. Install it on macOS, Linux, and Windows with a single command, or download prebuilt binaries from GitHub Releases.">
+  <meta name="description" content="Mars is a coding agent with the IDE wired in. Language servers on every write, real debuggers, and a native Rust core in one binary for macOS, Linux, and Windows.">
   <meta name="color-scheme" content="dark">
-  <meta name="theme-color" content="#0d1117">
+  <meta name="theme-color" content="#0a090d">
   <link rel="canonical" href="https://getmars.eu.cc/">
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-  <link rel="apple-touch-icon" href="/assets/mars-logo.png">
+  <link rel="apple-touch-icon" href="/assets/mars-mark-256.png">
   <meta property="og:title" content="Mars — A coding agent with the IDE wired in">
-  <meta property="og:description" content="Mars is a coding agent with the IDE wired in. Install on macOS, Linux, and Windows with a single command.">
+  <meta property="og:description" content="Language servers on every write, real debuggers, and a native Rust core. One binary for macOS, Linux, and Windows.">
   <meta property="og:image" content="https://getmars.eu.cc/assets/og-image.png">
   <meta property="og:url" content="https://getmars.eu.cc/">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Mars — A coding agent with the IDE wired in">
-  <meta name="twitter:description" content="Mars is a coding agent with the IDE wired in. Install on macOS, Linux, and Windows with a single command.">
+  <meta name="twitter:description" content="Language servers on every write, real debuggers, and a native Rust core. One binary for macOS, Linux, and Windows.">
   <meta name="twitter:image" content="https://getmars.eu.cc/assets/og-image.png">
+  <link rel="preload" href="assets/fonts/anybody-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <!--
+    Raster provenance.
+    assets/mars-mark*.png  — cropped from the user-supplied pixel logo
+                             (file_00000000b3008207a6681e97c2cc8a0c.png), chroma-keyed
+                             to transparency, scaled with nearest-neighbour.
+    assets/mars-mark.svg   — redrawn as 24x24 rects from the same logo, sampled at
+                             one rect per source pixel block.
+    assets/proof-*.webp    — real TUI captures from MarsAI-org/mars-agent assets/,
+                             downscaled to 760px wide and re-encoded at q78.
+    assets/fonts/*.woff2   — Anybody and Silkscreen, Google Fonts, OFL 1.1.
+    assets/og-image.png    — rendered from the page's own tokens and mark; text
+                             is the page headline and verified product facts.
+  -->
   <style>
+    /* ── Faces ─────────────────────────────────────────────────────
+       Self-hosted. Anybody carries the page voice; Silkscreen is the
+       machine voice, used only where a machine would print it. */
+    @font-face {
+      font-family: "Anybody";
+      font-style: normal;
+      font-weight: 400 900;
+      font-stretch: 75% 125%;
+      font-display: swap;
+      src: url("assets/fonts/anybody-latin.woff2") format("woff2");
+    }
+    @font-face {
+      font-family: "Silkscreen";
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+      src: url("assets/fonts/silkscreen-400.woff2") format("woff2");
+    }
+    @font-face {
+      font-family: "Silkscreen";
+      font-style: normal;
+      font-weight: 700;
+      font-display: swap;
+      src: url("assets/fonts/silkscreen-700.woff2") format("woff2");
+    }
+
     :root {
-      --bg: #0d1117;
-      --bg-soft: #10151d;
-      --card-bg: #161b22;
-      --card-bg-hover: #1b222c;
-      --badge-bg: rgba(22, 27, 34, 0.75);
-      --border: #30363d;
-      --border-soft: #232a34;
-      --text: #c9d1d9;
-      --heading: #f0f6fc;
-      --muted: #8b949e;
-      --brand-1: #ff6b4a;
-      --brand-2: #f97316;
-      --brand-3: #ea580c;
-      --brand-gradient: linear-gradient(100deg, var(--brand-1), var(--brand-2) 45%, var(--brand-3));
-      --accent: #f97316;
-      --accent-soft: rgba(249, 115, 22, 0.12);
-      --code-bg: #12181f;
-      --focus: #79c0ff;
-      --radius: 14px;
-      --max-width: 68rem;
-      --nav-height: 3.5rem;
+      --ink: #0a090d;
+      --ink-2: #100e14;
+      --ink-3: #16131b;
+      --ink-4: #1d1922;
+      --line: #2b2532;
+      --line-2: #3b3344;
+      --bone: #f4ece2;
+      --dust: #ada4ad;
+      --mars: #d64a27;
+      --mars-hi: #ff8a5f;
+      --mars-deep: #8f2f1c;
+      --cyan: #93d9e3;
+      --focus: #93d9e3;
+
+      --pixel: 4px;
+      --edge: 2px;
+      --gutter: clamp(1.25rem, 4vw, 2.5rem);
+      --measure: 62ch;
+      --shell: 74rem;
+
+      --step-0: clamp(1rem, 0.95rem + 0.22vw, 1.0938rem);
+      --step-1: clamp(1.125rem, 1.03rem + 0.45vw, 1.3125rem);
+      --step-2: clamp(1.4rem, 1.2rem + 0.95vw, 1.95rem);
+      --step-3: clamp(1.9rem, 1.4rem + 2.3vw, 3.15rem);
+      --step-4: clamp(2.5rem, 1.3rem + 4.6vw, 5rem);
+      --step-5: clamp(3.2rem, 1.2rem + 9vw, 8rem);
+
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
     }
-    *, *::before, *::after {
-      box-sizing: border-box;
-    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+
     html {
       scroll-behavior: smooth;
-      scroll-padding-top: calc(var(--nav-height) + 1rem);
+      scroll-padding-top: 5.5rem;
+      -webkit-text-size-adjust: 100%;
     }
-    @media (prefers-reduced-motion: reduce) {
-      html {
-        scroll-behavior: auto;
-      }
-    }
+
     body {
       margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
+      background: var(--ink);
+      color: var(--bone);
+      font-family: "Anybody", ui-sans-serif, system-ui, sans-serif;
+      font-size: var(--step-0);
+      font-weight: 400;
+      line-height: 1.62;
+      font-optical-sizing: auto;
       -webkit-font-smoothing: antialiased;
-      text-rendering: optimizeLegibility;
+      overflow-x: hidden;
     }
-    /* Ambient background: brand glow plus a subtle dot grid. */
+
+    /* Star field and ground haze are painted once, behind everything. */
     body::before {
       content: "";
       position: fixed;
       inset: 0;
-      pointer-events: none;
       z-index: -1;
-      background:
-        radial-gradient(60rem 34rem at 50% -10rem, rgba(249, 115, 22, 0.13), transparent 70%),
-        radial-gradient(4rem 4rem at 0.25rem 0.25rem, rgba(139, 148, 158, 0.09) 1px, transparent 0);
-      background-size: auto, 1.5rem 1.5rem;
+      pointer-events: none;
+      background: linear-gradient(180deg, #0b0a0f 0%, #0a090d 55%, #08070b 100%);
     }
-    a {
-      color: var(--accent);
-      text-decoration: none;
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      opacity: 0.5;
+      background-image:
+        radial-gradient(1px 1px at 12% 22%, rgba(244, 236, 226, 0.55) 50%, transparent 51%),
+        radial-gradient(1px 1px at 27% 9%, rgba(244, 236, 226, 0.35) 50%, transparent 51%),
+        radial-gradient(1px 1px at 41% 31%, rgba(244, 236, 226, 0.45) 50%, transparent 51%),
+        radial-gradient(1px 1px at 58% 15%, rgba(244, 236, 226, 0.30) 50%, transparent 51%),
+        radial-gradient(1px 1px at 73% 27%, rgba(244, 236, 226, 0.50) 50%, transparent 51%),
+        radial-gradient(1px 1px at 88% 8%, rgba(244, 236, 226, 0.32) 50%, transparent 51%),
+        radial-gradient(1px 1px at 94% 38%, rgba(244, 236, 226, 0.42) 50%, transparent 51%),
+        radial-gradient(1px 1px at 6% 44%, rgba(244, 236, 226, 0.28) 50%, transparent 51%);
+      background-size: 100% 100%;
     }
-    a:hover, a:active {
-      color: #ff8c60;
-      text-decoration: underline;
-    }
-    a:focus-visible, button:focus-visible {
+
+    ::selection { background: var(--mars); color: #12060a; }
+
+    :focus-visible {
       outline: 2px solid var(--focus);
       outline-offset: 3px;
-      border-radius: 6px;
     }
-    code, pre {
+
+    a { color: var(--mars-hi); text-underline-offset: 0.22em; text-decoration-thickness: 1px; }
+    a:hover { text-decoration-thickness: 2px; }
+
+    h1, h2, h3 {
+      font-weight: 800;
+      font-stretch: 108%;
+      letter-spacing: -0.022em;
+      line-height: 1.02;
+      margin: 0;
+      text-wrap: balance;
+    }
+
+    p { margin: 0; }
+
+    img { max-width: 100%; height: auto; }
+
+    code, kbd, pre {
       font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+      font-size: 0.92em;
+      font-variant-ligatures: none;
     }
-    /* Keeps a heading in the accessibility tree without painting it. */
-    .visually-hidden {
+
+    .skip {
+      position: absolute;
+      left: 1rem;
+      top: -4rem;
+      z-index: 100;
+      background: var(--bone);
+      color: var(--ink);
+      padding: 0.6rem 1rem;
+      font-weight: 700;
+    }
+    .skip:focus { top: 1rem; }
+
+    /* Text for assistive technology only: the stage numeral is set as a
+       decorative float, so the heading's accessible name carries the number
+       in words instead. */
+    .vh {
       position: absolute;
       width: 1px;
       height: 1px;
       margin: -1px;
       padding: 0;
       overflow: hidden;
-      clip: rect(0 0 0 0);
       clip-path: inset(50%);
       white-space: nowrap;
       border: 0;
     }
 
-    /* ── Navigation ───────────────────────────────────────────── */
-    .nav {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      height: var(--nav-height);
-      display: flex;
-      align-items: center;
-      border-bottom: 1px solid var(--border-soft);
-      background: rgba(13, 17, 23, 0.72);
-      -webkit-backdrop-filter: saturate(180%) blur(14px);
-      backdrop-filter: saturate(180%) blur(14px);
-    }
-    .nav-inner {
+    .shell {
       width: 100%;
-      max-width: var(--max-width);
-      margin: 0 auto;
-      padding: 0 1.25rem;
+      max-width: var(--shell);
+      margin-inline: auto;
+      padding-left: 1.25rem;
+      padding-right: 1.25rem;
+    }
+
+    @media (min-width: 40rem) {
+      .shell {
+        padding-left: 2rem;
+        padding-right: 2rem;
+      }
+    }
+    @media (min-width: 75rem) {
+      .shell {
+        padding-left: 2.5rem;
+        padding-right: 2.5rem;
+      }
+    }
+
+    .pixel {
+      font-family: "Silkscreen", ui-monospace, monospace;
+      font-size: 0.6875rem;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      line-height: 1.4;
+      color: var(--dust);
+    }
+
+    /* ── HUD ─────────────────────────────────────────────────────── */
+    .hud {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 40;
+      border-bottom: 1px solid var(--line);
+      background: var(--ink);
+    }
+    .hud-inner {
+      max-width: var(--shell);
+      margin-inline: auto;
+      padding: 0 var(--gutter);
+      height: 3.75rem;
       display: flex;
       align-items: center;
       gap: 1rem;
     }
-    .nav-brand {
+    .brand {
       display: inline-flex;
       align-items: center;
-      gap: 0.55rem;
-      color: var(--heading);
-      font-weight: 700;
-      letter-spacing: 0.02em;
+      gap: 0.6rem;
+      color: var(--bone);
       text-decoration: none;
       flex: none;
     }
-    .nav-brand:hover {
-      text-decoration: none;
-      color: var(--heading);
+    .brand img { width: 1.75rem; height: 1.75rem; image-rendering: pixelated; display: block; }
+    .brand span {
+      font-family: "Silkscreen", ui-monospace, monospace;
+      font-size: 0.9375rem;
+      letter-spacing: 0.16em;
     }
-    .nav-brand img {
-      width: 1.5rem;
-      height: 1.5rem;
+    .brand:hover { color: var(--bone); }
+
+    .hud-track {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-left: 1rem;
+      min-width: 0;
+    }
+    .hud-track-bar {
+      display: flex;
+      gap: 3px;
+      flex: none;
+    }
+    .hud-track-bar i {
       display: block;
+      width: 1.25rem;
+      height: 0.375rem;
+      background: var(--line-2);
     }
-    .nav-links {
+    .hud-track-bar i[data-on="true"] { background: var(--mars); }
+    .hud-track-label {
+      font-family: "Silkscreen", ui-monospace, monospace;
+      font-size: 0.6875rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--dust);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .hud-links {
       display: none;
       align-items: center;
       gap: 0.25rem;
       margin-left: auto;
     }
-    .nav-links a {
-      color: var(--muted);
+    .hud-links a {
       font-size: 0.875rem;
-      padding: 0.4rem 0.65rem;
-      border-radius: 8px;
-    }
-    .nav-links a:hover {
-      color: var(--heading);
-      background: var(--accent-soft);
+      font-weight: 500;
+      color: var(--dust);
       text-decoration: none;
+      padding: 0.4rem 0.7rem;
     }
-    .nav-cta {
+    .hud-links a:hover { color: var(--bone); background: var(--ink-3); }
+    .hud-links a[aria-current="true"] { color: var(--bone); }
+
+    .hud-cta {
       margin-left: auto;
       display: inline-flex;
       align-items: center;
-      gap: 0.4rem;
-      font-size: 0.8125rem;
-      font-weight: 600;
-      color: var(--heading);
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 0.35rem 0.8rem;
-      background: var(--card-bg);
+      gap: 0.45rem;
       flex: none;
-    }
-    .nav-cta:hover {
-      border-color: var(--accent);
+      font-weight: 700;
+      font-size: 0.875rem;
+      color: #150609;
+      background: var(--mars);
       text-decoration: none;
+      min-height: 2.75rem;
+      padding: 0.5rem 1rem;
+      border: 0;
+      cursor: pointer;
     }
-    .nav-cta svg {
-      width: 1rem;
-      height: 1rem;
-      fill: currentColor;
+    .hud-cta:hover { background: var(--mars-hi); color: #150609; }
+    .hud-cta svg { width: 0.875rem; height: 0.875rem; }
+
+    @media (max-width: 34rem) {
+      .hud-track-bar i { width: 0.6rem; }
+      .hud-track-label { display: none; }
     }
-    @media (min-width: 52rem) {
-      .nav-links {
-        display: flex;
-      }
-      .nav-cta {
-        margin-left: 0;
-      }
+    @media (min-width: 56rem) {
+      .hud-links { display: flex; margin-left: 0.5rem; }
+      .hud-cta { margin-left: 0; }
     }
 
-    .container {
-      width: 100%;
-      max-width: var(--max-width);
-      margin: 0 auto;
-      padding: 0 1.25rem;
-    }
-    .shell {
+    /* ── Hero: the surface ───────────────────────────────────────── */
+    .hero {
+      --sprite-w: clamp(5.5rem, 15vw, 7rem);
+      position: relative;
+      isolation: isolate;
+      padding-top: clamp(5rem, 7vh, 5.75rem);
       display: flex;
       flex-direction: column;
-      gap: 4.5rem;
-      padding: 3rem 0 2rem;
+      min-height: 0;
+      overflow: hidden;
+    }
+    .hero-stage {
+      position: relative;
+      z-index: 1;
+      flex: 1 0 auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding-bottom: clamp(1.5rem, 4vw, 2.5rem);
+    }
+    /* The mascot stands on the ridge: its feet meet the top edge of the ground
+       band, which sits above the 3.25rem stage trail. */
+    .hero-sprite {
+      position: absolute;
+      left: var(--gutter);
+      bottom: calc(3.25rem + clamp(3.5rem, 7vw, 5.5rem));
+      width: var(--sprite-w);
+      margin: 0;
+      z-index: 3;
+      pointer-events: none;
+    }
+    .hero-sprite img {
+      display: block;
+      width: 100%;
+      image-rendering: pixelated;
+      animation: idle 3.2s steps(2, jump-none) infinite;
+    }
+    @keyframes idle {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
+    }
+    .hero-sprite.is-hopping img {
+      animation: hop 620ms var(--ease) 1;
+    }
+    @keyframes hop {
+      0% { transform: translateY(0); }
+      30% { transform: translateY(-1.6rem); }
+      60% { transform: translateY(0); }
+      75% { transform: translateY(-0.45rem); }
+      100% { transform: translateY(0); }
     }
 
-    /* ── Hero ─────────────────────────────────────────────────── */
-    .hero {
-      text-align: center;
-      padding: 1rem 0 0;
+    .hero-copy { min-width: 0; }
+    .hero h1 {
+      font-size: var(--step-4);
+      font-weight: 850;
+      font-stretch: 118%;
+      letter-spacing: -0.035em;
+      line-height: 0.92;
+      max-width: 18ch;
     }
-    .hero-mark {
-      width: clamp(4.5rem, 13vw, 6.5rem);
-      height: auto;
-      margin: 0 auto 1.25rem;
-      display: block;
-      filter: drop-shadow(0 0.5rem 2rem rgba(249, 115, 22, 0.4));
-      animation: mark-in 600ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    .hero h1 em {
+      font-style: normal;
+      color: var(--mars-hi);
     }
-    @keyframes mark-in {
-      from { opacity: 0; transform: translateY(0.75rem) scale(0.94); }
-      to { opacity: 1; transform: none; }
+    .hero-lede {
+      margin-top: 1.15rem;
+      max-width: 46ch;
+      font-size: var(--step-1);
+      line-height: 1.5;
+      color: var(--dust);
     }
-    @media (prefers-reduced-motion: reduce) {
-      .hero-mark { animation: none; }
-    }
-    h1 {
-      font-size: clamp(3rem, 11vw, 5.25rem);
-      font-weight: 800;
-      letter-spacing: 0.03em;
-      line-height: 1;
-      margin: 0 0 0.85rem;
-      background: var(--brand-gradient);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      -webkit-text-fill-color: transparent;
-    }
-    .rule {
-      width: 5.5rem;
-      height: 4px;
-      margin: 0 auto 1.25rem;
-      border: 0;
-      border-radius: 999px;
-      background: var(--brand-gradient);
-    }
-    .tagline {
-      font-size: clamp(1.125rem, 3vw, 1.5rem);
-      font-weight: 600;
-      color: var(--heading);
-      margin: 0 auto;
-      max-width: 34rem;
-    }
-    .hero-sub {
-      margin: 0.85rem auto 0;
+    .hero-lede strong { color: var(--bone); font-weight: 600; }
+
+    /* The installer is the page's working action, in its working form. */
+    .installer {
+      margin-top: clamp(1.5rem, 3vw, 2rem);
       max-width: 40rem;
-      color: var(--muted);
+      border: 1px solid var(--line-2);
+      background: var(--ink-2);
     }
-    .hero-badges {
+    .installer-head {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.6rem;
+      border-bottom: 1px solid var(--line);
+      background: var(--ink-3);
+    }
+    .os-switch {
+      display: flex;
+      gap: 2px;
+      flex: none;
+    }
+    .os-switch button {
+      font-family: "Silkscreen", ui-monospace, monospace;
+      font-size: 0.6875rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--dust);
+      background: transparent;
+      border: 1px solid transparent;
+      padding: 0.35rem 0.55rem;
+      cursor: pointer;
+    }
+    .os-switch button:hover { color: var(--bone); border-color: var(--line-2); }
+    .os-switch button[aria-selected="true"] {
+      color: var(--bone);
+      background: var(--ink-4);
+      border-color: var(--line-2);
+    }
+    .installer-file {
+      margin-left: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.6875rem;
+      color: var(--dust);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .installer-body {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+    }
+    .installer-cmd {
+      flex: 1 1 auto;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.85rem 0.9rem;
+    }
+    .installer-cmd code {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      font-size: 0.75rem;
+      color: var(--bone);
+    }
+
+    @media (min-width: 34rem) {
+      .installer-cmd code { font-size: 0.8125rem; }
+    }
+    .installer-cmd .sigil { color: var(--mars-hi); user-select: none; }
+
+    .copy {
+      flex: 0 0 auto;
+      align-self: stretch;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-family: "Silkscreen", ui-monospace, monospace;
+      font-size: 0.6875rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--bone);
+      background: var(--ink-4);
+      border: 0;
+      border-left: 1px solid var(--line);
+      padding: 0 1rem;
+      cursor: pointer;
+    }
+    .copy:hover { background: #262031; }
+    .copy svg { width: 0.9rem; height: 0.9rem; fill: none; stroke: currentColor; stroke-width: 1.6; }
+    .copy[data-state="copied"] { color: #8ee08e; background: #16201a; }
+    .copy[data-state="failed"] { color: #ff9d9d; background: #241417; }
+
+    /* On the narrowest phones the copy button moves under the command so the
+       URL keeps its own line and never breaks mid-token. */
+    @media (max-width: 30rem) {
+      /* The filename is decoration; the OS tabs and the command are not. */
+      .installer-file { display: none; }
+      .installer-head { padding: 0.4rem 0.45rem; }
+      .os-switch button { padding: 0.35rem 0.4rem; }
+      .installer-body { flex-direction: column; }
+      .installer-cmd code { overflow-wrap: normal; }
+      .copy {
+        align-self: stretch;
+        justify-content: center;
+        padding: 0.7rem 1rem;
+        border-left: 0;
+        border-top: 1px solid var(--line);
+      }
+    }
+
+    .hero-meta {
+      margin-top: 1.1rem;
       display: flex;
       flex-wrap: wrap;
-      justify-content: center;
-      gap: 0.5rem;
-      margin: 1.5rem auto 0;
+      gap: 0.4rem 1.4rem;
+      list-style: none;
+      padding: 0;
+      max-width: 40rem;
+    }
+    .hero-meta li {
+      font-family: "Silkscreen", ui-monospace, monospace;
+      font-size: 0.6875rem;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--dust);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .hero-meta li::before {
+      content: "";
+      width: 4px;
+      height: 4px;
+      background: var(--mars);
+      flex: none;
+    }
+
+    /* Horizon and ground */
+    .horizon {
+      position: relative;
+      flex: none;
+    }
+    .horizon svg { display: block; width: 100%; height: clamp(3.5rem, 7vw, 5.5rem); }
+    .horizon-line {
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 138, 95, 0.75) 12%, rgba(255, 138, 95, 0.75) 88%, transparent);
+    }
+
+    /* Below the wide breakpoint the mascot sits under the copy column, so the
+       copy keeps a clear lane above it. */
+    @media (max-width: 63.9375rem) {
+      .hero-stage { padding-bottom: calc(var(--sprite-w) + 1.25rem); }
+    }
+
+    @media (max-width: 30rem) {
+      .hero { --sprite-w: 7rem; }
+      .hero h1 { font-size: clamp(2.25rem, 11.5vw, 3rem); }
+      .hero-lede { font-size: 1.0625rem; }
+    }
+
+    @media (min-width: 48rem) {
+      .hero { --sprite-w: 8.5rem; }
+    }
+
+    @media (min-width: 64rem) {
+      .hero { min-height: min(84svh, 46rem); }
+      .hero-copy { max-width: 46rem; }
+      .hero h1 { max-width: 16ch; }
+      .hero { --sprite-w: clamp(9rem, 12vw, 11rem); }
+      .hero-stage { padding-bottom: clamp(2.5rem, 5vw, 4rem); }
+      .hero-sprite {
+        left: auto;
+        right: 10%;
+        bottom: calc(3.25rem + clamp(3.5rem, 7vw, 5.5rem));
+      }
+    }
+
+
+    /* ── Stage trail ─────────────────────────────────────────────── */
+    .trail {
+      position: relative;
+      z-index: 2;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      background: var(--ink-2);
+      --fade: 2.5rem;
+    }
+    /* The rail fades only on a side that is actually cut off. Fading an edge
+       the rail has already reached would dim a label that is fully visible, so
+       the edge state is measured from scrollLeft and the mask follows it. */
+    .trail[data-edge="right"] {
+      -webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - var(--fade)), transparent 100%);
+      mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - var(--fade)), transparent 100%);
+    }
+    .trail[data-edge="left"] {
+      -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 var(--fade), #000 100%);
+      mask-image: linear-gradient(90deg, transparent 0, #000 var(--fade), #000 100%);
+    }
+    .trail[data-edge="both"] {
+      -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 var(--fade), #000 calc(100% - var(--fade)), transparent 100%);
+      mask-image: linear-gradient(90deg, transparent 0, #000 var(--fade), #000 calc(100% - var(--fade)), transparent 100%);
+    }
+    .trail-inner {
+      max-width: var(--shell);
+      margin-inline: auto;
+      padding: 0 var(--gutter);
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .trail-inner::-webkit-scrollbar { display: none; }
+    .trail a {
+      flex: 0 1 auto;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.9rem 1.4rem 0.9rem 0;
+      color: var(--dust);
+      text-decoration: none;
+      border-right: 1px solid var(--line);
+      position: relative;
+    }
+    .trail a + a { padding-left: 1.4rem; }
+    .trail a:last-child { border-right: 0; }
+    .trail a:hover { color: var(--bone); background: var(--ink-3); }
+    .trail a::before {
+      content: "";
+      position: absolute;
+      inset: auto 0 -1px 0;
+      height: 2px;
+      background: transparent;
+    }
+    .trail a[aria-current="true"] { color: var(--bone); }
+    .trail a[aria-current="true"]::before { background: var(--mars); }
+    .trail-flag {
+      flex: none;
+      width: 0.75rem;
+      height: 0.75rem;
+      background: var(--line-2);
+      clip-path: polygon(0 0, 100% 0, 100% 70%, 50% 100%, 0 70%);
+      transform: translateY(-2px);
+    }
+    .trail a[aria-current="true"] .trail-flag { background: var(--mars); }
+    .trail-no {
+      font-family: "Silkscreen", ui-monospace, monospace;
+      font-size: 0.6875rem;
+      letter-spacing: 0.08em;
+      color: var(--mars-hi);
+      flex: none;
+    }
+    .trail-name {
+      font-size: 0.875rem;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    @media (max-width: 40rem) {
+      .trail a { padding-right: 0.85rem; }
+      .trail a + a { padding-left: 0.85rem; }
+      .trail-name { font-size: 0.8125rem; }
+    }
+
+    /* ── Shared section furniture ────────────────────────────────── */
+    .level {
+      position: relative;
+      padding-top: 4.5rem;
+      padding-bottom: 4.5rem;
+      border-top: 1px solid var(--line);
+    }
+    @media (min-width: 48rem) {
+      .level {
+        padding-top: 6.5rem;
+        padding-bottom: 6.5rem;
+      }
+    }
+    @media (min-width: 75rem) {
+      .level {
+        padding-top: 8rem;
+        padding-bottom: 8rem;
+      }
+    }
+    .level-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1rem;
+      margin-bottom: clamp(2rem, 5vw, 3.5rem);
+    }
+    .stage-no {
+      font-family: "Silkscreen", ui-monospace, monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      color: var(--mars-hi);
+      float: left;
+      margin: 0.35rem 0.85rem 0 0;
+    }
+    .level h2 {
+      font-size: var(--step-3);
+      font-stretch: 112%;
+      letter-spacing: -0.028em;
+      max-width: 22ch;
+    }
+    .level-lede {
+      max-width: var(--measure);
+      color: var(--dust);
+      font-size: var(--step-1);
+      line-height: 1.55;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: clamp(2rem, 5vw, 4rem);
+      align-items: center;
+    }
+    @media (min-width: 58rem) {
+      .split { grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr); }
+      .split.reverse > :first-child { order: 2; }
+    }
+
+    .prose { max-width: var(--measure); }
+    .prose p + p { margin-top: 1rem; }
+    .prose strong { color: var(--bone); font-weight: 650; }
+
+    .tags {
+      margin: 1.5rem 0 0;
       padding: 0;
       list-style: none;
-      max-width: 36rem;
-    }
-    .hero-badges li {
-      font-size: 0.78125rem;
-      color: var(--muted);
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 0.25rem 0.75rem;
-      background: var(--badge-bg);
-      white-space: nowrap;
-    }
-    .hero-badges strong {
-      color: var(--heading);
-      font-weight: 600;
-      font-variant-numeric: tabular-nums;
-    }
-    .hero-actions {
       display: flex;
       flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+    .tags li {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 0.75rem;
+      color: var(--bone);
+      background: var(--ink-3);
+      border: 1px solid var(--line);
+      padding: 0.22rem 0.5rem;
+    }
+
+    /* Capture slabs: real product screenshots, framed without browser chrome. */
+    .capture {
+      margin: 0;
+      border: 1px solid var(--line-2);
+      background: var(--ink-2);
+    }
+    .capture img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-bottom: 1px solid var(--line);
+    }
+    .capture figcaption {
+      display: flex;
+      gap: 0.75rem;
+      align-items: baseline;
+      padding: 0.7rem 0.85rem;
+      font-size: 0.8125rem;
+      color: var(--dust);
+    }
+    .capture figcaption::before {
+      content: "";
+      flex: none;
+      width: 6px;
+      height: 6px;
+      background: var(--mars);
+      transform: translateY(-1px);
+    }
+    .capture figcaption code { color: var(--bone); }
+
+    /* ── Spec sheet (native core) ────────────────────────────────── */
+    .spec {
+      border-top: 1px solid var(--line-2);
+      margin: 0;
+      padding: 0;
+    }
+    .spec div {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.85rem 0;
+      border-bottom: 1px solid var(--line);
+    }
+    .spec dt {
+      font-size: 0.9375rem;
+      color: var(--dust);
+    }
+    .spec dd {
+      margin: 0;
+      font-family: "Silkscreen", ui-monospace, monospace;
+      font-size: clamp(1.15rem, 2vw, 1.6rem);
+      letter-spacing: 0.02em;
+      color: var(--bone);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+    .spec dd small {
+      font-family: "Anybody", sans-serif;
+      font-size: 0.8125rem;
+      letter-spacing: 0;
+      color: var(--dust);
+      margin-left: 0.35rem;
+    }
+
+    /* ── Proof strip ─────────────────────────────────────────────── */
+    .proof {
+      padding-top: 3rem;
+      padding-bottom: 3rem;
+      border-top: 1px solid var(--line);
+    }
+    @media (min-width: 48rem) {
+      .proof {
+        padding-top: 4rem;
+        padding-bottom: 4rem;
+      }
+    }
+    @media (min-width: 75rem) {
+      .proof {
+        padding-top: 5rem;
+        padding-bottom: 5rem;
+      }
+    }
+    .proof-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1rem;
+    }
+    @media (min-width: 52rem) {
+      .proof-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+
+    /* ── Install ─────────────────────────────────────────────────── */
+    .install-level { border-top: 1px solid var(--line); background: var(--ink-2); }
+    .install-pair {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+    }
+    @media (min-width: 52rem) {
+      .install-pair { grid-template-columns: 1fr 1fr; }
+    }
+    @media (min-width: 75rem) {
+      .install-card { padding: 1.75rem; }
+    }
+    .install-card {
+      background: var(--ink);
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      min-width: 0;
+    }
+    .install-card h3 {
+      font-size: 1.0625rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+    }
+    .install-card h3 svg { width: 1rem; height: 1rem; fill: none; stroke: var(--mars-hi); stroke-width: 1.7; }
+    .install-card p {
+      font-size: 0.875rem;
+      color: var(--dust);
+    }
+    .install-card .installer {
+      margin-top: 0;
+      max-width: none;
+      padding: 0.4rem;
+      background: var(--ink-2);
+    }
+    .install-card .installer-cmd { padding: 0.5rem 0.55rem; }
+    .install-card .installer-body { flex-direction: column; }
+    .install-card .copy {
+      align-self: stretch;
       justify-content: center;
-      gap: 0.65rem;
+      border-left: 0;
+      border-top: 1px solid var(--line);
+      padding: 0.55rem 1rem;
+    }
+    @media (min-width: 34rem) {
+      .install-card .installer-body { flex-direction: row; }
+      .install-card .copy {
+        border-left: 1px solid var(--line);
+        border-top: 0;
+        padding: 0 0.9rem;
+      }
+    }
+
+    .alt-installs {
+      margin-top: 1.5rem;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1rem;
+    }
+    .alt-installs > div {
+      border: 1px solid var(--line);
+      padding: 1rem 1.1rem;
+      background: var(--ink);
+    }
+    .alt-installs h4 {
+      margin: 0 0 0.35rem;
+      font-family: "Silkscreen", ui-monospace, monospace;
+      font-size: 0.6875rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--dust);
+      font-weight: 400;
+    }
+    .alt-installs code {
+      display: block;
+      font-size: 0.8125rem;
+      color: var(--bone);
+      /* These commands are read, not scrolled. Wrap at the spaces so a package
+         name never breaks mid-token. */
+      white-space: normal;
+      overflow-wrap: normal;
+      word-break: normal;
+    }
+    /* Column count follows the longest command, not the viewport: a card only
+       joins a row when `github:MarsAI-org/mars-agent` still fits on one line,
+       so no command ever breaks mid-token. These overrides sit after the base
+       rules on purpose — the cascade resolves them in source order. */
+    @media (min-width: 60rem) {
+      .alt-installs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (min-width: 75rem) {
+      .alt-installs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      /* Three across only fits when the longest command
+         (`nix profile install github:MarsAI-org/mars-agent`) still holds one
+         line, so the card tightens. Type size stays uniform: the command wraps
+         at the space before the package id instead. */
+      .alt-installs > div { padding: 1rem 0.9rem; }
+    }
+    /* A package id is one token: it wraps before the hyphen, never inside it. */
+    .alt-installs .nw { white-space: nowrap; }
+    /* The alternatives are the fallback path, so their copy action is quiet:
+       a 44px tap target with no plate, not a second primary button. */
+    .alt-installs .copy {
+      width: auto;
+      align-self: flex-start;
+      min-height: 2.75rem;
+      margin-top: 0.35rem;
+      padding: 0 0.15rem;
+      justify-content: flex-start;
+      color: var(--dust);
+      background: transparent;
+      border: 0;
+    }
+    .alt-installs .copy:hover { color: var(--bone); background: transparent; }
+
+    /* ── Close ───────────────────────────────────────────────────── */
+    .close {
+      padding-top: 4rem;
+      padding-bottom: 4rem;
+      border-top: 1px solid var(--line);
+    }
+    @media (min-width: 48rem) {
+      .close {
+        padding-top: 5.5rem;
+        padding-bottom: 5.5rem;
+      }
+    }
+    @media (min-width: 75rem) {
+      .close {
+        padding-top: 7rem;
+        padding-bottom: 7rem;
+      }
+    }
+    .close h2 {
+      font-size: var(--step-4);
+      font-stretch: 116%;
+      letter-spacing: -0.035em;
+      max-width: 16ch;
+    }
+    .close-actions {
       margin-top: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
     }
     .btn {
       display: inline-flex;
       align-items: center;
-      gap: 0.45rem;
+      gap: 0.5rem;
+      font-weight: 700;
       font-size: 0.9375rem;
-      font-weight: 600;
-      padding: 0.6rem 1.15rem;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      color: var(--heading);
-      background: var(--card-bg);
-      cursor: pointer;
-      font-family: inherit;
-    }
-    .btn:hover {
       text-decoration: none;
-      border-color: var(--accent);
-      background: var(--card-bg-hover);
-    }
-    .btn svg {
-      width: 1.05rem;
-      height: 1.05rem;
-      fill: currentColor;
-      flex: none;
-    }
-    .btn-primary {
-      border-color: transparent;
-      background: var(--brand-gradient);
-      color: #16060a;
-      -webkit-text-fill-color: #16060a;
-      box-shadow: 0 6px 20px rgba(234, 88, 12, 0.28);
-    }
-    .btn-primary:hover {
-      filter: brightness(1.07);
-      background: var(--brand-gradient);
-    }
-
-    /* ── Sections ─────────────────────────────────────────────── */
-    /* Anchor offset is handled once by scroll-padding-top on <html>. Adding
-       scroll-margin-top here would stack the two and leave a large gap. */
-    .section-title {
-      font-size: clamp(1.5rem, 4vw, 2rem);
-      color: var(--heading);
-      margin: 0 0 0.5rem;
-      letter-spacing: -0.01em;
-    }
-    .section-lead {
-      margin: 0 0 1.75rem;
-      color: var(--muted);
-      max-width: 44rem;
-    }
-
-    /* ── Terminal mockup ──────────────────────────────────────── */
-    .terminal {
-      max-width: 52rem;
-      margin: 0 auto;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      background: var(--code-bg);
-      overflow: hidden;
-      box-shadow: 0 24px 60px rgba(1, 4, 9, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.02) inset;
-      text-align: left;
-    }
-    .terminal-bar {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.65rem 0.85rem;
-      background: var(--bg-soft);
-      border-bottom: 1px solid var(--border-soft);
-    }
-    .terminal-dots {
-      display: flex;
-      gap: 0.4rem;
-      flex: none;
-    }
-    .terminal-dots span {
-      width: 0.7rem;
-      height: 0.7rem;
-      border-radius: 50%;
-      display: block;
-    }
-    .terminal-dots span:nth-child(1) { background: #ff5f57; }
-    .terminal-dots span:nth-child(2) { background: #febc2e; }
-    .terminal-dots span:nth-child(3) { background: #28c840; }
-    .terminal-title {
-      font-size: 0.78125rem;
-      color: var(--muted);
-      margin: 0 auto;
-      padding-right: 3rem;
-    }
-    .terminal-body {
-      padding: 1.1rem 1.25rem 1.4rem;
-      font-size: 0.84375rem;
-      line-height: 1.7;
-      overflow-x: auto;
-    }
-    .terminal-body .line {
-      white-space: pre;
-      min-height: 1.7em;
-    }
-    .terminal-body .prompt {
-      color: var(--brand-2);
-      font-weight: 600;
-    }
-    .terminal-body .cmd {
-      color: var(--heading);
-    }
-    .terminal-body .ok {
-      color: #3fb950;
-    }
-    .terminal-body .dim {
-      color: var(--muted);
-    }
-    .terminal-body .info {
-      color: #79c0ff;
-    }
-    .terminal-body .warn {
-      color: #d29922;
-    }
-    .caret {
-      display: inline-block;
-      width: 0.5rem;
-      height: 1.05em;
-      vertical-align: text-bottom;
-      background: var(--brand-2);
-      animation: blink 1.1s steps(2, start) infinite;
-    }
-    @keyframes blink {
-      50% { opacity: 0; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .caret { animation: none; }
-    }
-
-    /* ── Install ──────────────────────────────────────────────── */
-    .install-grid {
-      display: grid;
-      gap: 1rem;
-      grid-template-columns: 1fr;
-      max-width: 52rem;
-    }
-    @media (min-width: 44rem) {
-      .install-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
-    .install-card {
-      position: relative;
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.25rem 1.25rem 1.15rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      min-width: 0;
-      overflow: hidden;
-    }
-    .install-card::before,
-    .feature::before,
-    .link-card::before {
-      content: "";
-      position: absolute;
-      inset: 0 0 auto;
-      height: 1px;
-      background: var(--brand-gradient);
-      opacity: 0.55;
-    }
-    .install-card h3 {
-      margin: 0;
-      font-size: 0.9375rem;
-      color: var(--heading);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .os-dot {
-      width: 0.5rem;
-      height: 0.5rem;
-      border-radius: 50%;
-      background: var(--brand-gradient);
-      flex: none;
-    }
-    .command {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: var(--code-bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 0.6rem 0.7rem;
-      min-width: 0;
-    }
-    .command code {
-      flex: 1 1 auto;
-      min-width: 0;
-      overflow-x: auto;
-      white-space: nowrap;
-      font-size: 0.8125rem;
-      color: var(--heading);
-      background: none;
-      padding: 0;
-    }
-    .copy-btn {
-      flex: none;
+      padding: 0.7rem 1.1rem;
+      border: 1px solid var(--line-2);
+      color: var(--bone);
       background: transparent;
-      border: 1px solid var(--border);
-      border-radius: 7px;
-      color: var(--muted);
-      cursor: pointer;
-      font: inherit;
-      font-size: 0.6875rem;
-      font-weight: 600;
-      padding: 0.3rem 0.55rem;
-      line-height: 1.3;
-      transition: color 150ms ease, border-color 150ms ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
     }
-    .copy-btn svg {
-      width: 0.85rem;
-      height: 0.85rem;
-      fill: currentColor;
+    .btn:hover { color: var(--bone); background: var(--ink-3); border-color: var(--line-2); }
+    .btn-primary {
+      background: var(--mars);
+      border-color: var(--mars);
+      color: #150609;
     }
-    .copy-btn:hover {
-      border-color: var(--accent);
-      color: var(--heading);
-    }
-    .copy-btn[data-copied="true"] {
-      color: #3fb950;
-      border-color: rgba(63, 185, 80, 0.4);
-    }
-    .copy-btn[data-copy-failed="true"] {
-      color: #f85149;
-      border-color: rgba(248, 81, 73, 0.4);
-    }
-    .install-note {
-      margin: 0;
-      font-size: 0.8125rem;
-      color: var(--muted);
-    }
-    .install-note code {
-      font-size: 0.78125rem;
-      background: var(--code-bg);
-      padding: 0.1rem 0.3rem;
-      border-radius: 4px;
-      border: 1px solid var(--border-soft);
-    }
+    .btn-primary:hover { background: var(--mars-hi); border-color: var(--mars-hi); color: #150609; }
+    .btn svg { width: 1rem; height: 1rem; fill: currentColor; }
 
-    /* ── Features ─────────────────────────────────────────────── */
-    .feature-stats {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin: 0 0 1.75rem;
-      padding: 0;
-      list-style: none;
-    }
-    .feature-stats li {
-      font-size: 0.8125rem;
-      color: var(--muted);
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 0.3rem 0.85rem;
-      background: var(--badge-bg);
-    }
-    .feature-stats strong {
-      color: var(--heading);
-      font-variant-numeric: tabular-nums;
-    }
-    .feature-grid {
-      display: grid;
-      gap: 1rem;
-      grid-template-columns: 1fr;
-    }
-    @media (min-width: 40rem) {
-      .feature-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
-    .feature {
-      position: relative;
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.4rem 1.25rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-      min-width: 0;
-      overflow: hidden;
-      transition: border-color 150ms ease, transform 150ms ease, background 150ms ease;
-    }
-    .feature:hover {
-      border-color: var(--accent);
-      background: var(--card-bg-hover);
-      transform: translateY(-2px);
-    }
-    .feature-icon {
-      width: 2.25rem;
-      height: 2.25rem;
-      border-radius: 9px;
-      display: grid;
-      place-items: center;
-      background: var(--accent-soft);
-      border: 1px solid rgba(249, 115, 22, 0.22);
-      flex: none;
-    }
-    .feature-icon svg {
-      width: 1.2rem;
-      height: 1.2rem;
-      fill: none;
-      stroke: var(--brand-2);
-      stroke-width: 1.75;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-    .feature h3 {
-      margin: 0;
-      font-size: 1.0625rem;
-      color: var(--heading);
-    }
-    .feature p {
-      margin: 0;
-      font-size: 0.9375rem;
-      color: var(--text);
-    }
-    .feature code {
-      font-size: 0.875em;
-      background: var(--code-bg);
-      padding: 0.1rem 0.32rem;
-      border-radius: 4px;
-      border: 1px solid var(--border-soft);
-    }
-
-    /* ── Links ────────────────────────────────────────────────── */
-    .link-grid {
-      display: grid;
-      gap: 1rem;
-      grid-template-columns: 1fr;
-    }
-    @media (min-width: 40rem) {
-      .link-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-    .link-card {
-      position: relative;
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.25rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.35rem;
-      overflow: hidden;
-      transition: border-color 150ms ease, transform 150ms ease;
-    }
-    .link-card:hover {
-      border-color: var(--accent);
-      text-decoration: none;
-      transform: translateY(-2px);
-    }
-    .link-card span:first-child {
-      color: var(--heading);
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-    .link-card span:first-child svg {
-      width: 1rem;
-      height: 1rem;
-      fill: currentColor;
-      color: var(--brand-2);
-    }
-    .link-card span:last-child {
-      color: var(--muted);
-      font-size: 0.875rem;
-    }
-    .link-card code {
-      font-size: 0.8125rem;
-      color: var(--accent);
-    }
-
-    /* ── Footer ───────────────────────────────────────────────── */
     footer {
-      margin-top: 4rem;
-      padding-top: 1.75rem;
-      border-top: 1px solid var(--border-soft);
-      font-size: 0.875rem;
-      color: var(--muted);
-      text-align: center;
+      border-top: 1px solid var(--line);
+      padding-top: 2rem;
+      padding-bottom: 2.5rem;
+      font-size: 0.8125rem;
+      color: var(--dust);
     }
-    footer p {
-      margin: 0 0 0.5rem;
+    .footer-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1.25rem;
     }
-    footer a {
-      color: var(--text);
+    @media (min-width: 52rem) {
+      .footer-grid { grid-template-columns: 1fr auto; align-items: start; }
     }
-    @media (prefers-reduced-motion: reduce) {
-      * {
-        transition: none !important;
+    footer p { max-width: 60ch; }
+    footer a { color: var(--bone); text-decoration-color: var(--line-2); }
+    footer a:hover { color: var(--mars-hi); }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 1rem; }
+
+    /* Custom scrollbar, caret, and selection ship with the design. */
+    @supports (scrollbar-color: red blue) {
+      html { scrollbar-color: var(--line-2) var(--ink); scrollbar-width: thin; }
+    }
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track { background: var(--ink); }
+    ::-webkit-scrollbar-thumb { background: var(--line-2); border: 2px solid var(--ink); }
+    ::-webkit-scrollbar-thumb:hover { background: #51465c; }
+
+    /* Entrance. The hero gets its own authored moment: the headline is wiped
+       in by a hard-edged block in stepped frames, the ridge draws itself, and
+       the mascot falls and lands on it. Only those three move — the lede,
+       installer, and meta stay painted from the first frame so the action is
+       never missing while the entrance plays. Section captures use a separate,
+       slower clip wipe so the two never read as one effect. */
+    .rise { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: no-preference) {
+      .js .hero h1 {
+        animation: headline-wipe 760ms steps(7, jump-none) both;
       }
+      .js .hero-sprite { animation: land 820ms 120ms steps(4, jump-none) both; }
+      .js .horizon svg { animation: ridge-in 620ms steps(8, jump-none) both; }
+    }
+    @keyframes headline-wipe {
+      from { clip-path: inset(0 0 100% 0); }
+      to { clip-path: inset(0 0 0 0); }
+    }
+    @keyframes ridge-in {
+      from { clip-path: inset(0 100% 0 0); }
+      to { clip-path: inset(0 0 0 0); }
+    }
+    @keyframes land {
+      0% { transform: translateY(-3.5rem); opacity: 0; }
+      55% { transform: translateY(0); opacity: 1; }
+      72% { transform: translateY(-0.4rem); }
+      100% { transform: translateY(0); }
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .js .capture.rise {
+        opacity: 0;
+        transform: translateY(0.75rem);
+        clip-path: inset(0 0 100% 0);
+        transition:
+          opacity 520ms var(--ease),
+          transform 520ms var(--ease),
+          clip-path 760ms var(--ease);
+      }
+      .js .capture.rise.is-in {
+        opacity: 1;
+        transform: none;
+        clip-path: inset(0 0 0 0);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+      }
+    }
+
+    @media (max-width: 30rem) {
+      .hud-inner { height: 3.25rem; }
+      .hero { padding-top: 5.5rem; }
+      /* One step smaller keeps the command to at most two lines here instead
+         of wrapping a token mid-word. */
+      .installer-cmd code { font-size: 0.6875rem; }
     }
   </style>
 </head>
 <body>
-  <nav class="nav">
-    <div class="nav-inner">
-      <a class="nav-brand" href="#top">
-        <img src="assets/mars-logo.svg" alt="" width="24" height="24">
-        Mars
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="hud">
+    <div class="hud-inner">
+      <a class="brand" href="#top" aria-label="Mars, back to top">
+        <img src="assets/mars-mark.svg" alt="" width="28" height="28">
+        <span>MARS</span>
       </a>
-      <div class="nav-links">
-        <a href="#install">Install</a>
-        <a href="#features">Features</a>
-        <a href="#links">Links</a>
+
+      <div class="hud-track" aria-hidden="true">
+        <div class="hud-track-bar">
+          <i data-stage="0" data-on="true"></i>
+          <i data-stage="1" data-on="false"></i>
+          <i data-stage="2" data-on="false"></i>
+          <i data-stage="3" data-on="false"></i>
+          <i data-stage="4" data-on="false"></i>
+        </div>
+        <span class="hud-track-label" id="hud-stage">Surface</span>
       </div>
-      <a class="nav-cta" href="https://github.com/MarsAI-org/mars-agent" target="_blank" rel="noopener">
-        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A7.995 7.995 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
-        GitHub
+
+      <nav class="hud-links" aria-label="Sections">
+        <a href="#level-01">IDE</a>
+        <a href="#level-02">Native</a>
+        <a href="#level-03">Tools</a>
+        <a href="#install">Install</a>
+      </nav>
+
+      <a class="hud-cta" href="#install">
+        Install
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v9M4.5 7.5 8 11l3.5-3.5M3 13h10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"/></svg>
       </a>
     </div>
-  </nav>
+  </header>
 
-  <div class="container" id="top">
-    <div class="shell">
-      <header class="hero">
-        <img class="hero-mark" src="assets/mars-logo.png" alt="Mars" width="240" height="240">
-        <h1>Mars</h1>
-        <hr class="rule">
-        <p class="tagline">A coding agent with the IDE wired in.</p>
-        <p class="hero-sub">Runs your shell, reads your repo, and uses the same language servers, debuggers, and Rust core your editor does. macOS, Linux, and Windows.</p>
-        <ul class="hero-badges" aria-label="Project highlights">
-          <li><strong>v0.1.0</strong> release</li>
-          <li><strong>75</strong> providers</li>
-          <li><strong>36</strong> built-in tools</li>
-          <li>MIT licensed</li>
-        </ul>
-        <div class="hero-actions">
+  <main id="main">
+    <!-- ── Hero ─────────────────────────────────────────────────── -->
+    <section class="hero" id="top" data-stage="0" data-stage-label="Surface">
+      <div class="shell hero-stage">
+        <div class="hero-copy">
+          <h1>A coding agent with the <em>IDE</em> wired in.</h1>
+          <p class="hero-lede">Mars runs your shell, reads your repo, and edits through the same language servers, debuggers, and <strong>Rust core</strong> your editor uses. One binary. macOS, Linux, Windows.</p>
+
+          <div class="installer" id="installer">
+            <div class="installer-head">
+              <div class="os-switch" role="tablist" aria-label="Install command for your platform">
+                <button type="button" role="tab" id="tab-posix" aria-controls="panel-posix" aria-selected="true" tabindex="0">macOS / Linux</button>
+                <button type="button" role="tab" id="tab-win" aria-controls="panel-win" aria-selected="false" tabindex="-1">Windows</button>
+              </div>
+              <span class="installer-file" id="installer-file">install.sh</span>
+            </div>
+
+            <div class="installer-body" role="tabpanel" id="panel-posix" aria-labelledby="tab-posix">
+              <div class="installer-cmd">
+                <span class="sigil" aria-hidden="true">$</span>
+                <code id="cmd-posix">curl -fsSL https://getmars.eu.cc/install | sh</code>
+              </div>
+              <button class="copy" type="button" data-copy="cmd-posix" aria-label="Copy the macOS and Linux install command">
+                <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8"/><path d="M10.5 5.5v-3h-8v8h3"/></svg>
+                <span class="copy-label">Copy</span>
+              </button>
+            </div>
+
+            <div class="installer-body" role="tabpanel" id="panel-win" aria-labelledby="tab-win" hidden>
+              <div class="installer-cmd">
+                <span class="sigil" aria-hidden="true">&gt;</span>
+                <code id="cmd-win">irm https://getmars.eu.cc/install.ps1 | iex</code>
+              </div>
+              <button class="copy" type="button" data-copy="cmd-win" aria-label="Copy the Windows install command">
+                <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8"/><path d="M10.5 5.5v-3h-8v8h3"/></svg>
+                <span class="copy-label">Copy</span>
+              </button>
+            </div>
+          </div>
+
+          <ul class="hero-meta">
+            <li>MIT licensed</li>
+            <li>75 providers</li>
+            <li>36 built-in tools</li>
+            <li>Checksum verified</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="horizon">
+        <div class="horizon-line" aria-hidden="true"></div>
+        <svg viewBox="0 0 1440 144" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M0 144V108H48V108H96V84H144V84H192V96H240V96H288V60H336V60H384V72H432V72H480V84H528V84H576V48H624V48H672V60H720V60H768V84H816V84H864V72H912V72H960V96H1008V96H1056V84H1104V84H1152V60H1200V60H1248V72H1296V72H1344V108H1392V108H1440V144Z" fill="#0e0c13"/>
+          <path d="M0 108H48V108H96V84H144V84H192V96H240V96H288V60H336V60H384V72H432V72H480V84H528V84H576V48H624V48H672V60H720V60H768V84H816V84H864V72H912V72H960V96H1008V96H1056V84H1104V84H1152V60H1200V60H1248V72H1296V72H1344V108H1392V108H1440" fill="none" stroke="#3a3244" stroke-width="2" vector-effect="non-scaling-stroke"/>
+          <path d="M0 144V126H96V120H192V132H288V114H384V126H480V120H576V108H672V120H768V132H864V120H960V126H1056V114H1152V120H1248V126H1344V120H1440V144Z" fill="#0a090d"/>
+        </svg>
+      </div>
+
+      <figure class="hero-sprite" id="sprite">
+        <img src="assets/mars-mark-256.png" alt="The Mars mascot: a pixel-art red planet with two square eyes and two feet." width="256" height="256">
+      </figure>
+
+      <nav class="trail" aria-label="Stages">
+        <div class="trail-inner">
+          <a href="#level-01" data-trail="1"><span class="trail-flag" aria-hidden="true"></span><span class="trail-no">01</span><span class="trail-name">Rename</span></a>
+          <a href="#level-02" data-trail="2"><span class="trail-flag" aria-hidden="true"></span><span class="trail-no">02</span><span class="trail-name">Native core</span></a>
+          <a href="#level-03" data-trail="3"><span class="trail-flag" aria-hidden="true"></span><span class="trail-no">03</span><span class="trail-name">Real tools</span></a>
+          <a href="#install" data-trail="4"><span class="trail-flag" aria-hidden="true"></span><span class="trail-no">04</span><span class="trail-name">Install</span></a>
+        </div>
+      </nav>
+    </section>
+
+    <!-- ── Proof strip ──────────────────────────────────────────── -->
+    <section class="proof" aria-label="What a session looks like">
+      <div class="shell">
+        <div class="proof-grid">
+          <figure class="capture rise">
+            <img src="assets/proof-task.webp" alt="Mars terminal running three explore agents over the packages directory." width="760" height="430" loading="lazy" decoding="async">
+            <figcaption><span><code>task</code> fans out into isolated worktrees.</span></figcaption>
+          </figure>
+          <figure class="capture rise">
+            <img src="assets/proof-python.webp" alt="Mars terminal rendering a chart from a persistent Python cell." width="760" height="430" loading="lazy" decoding="async">
+            <figcaption><span>Persistent Python cells, rendered inline.</span></figcaption>
+          </figure>
+          <figure class="capture rise">
+            <img src="assets/proof-review.webp" alt="Mars terminal showing a reviewer subagent working through a code review." width="760" height="430" loading="lazy" decoding="async">
+            <figcaption><span><code>/review</code> ranks findings P0–P3 with a verdict.</span></figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Level 01 ─────────────────────────────────────────────── -->
+    <section class="level" id="level-01" data-stage="1" data-stage-label="Language servers">
+      <div class="shell">
+        <div class="level-head">
+          <h2><span class="stage-no" aria-hidden="true">01</span><span class="vh">Stage 01: </span>A rename is a rename, not a find and replace.</h2>
+          <p class="level-lede">Every write goes through the language server. The call hits <code>workspace/willRenameFiles</code>, so re-exports, barrel files, and aliased imports update before the file moves.</p>
+        </div>
+
+        <div class="split">
+          <div class="prose">
+            <p>Most agents text-match their way through a rename and leave the fallout for you. Mars asks the same server your editor asks, then writes through it.</p>
+            <p>The same connection carries <strong>diagnostics, symbols, code actions, and raw LSP requests</strong>. If your editor can see it, the agent can see it — including the language servers you already configured.</p>
+            <ul class="tags" aria-label="Tools involved">
+              <li>lsp</li>
+              <li>ast_edit</li>
+              <li>ast_grep</li>
+            </ul>
+          </div>
+
+          <figure class="capture rise">
+            <img src="assets/proof-lspv.webp" alt="Mars terminal listing an active TypeScript language server and a Biome language server." width="760" height="430" loading="lazy" decoding="async">
+            <figcaption><span>TypeScript and Biome servers active in a live session.</span></figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Level 02 ─────────────────────────────────────────────── -->
+    <section class="level" id="level-02" data-stage="2" data-stage-label="Native core">
+      <div class="shell">
+        <div class="level-head">
+          <h2><span class="stage-no" aria-hidden="true">02</span><span class="vh">Stage 02: </span>Nothing on the hot path shells out.</h2>
+          <p class="level-lede">Other harnesses fork a subprocess for every search, every glob, every shell call. Mars links the real implementations into the binary and keeps them there.</p>
+        </div>
+
+        <div class="split reverse">
+          <div class="prose">
+            <p>Search, walk, and shell are Rust crates inside the process. <code>bash</code> is an embedded engine with sessions that survive across calls, and the common coreutils run as builtins rather than as programs on your <code>PATH</code>.</p>
+            <p>That is why the same binary runs on macOS, Linux, and Windows — including machines with no <code>rg</code>, no <code>grep</code>, and no <code>bash</code> to find.</p>
+          </div>
+
+          <div>
+            <dl class="spec">
+              <div><dt>Rust core</dt><dd>~240k<small>lines</small></dd></div>
+              <div><dt>Vendored in-process</dt><dd>~50k<small>lines</small></dd></div>
+              <div><dt>Crates in the core</dt><dd>12</dd></div>
+              <div><dt>Coreutils as builtins</dt><dd>46</dd></div>
+              <div><dt>Release targets</dt><dd>6</dd></div>
+              <div><dt>Platforms</dt><dd>3</dd></div>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Level 03 ─────────────────────────────────────────────── -->
+    <section class="level" id="level-03" data-stage="3" data-stage-label="Real tools">
+      <div class="shell">
+        <div class="level-head">
+          <h2><span class="stage-no" aria-hidden="true">03</span><span class="vh">Stage 03: </span>The web is just another filesystem.</h2>
+          <p class="level-lede">One <code>read</code> call handles local paths, archives, SQLite, PDFs, URLs, and internal schemes. <code>web_search</code> chains ranked providers and hands the URLs straight to it.</p>
+        </div>
+
+        <div class="split">
+          <div class="prose">
+            <p>An arXiv PDF comes back as structured markdown with anchors intact — the same tool surface you use on local files. Pull requests are paths too: <code>read pr://1428</code> returns the same shape as <code>read src/foo.ts</code>.</p>
+            <p>When the job needs a real machine instead of a file, the agent attaches <strong>lldb</strong>, <strong>dlv</strong>, or <strong>debugpy</strong>, drives a headless browser, or controls the desktop through the accessibility tree. The tool changes; the interface does not.</p>
+            <ul class="tags" aria-label="Tools involved">
+              <li>read</li>
+              <li>web_search</li>
+              <li>debug</li>
+              <li>browser</li>
+              <li>computer</li>
+            </ul>
+          </div>
+
+          <figure class="capture rise">
+            <img src="assets/proof-arxiv.webp" alt="Mars terminal ranking search sources and reading an arXiv paper as structured markdown." width="760" height="430" loading="lazy" decoding="async">
+            <figcaption><span>Ranked sources in, structured markdown out.</span></figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Install ──────────────────────────────────────────────── -->
+    <section class="level install-level" id="install" data-stage="4" data-stage-label="Install">
+      <div class="shell">
+        <div class="level-head">
+          <h2><span class="stage-no" aria-hidden="true">04</span><span class="vh">Stage 04: </span>One command to running.</h2>
+          <p class="level-lede">The script downloads the prebuilt binary for your platform, verifies its checksum, and installs it. On Windows it also adds the install directory to your user PATH.</p>
+        </div>
+
+        <div class="install-pair">
+          <div class="install-card">
+            <h3>
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4.5h12M2 11.5h12M5 2v12"/></svg>
+              macOS &amp; Linux
+            </h3>
+            <div class="installer">
+              <div class="installer-body">
+                <div class="installer-cmd">
+                  <span class="sigil" aria-hidden="true">$</span>
+                  <code id="cmd-posix-2">curl -fsSL https://getmars.eu.cc/install | sh</code>
+                </div>
+                <button class="copy" type="button" data-copy="cmd-posix-2" aria-label="Copy the macOS and Linux install command">
+                  <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8"/><path d="M10.5 5.5v-3h-8v8h3"/></svg>
+                  <span class="copy-label">Copy</span>
+                </button>
+              </div>
+            </div>
+            <p>Installs to <code>~/.local/bin</code> and tells you if that directory is not on your <code>PATH</code>. Override with <code>MARS_INSTALL_DIR</code>; the legacy <code>PI_INSTALL_DIR</code> still works.</p>
+          </div>
+
+          <div class="install-card">
+            <h3>
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2 4.5h12M2 11.5h12M5 2v12"/></svg>
+              Windows (PowerShell)
+            </h3>
+            <div class="installer">
+              <div class="installer-body">
+                <div class="installer-cmd">
+                  <span class="sigil" aria-hidden="true">&gt;</span>
+                  <code id="cmd-win-2">irm https://getmars.eu.cc/install.ps1 | iex</code>
+                </div>
+                <button class="copy" type="button" data-copy="cmd-win-2" aria-label="Copy the Windows install command">
+                  <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8"/><path d="M10.5 5.5v-3h-8v8h3"/></svg>
+                  <span class="copy-label">Copy</span>
+                </button>
+              </div>
+            </div>
+            <p>Installs to <code>%LOCALAPPDATA%\mars</code> and adds it to your user PATH.</p>
+          </div>
+        </div>
+
+        <div class="alt-installs">
+          <div>
+            <h4>Bun</h4>
+            <code id="cmd-bun">bun install -g <span class="nw">@marsai-org/coding-agent</span></code>
+            <button class="copy" type="button" data-copy="cmd-bun" aria-label="Copy the Bun install command">
+              <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8"/><path d="M10.5 5.5v-3h-8v8h3"/></svg>
+              <span class="copy-label">Copy</span>
+            </button>
+          </div>
+          <div>
+            <h4>Nix</h4>
+            <code id="cmd-nix">nix profile install <span class="nw">github:MarsAI-org/mars-agent</span></code>
+            <button class="copy" type="button" data-copy="cmd-nix" aria-label="Copy the Nix install command">
+              <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8"/><path d="M10.5 5.5v-3h-8v8h3"/></svg>
+              <span class="copy-label">Copy</span>
+            </button>
+          </div>
+          <div>
+            <h4>Pinned with mise</h4>
+            <code id="cmd-mise">mise use -g <span class="nw">github:MarsAI-org/mars-agent</span></code>
+            <button class="copy" type="button" data-copy="cmd-mise" aria-label="Copy the mise install command">
+              <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8"/><path d="M10.5 5.5v-3h-8v8h3"/></svg>
+              <span class="copy-label">Copy</span>
+            </button>
+          </div>
+        </div>
+
+        <p style="margin-top:1.5rem;max-width:62ch;color:var(--dust);font-size:0.9375rem;">
+          Prefer to do it by hand? Grab the archive for your platform from
+          <a href="https://github.com/MarsAI-org/mars-agent/releases" target="_blank" rel="noopener">GitHub Releases</a> —
+          <code>mars-&lt;platform&gt;-&lt;arch&gt;</code> for linux-x64, linux-arm64, darwin-x64, darwin-arm64, win32-x64, and win32-arm64.
+        </p>
+      </div>
+    </section>
+
+    <!-- ── Close ────────────────────────────────────────────────── -->
+    <section class="close" aria-labelledby="close-title">
+      <div class="shell">
+        <h2 id="close-title">Start the run.</h2>
+        <div class="close-actions">
           <a class="btn btn-primary" href="#install">
-            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1a3.5 3.5 0 0 0-3.5 3.5v3H3a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-5a1 1 0 0 0-1-1h-1.5v-3A3.5 3.5 0 0 0 8 1Zm0 8.5a1.25 1.25 0 1 1 0 2.5 1.25 1.25 0 0 1 0-2.5Z"/></svg>
             Install Mars
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2v9M4.5 7.5 8 11l3.5-3.5M3 13h10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"/></svg>
           </a>
           <a class="btn" href="https://github.com/MarsAI-org/mars-agent" target="_blank" rel="noopener">
             <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A7.995 7.995 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
             View source
           </a>
-        </div>
-      </header>
-
-      <section aria-labelledby="terminal-title-h">
-        <h2 class="visually-hidden" id="terminal-title-h">What a session looks like</h2>
-        <div class="terminal" role="img" aria-label="A terminal session showing the mars command running a test suite and a git rebrand.">
-          <div class="terminal-bar">
-            <div class="terminal-dots" aria-hidden="true"><span></span><span></span><span></span></div>
-            <p class="terminal-title">zsh — mars</p>
-          </div>
-          <div class="terminal-body" id="terminal-body"></div>
-        </div>
-      </section>
-
-      <section id="install" aria-labelledby="install-title">
-        <h2 class="section-title" id="install-title">Install</h2>
-        <p class="section-lead">One command. The script downloads the prebuilt binary for your platform and verifies its checksum. On Windows it also adds the install directory to your user PATH.</p>
-        <div class="install-grid">
-          <div class="install-card">
-            <h3><span class="os-dot" aria-hidden="true"></span>macOS &amp; Linux</h3>
-            <div class="command">
-              <code id="install-posix">curl -fsSL https://getmars.eu.cc/install | sh</code>
-              <button class="copy-btn" type="button" data-copy="install-posix" aria-label="Copy the macOS and Linux install command">
-                <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 1.5A1.5 1.5 0 0 1 6.5 0h6A1.5 1.5 0 0 1 14 1.5v9a1.5 1.5 0 0 1-1.5 1.5H11V11a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h1V1.5Zm0 4.5H4a.5.5 0 0 0-.5.5v6a.5.5 0 0 0 .5.5h5a.5.5 0 0 0 .5-.5v-1H6.5A1.5 1.5 0 0 1 5 10.5V6Z"/></svg>
-                <span class="copy-label">Copy</span>
-              </button>
-            </div>
-            <p class="install-note">Installs to <code>~/.local/bin</code> and tells you if that directory is not on your <code>PATH</code>. Override the location with <code>MARS_INSTALL_DIR</code> (legacy <code>PI_INSTALL_DIR</code> is still honored).</p>
-          </div>
-          <div class="install-card">
-            <h3><span class="os-dot" aria-hidden="true"></span>Windows (PowerShell)</h3>
-            <div class="command">
-              <code id="install-windows">irm https://getmars.eu.cc/install.ps1 | iex</code>
-              <button class="copy-btn" type="button" data-copy="install-windows" aria-label="Copy the Windows install command">
-                <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 1.5A1.5 1.5 0 0 1 6.5 0h6A1.5 1.5 0 0 1 14 1.5v9a1.5 1.5 0 0 1-1.5 1.5H11V11a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h1V1.5Zm0 4.5H4a.5.5 0 0 0-.5.5v6a.5.5 0 0 0 .5.5h5a.5.5 0 0 0 .5-.5v-1H6.5A1.5 1.5 0 0 1 5 10.5V6Z"/></svg>
-                <span class="copy-label">Copy</span>
-              </button>
-            </div>
-            <p class="install-note">Installs to <code>%LOCALAPPDATA%\mars</code> and adds it to your user PATH.</p>
-          </div>
-        </div>
-        <p class="section-lead" style="margin-top:1rem;">Prefer to do it by hand? Grab the archive for your platform from <a href="https://github.com/MarsAI-org/mars-agent/releases" target="_blank" rel="noopener">GitHub Releases</a> — <code>mars-&lt;platform&gt;-&lt;arch&gt;</code> for linux-x64, linux-arm64, darwin-x64, darwin-arm64, win32-x64, and win32-arm64.</p>
-      </section>
-
-      <section id="features" aria-labelledby="features-title">
-        <h2 class="section-title" id="features-title">What you get</h2>
-        <p class="section-lead">Out of the box, with nothing to wire up.</p>
-        <ul class="feature-stats">
-          <li><strong>75</strong> providers</li>
-          <li><strong>36</strong> built-in tools</li>
-          <li><strong>~290k</strong> lines of Rust core</li>
-          <li><strong>3</strong> platforms</li>
-          <li><strong>MIT</strong> licensed</li>
-        </ul>
-        <div class="feature-grid">
-          <article class="feature">
-            <span class="feature-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h7"/><circle cx="18" cy="16" r="3"/><path d="M20.5 18.5 23 21"/></svg>
-            </span>
-            <h3>The IDE, wired in</h3>
-            <p>LSP calls sit on every write: ask for a rename and the call goes through <code>workspace/willRenameFiles</code>, so re-exports, barrel files, and aliased imports follow. Debugging is real too — attach lldb, dlv, or debugpy and step.</p>
-          </article>
-          <article class="feature">
-            <span class="feature-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M4 17 9 7l4 6 3-4 4 8z"/><path d="M4 20h16"/></svg>
-            </span>
-            <h3>Native all the way down</h3>
-            <p>ripgrep, glob, and find run in-process instead of shelling out. <code>bash</code> is brush, with sessions that survive across calls and the common coreutils ported into the Rust builtins crate. The same binary runs on macOS, Linux, and Windows — no WSL bridge.</p>
-          </article>
-          <article class="feature">
-            <span class="feature-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/></svg>
-            </span>
-            <h3>Any model, tuned per model</h3>
-            <p>Pick from 75 providers in the bundled catalog. Prompts are adjusted for each one, completions generate themselves from the live command metadata, and <code>--resume</code> resolves against your on-disk sessions.</p>
-          </article>
-          <article class="feature">
-            <span class="feature-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24"><path d="M4 5h6v6H4zM14 5h6v4h-6zM4 15h16v4H4z"/></svg>
-            </span>
-            <h3>Subagents, review, and shareable sessions</h3>
-            <p><code>task</code> fans work into isolated worktrees and returns schema-validated results. <code>/review</code> ranks issues P0–P3 with a verdict. <code>/collab</code> puts your live session on a relay and hands back a link — frames are sealed client-side.</p>
-          </article>
-        </div>
-      </section>
-
-      <section id="links" aria-labelledby="links-title">
-        <h2 class="section-title" id="links-title">Links</h2>
-        <div class="link-grid">
-          <a class="link-card" href="https://github.com/MarsAI-org/mars-agent" target="_blank" rel="noopener">
-            <span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.4 7.4 0 0 1 2-.27c.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A7.995 7.995 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>GitHub</span>
-            <span>Source, issues, and discussions</span>
-          </a>
-          <a class="link-card" href="https://github.com/MarsAI-org/mars-agent/releases" target="_blank" rel="noopener">
-            <span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0Zm0 3a5 5 0 1 1 0 10A5 5 0 0 1 8 3Z"/></svg>Releases</span>
-            <span>Prebuilt binaries and changelog</span>
-          </a>
-          <a class="link-card" href="https://www.npmjs.com/package/@marsai-org/coding-agent" target="_blank" rel="noopener">
-            <span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M0 1h16v14H0V1Zm1 1v12h14V2H1Zm2 2h3v6H5V6H3V4Zm5 0h3v6H9V6H8V4Z"/></svg>npm</span>
-            <span><code>@marsai-org/coding-agent</code></span>
+          <a class="btn" href="https://www.npmjs.com/package/@marsai-org/coding-agent" target="_blank" rel="noopener">
+            npm
           </a>
         </div>
-      </section>
+      </div>
+    </section>
+  </main>
 
-      <footer>
-        <p>MIT licensed. Mars is a fork of <a href="https://github.com/can1357/oh-my-pi" target="_blank" rel="noopener">oh-my-pi</a> by can1357, which is a fork of <a href="https://github.com/badlogic/pi-mono" target="_blank" rel="noopener">Pi</a> by Mario Zechner. Both are MIT licensed.</p>
-      </footer>
+  <footer>
+    <div class="shell footer-grid">
+      <p>MIT licensed. Mars is a fork of <a href="https://github.com/can1357/oh-my-pi" target="_blank" rel="noopener">oh-my-pi</a> by can1357, which is a fork of <a href="https://github.com/badlogic/pi-mono" target="_blank" rel="noopener">Pi</a> by Mario Zechner. Both are MIT licensed.</p>
+      <div class="footer-links">
+        <a href="https://github.com/MarsAI-org/mars-agent" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://github.com/MarsAI-org/mars-agent/releases" target="_blank" rel="noopener">Releases</a>
+        <a href="https://github.com/MarsAI-org/mars-agent/blob/main/LICENSE" target="_blank" rel="noopener">License</a>
+      </div>
     </div>
-  </div>
+  </footer>
 
   <script>
+    document.documentElement.classList.add("js");
+
+    /* ── Install tabs ──────────────────────────────────────────── */
     (function () {
-      var body = document.getElementById("terminal-body");
-      if (!body) return;
+      var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+      if (!tabs.length) return;
+      var fileLabel = document.getElementById("installer-file");
+      var names = { "tab-posix": "install.sh", "tab-win": "install.ps1" };
 
-      // Stylised session transcript. Fixed content, no network, no model calls.
-      var script = [
-        { html: '<span class="prompt">➜ ~/mars</span> <span class="cmd">mars</span>' },
-        { html: '<span class="dim">Mars v0.1.0 · 75 providers · 36 tools ready</span>' },
-        { html: '' },
-        { html: '<span class="prompt">➜ ~/mars</span> <span class="cmd">run the auth tests</span>' },
-        { html: '<span class="dim">…</span>' },
-        { html: '<span class="ok">✓</span> <span class="cmd">read</span>        <span class="dim">packages/coding-agent/test/oauth-flow.test.ts</span>' },
-        { html: '<span class="ok">✓</span> <span class="cmd">bash</span>        <span class="dim">bun test packages/coding-agent/test/oauth-flow.test.ts</span>' },
-        { html: '<span class="info">26 pass</span><span class="dim"> · 0 fail · 1.2s</span>' },
-        { html: '' },
-        { html: '<span class="prompt">➜ ~/mars</span> <span class="cmd">rename the residual omp refs to mars</span>' },
-        { html: '<span class="dim">lsp → workspace/willRenameFiles</span>' },
-        { html: '<span class="ok">✓</span> renamed <span class="cmd">12</span> refs across <span class="cmd">4</span> files' },
-        { html: '<span class="ok">✓</span> re-exports and barrel files followed' },
-        { html: '<span class="warn">→</span> 1 alias left in a vendored test fixture — review it' },
-        { html: '' },
-        { html: '<span class="prompt">➜ ~/mars</span> <span class="caret"></span>' }
-      ];
-
-      var prefersReducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-      function renderAll() {
-        script.forEach(function (step) {
-          var line = document.createElement("div");
-          line.className = "line";
-          line.innerHTML = step.html;
-          body.appendChild(line);
+      function select(tab, focus) {
+        tabs.forEach(function (t) {
+          var on = t === tab;
+          t.setAttribute("aria-selected", on ? "true" : "false");
+          t.tabIndex = on ? 0 : -1;
+          var panel = document.getElementById(t.getAttribute("aria-controls"));
+          if (panel) panel.hidden = !on;
         });
+        if (fileLabel && names[tab.id]) fileLabel.textContent = names[tab.id];
+        if (focus) tab.focus();
       }
 
-      if (prefersReducedMotion) {
-        renderAll();
-        return;
-      }
-
-      // Typing-light reveal: append one line at a time. No layout thrash — we
-      // only touch the DOM once per step, and we stop as soon as the section
-      // scrolls out of view so an idle tab costs nothing.
-      var index = 0;
-      var started = false;
-
-      function step() {
-        if (index >= script.length) return;
-        var line = document.createElement("div");
-        line.className = "line";
-        line.innerHTML = script[index].html;
-        body.appendChild(line);
-        index += 1;
-        if (index < script.length) {
-          window.setTimeout(step, index % 6 === 0 ? 260 : 90);
-        }
-      }
-
-      function maybeStart() {
-        if (started) return;
-        var rect = body.getBoundingClientRect();
-        var visible = rect.top < window.innerHeight && rect.bottom > 0;
-        if (!visible) return;
-        started = true;
-        window.removeEventListener("scroll", maybeStart);
-        step();
-      }
-
-      // If IntersectionObserver exists, use it; otherwise fall back to scroll.
-      if ("IntersectionObserver" in window) {
-        var observer = new IntersectionObserver(function (entries) {
-          entries.forEach(function (entry) {
-            if (entry.isIntersecting) {
-              started = true;
-              observer.disconnect();
-              step();
-            }
-          });
-        }, { rootMargin: "12rem" });
-        observer.observe(body);
-      } else {
-        window.addEventListener("scroll", maybeStart);
-        maybeStart();
-      }
-
-      // No-JS safety: if the observer never fires (very old browser), the whole
-      // transcript still exists in the DOM after the animation is skipped.
-      window.setTimeout(function () {
-        if (body.childElementCount === 0) renderAll();
-      }, 3000);
+      tabs.forEach(function (tab) {
+        tab.addEventListener("click", function () { select(tab, false); });
+        tab.addEventListener("keydown", function (event) {
+          var i = tabs.indexOf(tab);
+          var next = null;
+          if (event.key === "ArrowRight") next = tabs[(i + 1) % tabs.length];
+          if (event.key === "ArrowLeft") next = tabs[(i - 1 + tabs.length) % tabs.length];
+          if (event.key === "Home") next = tabs[0];
+          if (event.key === "End") next = tabs[tabs.length - 1];
+          if (next) { event.preventDefault(); select(next, true); }
+        });
+      });
     })();
 
+    /* ── Copy: the page's working action ───────────────────────── */
     (function () {
-      var RESET_MS = 1600;
-      document.querySelectorAll(".copy-btn").forEach(function (btn) {
+      var RESET_MS = 1800;
+      var sprite = document.getElementById("sprite");
+
+      function hop() {
+        if (!sprite) return;
+        sprite.classList.remove("is-hopping");
+        /* Force a reflow so the animation can restart on repeated copies. */
+        void sprite.offsetWidth;
+        sprite.classList.add("is-hopping");
+        window.setTimeout(function () { sprite.classList.remove("is-hopping"); }, 700);
+      }
+
+      document.querySelectorAll(".copy").forEach(function (btn) {
         var label = btn.querySelector(".copy-label");
-        var baseLabel = btn.getAttribute("aria-label") || "Copy";
+        var base = btn.getAttribute("aria-label") || "Copy";
         var timer = 0;
 
-        // The visible span and the accessible name must change together, or
-        // screen-reader users never learn the copy succeeded or failed.
         function announce(state, text) {
-          btn.removeAttribute("data-copied");
-          btn.removeAttribute("data-copy-failed");
-          if (state === "copied") btn.setAttribute("data-copied", "true");
-          if (state === "failed") btn.setAttribute("data-copy-failed", "true");
+          if (state === "idle") btn.removeAttribute("data-state");
+          else btn.setAttribute("data-state", state);
           if (label) label.textContent = text;
-          btn.setAttribute("aria-label", state === "idle" ? baseLabel : text);
+          btn.setAttribute("aria-label", state === "idle" ? base : text);
           window.clearTimeout(timer);
           if (state !== "idle") {
-            timer = window.setTimeout(function () {
-              announce("idle", "Copy");
-            }, RESET_MS);
+            timer = window.setTimeout(function () { announce("idle", "Copy"); }, RESET_MS);
           }
         }
 
         btn.addEventListener("click", function () {
           var target = document.getElementById(btn.getAttribute("data-copy"));
-          if (!target) {
-            announce("failed", "Copy failed");
-            return;
+          if (!target) { announce("failed", "Copy failed"); return; }
+          var text = target.textContent.trim();
+
+          function done(ok) {
+            announce(ok ? "copied" : "failed", ok ? "Copied" : "Copy failed");
+            if (ok) hop();
           }
-          var text = target.textContent;
+
           function fallback() {
             var range = document.createRange();
             range.selectNodeContents(target);
             var selection = window.getSelection();
             selection.removeAllRanges();
             selection.addRange(range);
-            var copied = false;
-            try {
-              copied = document.execCommand("copy") === true;
-            } catch (err) {
-              copied = false;
-            } finally {
-              selection.removeAllRanges();
-            }
-            // execCommand reports failure through its return value, not by
-            // throwing, so the result has to be checked explicitly.
-            announce(copied ? "copied" : "failed", copied ? "Copied" : "Copy failed");
+            var ok = false;
+            try { ok = document.execCommand("copy") === true; }
+            catch (err) { ok = false; }
+            finally { selection.removeAllRanges(); }
+            done(ok);
           }
+
           if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(text).then(
-              function () {
-                announce("copied", "Copied");
-              },
-              fallback
-            );
+            navigator.clipboard.writeText(text).then(function () { done(true); }, fallback);
           } else {
             fallback();
           }
         });
       });
+    })();
+
+    /* ── Stage tracker and entrance ────────────────────────────── */
+    (function () {
+      var rail = document.querySelector(".trail");
+      var railInner = document.querySelector(".trail-inner");
+      function syncRail() {
+        if (!rail || !railInner) return;
+        var max = railInner.scrollWidth - railInner.clientWidth;
+        var atStart = railInner.scrollLeft <= 1;
+        var atEnd = railInner.scrollLeft >= max - 1;
+        rail.setAttribute("data-edge", max <= 1 ? "none" : atStart ? "right" : atEnd ? "left" : "both");
+      }
+      syncRail();
+      if (railInner) railInner.addEventListener("scroll", syncRail, { passive: true });
+      window.addEventListener("resize", syncRail, { passive: true });
+      /* A late font swap changes the rail's intrinsic width, so re-measure
+         once the faces have loaded. */
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(syncRail);
+      }
+
+      var stages = Array.prototype.slice.call(document.querySelectorAll("[data-stage]"));
+      var bars = Array.prototype.slice.call(document.querySelectorAll(".hud-track-bar i"));
+      var label = document.getElementById("hud-stage");
+      var links = Array.prototype.slice.call(document.querySelectorAll(".hud-links a"));
+      var trail = Array.prototype.slice.call(document.querySelectorAll(".trail a"));
+      var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      function setStage(index, text) {
+        bars.forEach(function (bar) {
+          bar.setAttribute("data-on", String(Number(bar.getAttribute("data-stage")) <= index));
+        });
+        if (label) label.textContent = text;
+        links.forEach(function (a) {
+          var target = document.querySelector(a.getAttribute("href"));
+          a.setAttribute("aria-current", target && target.getAttribute("data-stage") === String(index) ? "true" : "false");
+        });
+        trail.forEach(function (a) {
+          a.setAttribute("aria-current", a.getAttribute("data-trail") === String(index) ? "true" : "false");
+        });
+      }
+
+      if ("IntersectionObserver" in window) {
+        var stageObserver = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (!entry.isIntersecting) return;
+            setStage(Number(entry.target.getAttribute("data-stage")), entry.target.getAttribute("data-stage-label") || "");
+          });
+        }, { rootMargin: "-45% 0px -45% 0px", threshold: 0 });
+
+        stages.forEach(function (section) { stageObserver.observe(section); });
+
+        if (!reduce) {
+          var riseObserver = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+              if (!entry.isIntersecting) return;
+              entry.target.classList.add("is-in");
+              riseObserver.unobserve(entry.target);
+            });
+          }, { rootMargin: "0px 0px -8% 0px" });
+
+          document.querySelectorAll(".rise").forEach(function (el) { riseObserver.observe(el); });
+        }
+      }
     })();
   </script>
 </body>

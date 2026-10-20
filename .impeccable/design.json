@@ -1,0 +1,487 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-20T08:02:48Z",
+  "title": "Design System: Mars",
+  "extensions": {
+    "colorMeta": {
+      "rust": {
+        "role": "primary",
+        "displayName": "Mars Rust",
+        "canonical": "oklch(0.599 0.182 34.9)",
+        "tonalRamp": [
+          "#2c0000",
+          "#590c00",
+          "#8d1e00",
+          "#b74428",
+          "#e0694d",
+          "#ff977d",
+          "#ffc9bb",
+          "#ffe9e3"
+        ]
+      },
+      "rust-hi": {
+        "role": "primary",
+        "displayName": "Rust Glow",
+        "canonical": "oklch(0.754 0.153 40.6)",
+        "tonalRamp": [
+          "#290200",
+          "#541600",
+          "#842c00",
+          "#ac502d",
+          "#d47451",
+          "#fd9975",
+          "#ffcab6",
+          "#ffe9e1"
+        ]
+      },
+      "focus": {
+        "role": "tertiary",
+        "displayName": "Focus Cyan",
+        "canonical": "oklch(0.842 0.071 207.2)",
+        "tonalRamp": [
+          "#00161a",
+          "#00353b",
+          "#1b565e",
+          "#407981",
+          "#649da5",
+          "#89c3cb",
+          "#a9e3ec",
+          "#caf8ff"
+        ]
+      },
+      "on-rust": {
+        "role": "neutral",
+        "displayName": "On Rust Ink",
+        "canonical": "oklch(0.149 0.029 6.6)",
+        "tonalRamp": [
+          "#1b0d10",
+          "#39292c",
+          "#59484b",
+          "#7c696c",
+          "#a08c90",
+          "#c6b1b5",
+          "#e7d1d5",
+          "#fee8ec"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ground Ink",
+        "canonical": "oklch(0.143 0.009 297.0)",
+        "tonalRamp": [
+          "#121115",
+          "#2e2d31",
+          "#4d4c51",
+          "#6f6e73",
+          "#929196",
+          "#b8b6bc",
+          "#d8d6dc",
+          "#efedf3"
+        ]
+      },
+      "ink-2": {
+        "role": "neutral",
+        "displayName": "Panel Ink",
+        "canonical": "oklch(0.169 0.013 300.3)",
+        "tonalRamp": [
+          "#121116",
+          "#2f2d33",
+          "#4e4c52",
+          "#6f6d74",
+          "#939198",
+          "#b8b6bd",
+          "#d8d6de",
+          "#efedf5"
+        ]
+      },
+      "ink-3": {
+        "role": "neutral",
+        "displayName": "Bar Ink",
+        "canonical": "oklch(0.194 0.017 302.0)",
+        "tonalRamp": [
+          "#131017",
+          "#2f2c34",
+          "#4e4b54",
+          "#706d76",
+          "#94909a",
+          "#b9b5bf",
+          "#d9d5df",
+          "#f0ecf7"
+        ]
+      },
+      "ink-4": {
+        "role": "neutral",
+        "displayName": "Plate Ink",
+        "canonical": "oklch(0.222 0.018 305.1)",
+        "tonalRamp": [
+          "#131017",
+          "#302c34",
+          "#4f4b54",
+          "#716d76",
+          "#94909a",
+          "#b9b5c0",
+          "#dad5e0",
+          "#f1ecf7"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Seam",
+        "canonical": "oklch(0.277 0.025 305.8)",
+        "tonalRamp": [
+          "#140f19",
+          "#302b36",
+          "#504a57",
+          "#726c79",
+          "#958f9d",
+          "#bab4c2",
+          "#dbd4e3",
+          "#f2ebfa"
+        ]
+      },
+      "line-2": {
+        "role": "neutral",
+        "displayName": "Seam Strong",
+        "canonical": "oklch(0.337 0.031 306.1)",
+        "tonalRamp": [
+          "#140e1b",
+          "#312a39",
+          "#514a59",
+          "#726b7b",
+          "#968e9f",
+          "#bbb3c5",
+          "#dcd3e6",
+          "#f3eafd"
+        ]
+      },
+      "bone": {
+        "role": "neutral",
+        "displayName": "Bone",
+        "canonical": "oklch(0.947 0.016 73.7)",
+        "tonalRamp": [
+          "#15110b",
+          "#322d26",
+          "#524c45",
+          "#746e66",
+          "#979189",
+          "#bdb6ae",
+          "#ddd6ce",
+          "#f4ede5"
+        ]
+      },
+      "dust": {
+        "role": "neutral",
+        "displayName": "Dust",
+        "canonical": "oklch(0.729 0.016 325.7)",
+        "tonalRamp": [
+          "#150f15",
+          "#322b32",
+          "#514b51",
+          "#736c73",
+          "#978f97",
+          "#bcb4bc",
+          "#dcd4dc",
+          "#f4ebf4"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Hero headline only. Anybody at 850 weight and 118% width, 16-18ch measure. Emphasis is a color change to Rust Glow, never an italic."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Stage headings at 800 weight and 112% width, capped at 22ch. Carries the floated stage numeral."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Install card headings, paired with a 1rem stroke icon in Rust Glow."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Running prose at 62ch, hero lede at 46ch. Anybody 400."
+      },
+      "label": {
+        "displayName": "Machine Label",
+        "purpose": "Silkscreen micro-type: OS tabs, meta facts, trail numerals, alt-install headings, HUD track label."
+      },
+      "metric": {
+        "displayName": "Spec Metric",
+        "purpose": "Silkscreen spec-sheet values with tabular figures; the unit after the number is Anybody in Dust."
+      },
+      "code": {
+        "displayName": "Code",
+        "purpose": "Install commands, inline code, and tool tags in the system ui-monospace stack. Deliberately not a display face: a command should look like the reader's own terminal. The installer command steps to 0.75rem below 34rem."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "ease-landing",
+        "value": "cubic-bezier(0.22, 1, 0.36, 1)",
+        "purpose": "The only easing curve on the page. Used for the capture-plate wipe and the mascot hop, never for an entrance wipe."
+      },
+      {
+        "name": "headline-wipe",
+        "value": "clip-path inset(0 0 100% 0) to inset(0 0 0 0) over 760ms steps(7, jump-none)",
+        "purpose": "Hero headline entrance. Hard-edged, stepped, gated on prefers-reduced-motion: no-preference and the js class."
+      },
+      {
+        "name": "ridge-in",
+        "value": "clip-path inset(0 100% 0 0) to inset(0 0 0 0) over 620ms steps(8, jump-none)",
+        "purpose": "The ridge draws itself left to right."
+      },
+      {
+        "name": "land",
+        "value": "translateY(-3.5rem) to 0 with opacity, 820ms steps(4, jump-none), 120ms delay",
+        "purpose": "The mascot falls and lands on the ridge line."
+      },
+      {
+        "name": "idle",
+        "value": "translateY(0 to -3px) over 3.2s steps(2, jump-none) infinite",
+        "purpose": "Two-frame mascot bob at rest."
+      },
+      {
+        "name": "hop",
+        "value": "620ms cubic-bezier(0.22, 1, 0.36, 1), single run",
+        "purpose": "Mascot hops once after a successful copy."
+      },
+      {
+        "name": "capture-rise",
+        "value": "opacity 520ms, translateY 0.75rem 520ms, clip-path 760ms",
+        "purpose": "Section capture plates wipe in on intersection. Slower than the hero so the two never read as one effect."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "animation-duration and transition-duration 0.001ms, scroll-behavior auto",
+        "purpose": "Every animation and transition collapses under prefers-reduced-motion: reduce."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "phone-narrow",
+        "value": "30rem",
+        "purpose": "Installer stacks its copy plate under the command, filename label drops, HUD track label drops."
+      },
+      {
+        "name": "phone",
+        "value": "34rem",
+        "purpose": "Command type steps up to 0.8125rem; install-card copy plate returns inline."
+      },
+      {
+        "name": "shell-pad",
+        "value": "40rem",
+        "purpose": "Shell gutter widens to 2rem; trail stops tighten their padding."
+      },
+      {
+        "name": "stage-pad",
+        "value": "48rem",
+        "purpose": "Stage padding steps to 6.5rem; hero mascot width steps to 8.5rem."
+      },
+      {
+        "name": "grid-two",
+        "value": "52rem",
+        "purpose": "Proof grid goes three-up; install pair splits into two columns; footer splits."
+      },
+      {
+        "name": "hud-links",
+        "value": "56rem",
+        "purpose": "HUD section links appear and the CTA stops claiming the auto margin."
+      },
+      {
+        "name": "split",
+        "value": "58rem",
+        "purpose": "Prose/capture splits engage, including the reversed variant."
+      },
+      {
+        "name": "alt-two",
+        "value": "60rem",
+        "purpose": "Alternative install cards go two-up; set by the longest command fitting on one line."
+      },
+      {
+        "name": "hero-desktop",
+        "value": "63.9375rem",
+        "purpose": "Complement of 64rem: below it the stage reserves the mascot lane as bottom padding."
+      },
+      {
+        "name": "desktop",
+        "value": "64rem",
+        "purpose": "Hero takes min-height, copy caps at 46rem, mascot moves to the right edge of the ridge."
+      },
+      {
+        "name": "shell-max",
+        "value": "75rem",
+        "purpose": "Stage padding 8rem, shell gutter 2.5rem, alt installs three-up, install cards pad 1.75rem."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Rust plate with near-black text. The page's committed action; hover lifts the plate to Rust Glow rather than raising it.",
+      "html": "<a class=\"ds-btn-primary\" href=\"#\">Install Mars <svg viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"M8 2v9M4.5 7.5 8 11l3.5-3.5M3 13h10\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"square\"/></svg></a>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; gap: 0.5rem; font-family: \"Anybody\", ui-sans-serif, system-ui, sans-serif; font-weight: 700; font-size: 0.9375rem; line-height: 1.62; text-decoration: none; padding: 0.7rem 1.1rem; min-height: 2.75rem; border: 1px solid var(--mars, #d64a27); border-radius: 0; color: #150609; background: var(--mars, #d64a27); cursor: pointer; } .ds-btn-primary:hover { background: var(--mars-hi, #ff8a5f); border-color: var(--mars-hi, #ff8a5f); color: #150609; } .ds-btn-primary:focus-visible { outline: 2px solid var(--focus, #93d9e3); outline-offset: 3px; } .ds-btn-primary svg { width: 1rem; height: 1rem; flex: none; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Transparent, 1px Seam Strong border, bone text. Hover fills one rung of the ground ladder; nothing moves.",
+      "html": "<a class=\"ds-btn-secondary\" href=\"#\">View source</a>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; gap: 0.5rem; font-family: \"Anybody\", ui-sans-serif, system-ui, sans-serif; font-weight: 700; font-size: 0.9375rem; line-height: 1.62; text-decoration: none; padding: 0.7rem 1.1rem; min-height: 2.75rem; border: 1px solid var(--line-2, #3b3344); border-radius: 0; color: var(--bone, #f4ece2); background: transparent; cursor: pointer; } .ds-btn-secondary:hover { background: var(--ink-3, #16131b); color: var(--bone, #f4ece2); border-color: var(--line-2, #3b3344); } .ds-btn-secondary:focus-visible { outline: 2px solid var(--focus, #93d9e3); outline-offset: 3px; }"
+    },
+    {
+      "name": "HUD Install CTA",
+      "kind": "nav",
+      "refersTo": "nav-cta",
+      "description": "The rust plate that lives in the fixed header. Same fill as the primary button, tighter padding, 2.75rem minimum height for the touch target.",
+      "html": "<a class=\"ds-hud-cta\" href=\"#\">Install <svg viewBox=\"0 0 16 16\" aria-hidden=\"true\"><path d=\"M8 2v9M4.5 7.5 8 11l3.5-3.5M3 13h10\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"square\"/></svg></a>",
+      "css": ".ds-hud-cta { display: inline-flex; align-items: center; gap: 0.45rem; font-family: \"Anybody\", ui-sans-serif, system-ui, sans-serif; font-weight: 700; font-size: 0.875rem; text-decoration: none; color: #150609; background: var(--mars, #d64a27); border: 0; border-radius: 0; min-height: 2.75rem; padding: 0.5rem 1rem; cursor: pointer; } .ds-hud-cta:hover { background: var(--mars-hi, #ff8a5f); color: #150609; } .ds-hud-cta:focus-visible { outline: 2px solid var(--focus, #93d9e3); outline-offset: 3px; } .ds-hud-cta svg { width: 0.875rem; height: 0.875rem; flex: none; }"
+    },
+    {
+      "name": "Installer Panel",
+      "kind": "custom",
+      "description": "The page's working action shown as itself: OS tabs in a bar head, a sigil and command row, a copy plate on the right seam. Tab and copy states included.",
+      "html": "<div class=\"ds-installer\"><div class=\"ds-installer-head\"><div class=\"ds-os-switch\" role=\"tablist\" aria-label=\"Install command for your platform\"><button type=\"button\" role=\"tab\" aria-selected=\"true\" class=\"ds-os-tab\">macOS / Linux</button><button type=\"button\" role=\"tab\" aria-selected=\"false\" class=\"ds-os-tab\">Windows</button></div><span class=\"ds-installer-file\">install.sh</span></div><div class=\"ds-installer-body\"><div class=\"ds-installer-cmd\"><span class=\"ds-sigil\" aria-hidden=\"true\">$</span><code>curl -fsSL https://example.com/install | sh</code></div><button class=\"ds-copy\" type=\"button\"><svg viewBox=\"0 0 16 16\" aria-hidden=\"true\"><rect x=\"5.5\" y=\"5.5\" width=\"8\" height=\"8\"/><path d=\"M10.5 5.5v-3h-8v8h3\"/></svg><span>Copy</span></button></div></div>",
+      "css": ".ds-installer { border: 1px solid var(--line-2, #3b3344); border-radius: 0; background: var(--ink-2, #100e14); font-family: \"Anybody\", ui-sans-serif, system-ui, sans-serif; } .ds-installer-head { display: flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0.6rem; border-bottom: 1px solid var(--line, #2b2532); background: var(--ink-3, #16131b); } .ds-os-switch { display: flex; gap: 2px; } .ds-os-tab { font-family: \"Silkscreen\", ui-monospace, monospace; font-size: 0.6875rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--dust, #ada4ad); background: transparent; border: 1px solid transparent; border-radius: 0; padding: 0.35rem 0.55rem; cursor: pointer; } .ds-os-tab:hover { color: var(--bone, #f4ece2); border-color: var(--line-2, #3b3344); } .ds-os-tab[aria-selected=\"true\"] { color: var(--bone, #f4ece2); background: var(--ink-4, #1d1922); border-color: var(--line-2, #3b3344); } .ds-os-tab:focus-visible { outline: 2px solid var(--focus, #93d9e3); outline-offset: 3px; } .ds-installer-file { margin-left: auto; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.6875rem; color: var(--dust, #ada4ad); } .ds-installer-body { display: flex; align-items: stretch; } .ds-installer-cmd { flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: 0.6rem; padding: 0.85rem 0.9rem; } .ds-installer-cmd code { white-space: pre-wrap; overflow-wrap: anywhere; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.8125rem; color: var(--bone, #f4ece2); } .ds-sigil { color: var(--mars-hi, #ff8a5f); user-select: none; } .ds-copy { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 0.45rem; font-family: \"Silkscreen\", ui-monospace, monospace; font-size: 0.6875rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--bone, #f4ece2); background: var(--ink-4, #1d1922); border: 0; border-left: 1px solid var(--line, #2b2532); border-radius: 0; padding: 0 1rem; cursor: pointer; } .ds-copy:hover { background: #262031; } .ds-copy:focus-visible { outline: 2px solid var(--focus, #93d9e3); outline-offset: 3px; } .ds-copy svg { width: 0.9rem; height: 0.9rem; fill: none; stroke: currentColor; stroke-width: 1.6; }"
+    },
+    {
+      "name": "Alternative Install Card",
+      "kind": "card",
+      "description": "Fallback install path: 1px border, Silkscreen heading, command wrapping at the space before the package id, and a deliberately quiet copy action with no plate.",
+      "html": "<div class=\"ds-alt-card\"><h4>Nix</h4><code>nix profile install <span class=\"ds-nw\">github:org/repo</span></code><button class=\"ds-alt-copy\" type=\"button\"><svg viewBox=\"0 0 16 16\" aria-hidden=\"true\"><rect x=\"5.5\" y=\"5.5\" width=\"8\" height=\"8\"/><path d=\"M10.5 5.5v-3h-8v8h3\"/></svg><span>Copy</span></button></div>",
+      "css": ".ds-alt-card { border: 1px solid var(--line, #2b2532); border-radius: 0; padding: 1rem 1.1rem; background: var(--ink, #0a090d); font-family: \"Anybody\", ui-sans-serif, system-ui, sans-serif; } .ds-alt-card h4 { margin: 0 0 0.35rem; font-family: \"Silkscreen\", ui-monospace, monospace; font-size: 0.6875rem; font-weight: 400; letter-spacing: 0.09em; text-transform: uppercase; color: var(--dust, #ada4ad); } .ds-alt-card code { display: block; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.8125rem; color: var(--bone, #f4ece2); white-space: normal; overflow-wrap: normal; word-break: normal; } .ds-nw { white-space: nowrap; } .ds-alt-copy { display: inline-flex; align-items: center; gap: 0.45rem; min-height: 2.75rem; margin-top: 0.35rem; padding: 0 0.15rem; font-family: \"Silkscreen\", ui-monospace, monospace; font-size: 0.6875rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--dust, #ada4ad); background: transparent; border: 0; border-radius: 0; cursor: pointer; } .ds-alt-copy:hover { color: var(--bone, #f4ece2); } .ds-alt-copy:focus-visible { outline: 2px solid var(--focus, #93d9e3); outline-offset: 3px; } .ds-alt-copy svg { width: 0.9rem; height: 0.9rem; fill: none; stroke: currentColor; stroke-width: 1.6; }"
+    },
+    {
+      "name": "Tool Chip",
+      "kind": "chip",
+      "refersTo": "chip-tool",
+      "description": "A tool name printed as a label, not a filter. Monospace, one rung above the ground, square, no interaction state.",
+      "html": "<ul class=\"ds-chips\" aria-label=\"Tools involved\"><li>lsp</li><li>ast_edit</li><li>ast_grep</li></ul>",
+      "css": ".ds-chips { margin: 1.5rem 0 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 0.4rem; } .ds-chips li { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.75rem; line-height: 1.62; color: var(--bone, #f4ece2); background: var(--ink-3, #16131b); border: 1px solid var(--line, #2b2532); border-radius: 0; padding: 0.22rem 0.5rem; }"
+    },
+    {
+      "name": "Spec List",
+      "kind": "custom",
+      "description": "Label/value rows under a strong top rule. Keys in Anybody Dust, values in Silkscreen with tabular figures and an Anybody unit.",
+      "html": "<dl class=\"ds-spec\"><div><dt>Rust core</dt><dd>~240k<small>lines</small></dd></div><div><dt>Platforms</dt><dd>3</dd></div></dl>",
+      "css": ".ds-spec { margin: 0; padding: 0; border-top: 1px solid var(--line-2, #3b3344); font-family: \"Anybody\", ui-sans-serif, system-ui, sans-serif; } .ds-spec div { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding: 0.85rem 0; border-bottom: 1px solid var(--line, #2b2532); } .ds-spec dt { font-size: 0.9375rem; color: var(--dust, #ada4ad); } .ds-spec dd { margin: 0; font-family: \"Silkscreen\", ui-monospace, monospace; font-size: clamp(1.15rem, 2vw, 1.6rem); letter-spacing: 0.02em; color: var(--bone, #f4ece2); font-variant-numeric: tabular-nums; white-space: nowrap; } .ds-spec dd small { font-family: \"Anybody\", ui-sans-serif, system-ui, sans-serif; font-size: 0.8125rem; letter-spacing: 0; color: var(--dust, #ada4ad); margin-left: 0.35rem; }"
+    },
+    {
+      "name": "Capture Plate",
+      "kind": "card",
+      "description": "A bordered proof image with a rust-square caption. No browser chrome, no window dots; the seam does the framing.",
+      "html": "<figure class=\"ds-capture\"><div class=\"ds-capture-shot\" role=\"img\" aria-label=\"Product capture placeholder\"></div><figcaption><span><code>task</code> fans out into isolated worktrees.</span></figcaption></figure>",
+      "css": ".ds-capture { margin: 0; border: 1px solid var(--line-2, #3b3344); border-radius: 0; background: var(--ink-2, #100e14); font-family: \"Anybody\", ui-sans-serif, system-ui, sans-serif; } .ds-capture-shot { display: block; width: 100%; aspect-ratio: 760 / 430; background: var(--ink-4, #1d1922); border-bottom: 1px solid var(--line, #2b2532); } .ds-capture figcaption { display: flex; gap: 0.75rem; align-items: baseline; padding: 0.7rem 0.85rem; font-size: 0.8125rem; color: var(--dust, #ada4ad); } .ds-capture figcaption::before { content: \"\"; flex: none; width: 6px; height: 6px; background: var(--mars, #d64a27); transform: translateY(-1px); } .ds-capture figcaption code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--bone, #f4ece2); }"
+    },
+    {
+      "name": "Stage Heading",
+      "kind": "custom",
+      "description": "A stage h2 with the floated Silkscreen numeral and the visually hidden stage prefix that gives the heading its accessible name.",
+      "html": "<h2 class=\"ds-stage-head\"><span class=\"ds-stage-no\" aria-hidden=\"true\">01</span><span class=\"ds-vh\">Stage 01: </span>A rename is a rename, not a find and replace.</h2>",
+      "css": ".ds-stage-head { font-family: \"Anybody\", ui-sans-serif, system-ui, sans-serif; font-size: clamp(1.9rem, 1.4rem + 2.3vw, 3.15rem); font-weight: 800; font-stretch: 112%; letter-spacing: -0.028em; line-height: 1.02; margin: 0; max-width: 22ch; text-wrap: balance; color: var(--bone, #f4ece2); } .ds-stage-no { font-family: \"Silkscreen\", ui-monospace, monospace; font-size: 0.75rem; font-weight: 400; letter-spacing: 0.12em; color: var(--mars-hi, #ff8a5f); float: left; margin: 0.35rem 0.85rem 0 0; } .ds-vh { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }"
+    },
+    {
+      "name": "Stage Trail Stop",
+      "kind": "nav",
+      "description": "One stop on the horizontal stage rail: pennant flag, Silkscreen numeral, name. The current stop takes bone text, a rust flag, and a 2px rust underline on the seam.",
+      "html": "<nav class=\"ds-trail\" aria-label=\"Stages\"><a class=\"ds-trail-stop\" href=\"#\" aria-current=\"true\"><span class=\"ds-trail-flag\" aria-hidden=\"true\"></span><span class=\"ds-trail-no\">01</span><span class=\"ds-trail-name\">Rename</span></a><a class=\"ds-trail-stop\" href=\"#\"><span class=\"ds-trail-flag\" aria-hidden=\"true\"></span><span class=\"ds-trail-no\">02</span><span class=\"ds-trail-name\">Native core</span></a></nav>",
+      "css": ".ds-trail { display: flex; align-items: stretch; background: var(--ink-2, #100e14); border-top: 1px solid var(--line, #2b2532); border-bottom: 1px solid var(--line, #2b2532); font-family: \"Anybody\", ui-sans-serif, system-ui, sans-serif; } .ds-trail-stop { position: relative; display: flex; align-items: center; gap: 0.6rem; padding: 0.9rem 1.4rem; color: var(--dust, #ada4ad); text-decoration: none; border-right: 1px solid var(--line, #2b2532); } .ds-trail-stop:hover { color: var(--bone, #f4ece2); background: var(--ink-3, #16131b); } .ds-trail-stop:focus-visible { outline: 2px solid var(--focus, #93d9e3); outline-offset: 3px; } .ds-trail-stop::before { content: \"\"; position: absolute; inset: auto 0 -1px 0; height: 2px; background: transparent; } .ds-trail-stop[aria-current=\"true\"] { color: var(--bone, #f4ece2); } .ds-trail-stop[aria-current=\"true\"]::before { background: var(--mars, #d64a27); } .ds-trail-flag { flex: none; width: 0.75rem; height: 0.75rem; background: var(--line-2, #3b3344); clip-path: polygon(0 0, 100% 0, 100% 70%, 50% 100%, 0 70%); transform: translateY(-2px); } .ds-trail-stop[aria-current=\"true\"] .ds-trail-flag { background: var(--mars, #d64a27); } .ds-trail-no { font-family: \"Silkscreen\", ui-monospace, monospace; font-size: 0.6875rem; letter-spacing: 0.08em; color: var(--mars-hi, #ff8a5f); } .ds-trail-name { font-size: 0.875rem; font-weight: 500; white-space: nowrap; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Surface Traverse",
+    "overview": "The page is a planet you land on and a series of stages you clear. A pixel-art mascot stands on a stepped ridge; each capability is a numbered stage on a rail below the horizon. The interface is built from the same blocks the mascot is built from: flat plates, hard edges, and a 1px seam between every surface. Nothing floats. Nothing glows. Depth comes from the ground ladder — four near-black steps — and from the seam, not from shadow.\n\nThe palette is almost entirely absence: near-black grounds, bone type, dust secondary, and one rust accent that behaves like a light source without ever becoming one. Rust marks action and position — the primary plate, the active stage flag, the underline under the current stop, the small square before each meta fact, the stage numerals. It is never used as body text. A single cool cyan exists for one job only: the focus ring.\n\nTwo type voices carry the whole system. Anybody, a variable face run wide (108–118% width) and heavy (800–850) for headlines, speaks as the product. Silkscreen, a bitmap face, prints as the machine: stage numerals, OS tabs, commands, labels, spec figures, meta facts. The division is strict — if a human wrote the sentence, it is Anybody; if a machine would print it, it is Silkscreen or monospace.",
+    "keyCharacteristics": [
+      "Flat, bordered plates on a four-step near-black ground ladder; no shadow, blur, or glass anywhere.",
+      "Square corners on every surface; the only curves are in the mascot and the SVG ridge.",
+      "One rust accent, used as fill, flag, dot, and numeral — never as body text.",
+      "Stepped, hard-edged motion: clip wipes in steps() frames, not eased fades.",
+      "Body copy held to 62ch; headlines capped at 16–22ch so they break in short, blunt lines."
+    ],
+    "rules": [
+      {
+        "name": "The Rust Is a Verb Rule",
+        "body": "Rust appears as a fill, a flag, a dot, an underline, or a numeral — never as the color of a sentence. The stylesheet has no color: var(--mars); every rust-colored word is Rust Glow.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Cool Note Rule",
+        "body": "Cyan is the focus ring and nothing else. It never becomes a link color, a hover state, a chart accent, or a decorative highlight.",
+        "section": "colors"
+      },
+      {
+        "name": "The Ground Ladder Rule",
+        "body": "Depth steps one rung at a time: Ground Ink → Panel Ink → Bar Ink → Plate Ink. Never skip a rung, never invent a fifth near-black, never lighten a panel to make it pop — the 1px seam does that job.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Voices Rule",
+        "body": "Anybody speaks; Silkscreen prints. A sentence a human wrote is never set in Silkscreen, and a machine fact (a numeral, a command, an OS name, a file name) is never set in Anybody.",
+        "section": "typography"
+      },
+      {
+        "name": "The Width Is the Emphasis Rule",
+        "body": "Scale and width move together. Display is 850 weight at 118% width; headline is 800 at 112%; body is 400 at normal width. There is no italic anywhere in the system, and no weight below 400.",
+        "section": "typography"
+      },
+      {
+        "name": "The Measure Rule",
+        "body": "Prose stops at 62ch, the hero lede at 46ch, headlines at 16–22ch. Nothing on the page runs full-width as text.",
+        "section": "typography"
+      },
+      {
+        "name": "The Edge, Not the Lift Rule",
+        "body": "State is signalled by swapping fill or color — never by raising, blurring, or glowing an element. A hover changes background and text color; it does not add a shadow, a translate, or a scale.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Seam Rule",
+        "body": "Two surfaces touch through a 1px line, never through a gap, a shadow, or a radius. Adjacent cards are separated by a 1px grid gap filled with --line, so the seam is the gap.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Square Corner Rule",
+        "body": "Zero radius on every surface, control, and plate. A rounded corner is a different world.",
+        "section": "shapes"
+      },
+      {
+        "name": "The Pixelated Rule",
+        "body": "Any raster of the mascot or mark is scaled with image-rendering: pixelated. Never let a pixel asset interpolate.",
+        "section": "shapes"
+      },
+      {
+        "name": "The Steps Rule",
+        "body": "Entrances are clip wipes timed in steps() frames. No eased fades, no blur-ins, no parallax on content.",
+        "section": "components"
+      },
+      {
+        "name": "The Working Action Rule",
+        "body": "The primary action is shown as the real, copyable thing — a command in a bordered plate with a copy button — not as a button that leads to one.",
+        "section": "components"
+      }
+    ],
+    "dos": [
+      "keep every surface square and flat: 0 radius, 1px seams, and the ink ladder for depth.",
+      "use rust for action and position only — fills, flags, dots, underlines, numerals — and Rust Glow for any rust-colored word.",
+      "set machine facts (numerals, commands, OS names, file names, labels) in Silkscreen or monospace, and human sentences in Anybody.",
+      "gate every entrance on `prefers-reduced-motion: no-preference` and on the `js` class, so a no-JS or reduced-motion visitor sees the finished frame.",
+      "hold prose to 62ch and headlines to 16–22ch.",
+      "keep every action at least 2.75rem tall — the HUD plate and the quiet copy actions set `min-height: 2.75rem`; the primary and secondary buttons reach it through padding — and give each a visible `:focus-visible` ring in Focus Cyan.",
+      "let the mascot's feet meet the ridge line at every breakpoint; the ridge is the ground, not a decoration behind the copy."
+    ],
+    "donts": [
+      "Don't add a shadow, glow, blur, or backdrop-filter. There are none in the build and the world does not have a vocabulary for them.",
+      "Don't round a corner, on any element, for any reason.",
+      "Don't use a gradient as a surface fill, a text fill, or a control fill. Gradients exist only in the page ground vignette, the 1px star field, the horizon hairline, and the trail's scroll-edge mask.",
+      "Don't set body copy in rust. Mars Rust on Ground Ink is 4.60:1 — it is a mark color, not a reading color.",
+      "Don't use Focus Cyan for anything but the focus ring.",
+      "Don't introduce a second accent hue, a warm neutral, or a brand gradient.",
+      "Don't ease an entrance. Stepped frames only.",
+      "Don't put a kicker, eyebrow, or all-caps label above a headline — the stage numeral inside the heading is the only heading marker this world uses."
+    ]
+  }
+}
