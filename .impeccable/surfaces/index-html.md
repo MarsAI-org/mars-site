@@ -22,7 +22,9 @@ agents, and how to install it — in that order, within one viewport.
 ## Action and proof
 
 Primary action: the working install command, switchable between POSIX and
-Windows, with copy feedback. Secondary: GitHub Releases, npm, Bun, Nix, mise.
+Windows, pre-selected from the visitor's platform, with copy feedback and a line
+naming where the binary lands, whether elevation is needed, and a link to the
+script itself. Secondary: GitHub Releases, npm, Bun, Nix, mise.
 Proof is the real product: TUI captures from `mars-agent/assets/`, plus measured
 repository facts (75 providers, 36 built-in tools, ~240k Rust lines, 12 crates,
 6 release targets, MIT). No customer logos or benchmarks exist; do not invent.
