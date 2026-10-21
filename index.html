@@ -503,6 +503,23 @@
     .copy[data-state="copied"] { color: #8ee08e; background: #16201a; }
     .copy[data-state="failed"] { color: #ff9d9d; background: #241417; }
 
+    /* What the command does before anyone runs it. This sits closer to the
+       plate than the meta facts below it, because it answers the question the
+       action raises rather than adding a fifth fact about the product. */
+    .installer-note {
+      margin-top: 0.6rem;
+      max-width: 40rem;
+      color: var(--dust);
+      font-size: 0.8125rem;
+      line-height: 1.5;
+    }
+    .installer-note a {
+      color: var(--bone);
+      text-decoration-color: var(--line-2);
+      white-space: nowrap;
+    }
+    .installer-note a:hover { color: var(--mars-hi); }
+
     /* On the narrowest phones the copy button moves under the command so the
        URL keeps its own line and never breaks mid-token. */
     @media (max-width: 30rem) {
@@ -1187,6 +1204,11 @@
             </div>
           </div>
 
+          <p class="installer-note">
+            Installs to <code id="note-path">~/.local/bin</code>, <span id="note-priv">no sudo</span> · Verifies
+            the release checksum · <a id="install-script" href="https://github.com/MarsAI-org/mars-site/blob/main/install" target="_blank" rel="noopener">View install script</a>
+          </p>
+
           <ul class="hero-meta">
             <li>MIT licensed</li>
             <li>75 model providers</li>
@@ -1498,7 +1520,22 @@
       var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
       if (!tabs.length) return;
       var fileLabel = document.getElementById("installer-file");
+      var scriptLink = document.getElementById("install-script");
+      var notePath = document.getElementById("note-path");
+      var notePriv = document.getElementById("note-priv");
       var names = { "tab-posix": "install.sh", "tab-win": "install.ps1" };
+      var notes = {
+        "tab-posix": {
+          file: "install",
+          path: "~/.local/bin",
+          priv: "no sudo"
+        },
+        "tab-win": {
+          file: "install.ps1",
+          path: "%LOCALAPPDATA%\\mars",
+          priv: "no admin"
+        }
+      };
 
       function select(tab, focus) {
         tabs.forEach(function (t) {
@@ -1509,6 +1546,17 @@
           if (panel) panel.hidden = !on;
         });
         if (fileLabel && names[tab.id]) fileLabel.textContent = names[tab.id];
+        var note = notes[tab.id];
+        if (note) {
+          if (scriptLink) {
+            scriptLink.setAttribute(
+              "href",
+              "https://github.com/MarsAI-org/mars-site/blob/main/" + note.file
+            );
+          }
+          if (notePath) notePath.textContent = note.path;
+          if (notePriv) notePriv.textContent = note.priv;
+        }
         if (focus) tab.focus();
       }
 
@@ -1524,6 +1572,20 @@
           if (next) { event.preventDefault(); select(next, true); }
         });
       });
+
+      /* Open the tab the visitor can actually run. Everything that is not
+         Windows takes the POSIX script: macOS, Linux, ChromeOS, and the
+         Android or iOS visitor reading the command for later. This runs once,
+         after the markup is parsed and before the visitor can choose, so a
+         click never races it. */
+      function platform() {
+        var ua = navigator.userAgent || "";
+        var name = navigator.userAgentData && navigator.userAgentData.platform || navigator.platform || "";
+        return /Win/i.test(name) || /Windows/i.test(ua) ? "tab-win" : "tab-posix";
+      }
+
+      var autoTab = document.getElementById(platform());
+      if (autoTab) select(autoTab, false);
     })();
 
     /* ── Copy: the page's working action ───────────────────────── */

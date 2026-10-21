@@ -236,10 +236,11 @@ The stage trail below the hero is a second navigation: a horizontal rail on `--i
 ### Installer Panel (signature)
 The page's working action, shown in its working form rather than described.
 - **Frame:** 1px `--line-2`, `--ink-2` body, `--ink-3` head bar with a 1px bottom seam. In the install band the same plate sits on `--ink` with 0.4rem of padding, so the frame reads as an inset panel.
-- **Head:** OS tabs in Silkscreen 0.6875rem uppercase — selected tab takes `--ink-4` fill and a `--line-2` border, unselected is dust on transparent. A filename label (`install.sh` / `install.ps1`) sits right-aligned in monospace and swaps with the tab.
+- **Head:** OS tabs in Silkscreen 0.6875rem uppercase — selected tab takes `--ink-4` fill and a `--line-2` border, unselected is dust on transparent. A filename label (`install.sh` / `install.ps1`) sits right-aligned in monospace and swaps with the tab. On load the tab matching the visitor's platform is selected: Windows takes `install.ps1`, everything else including a phone takes `install.sh`, since the platform is the only signal available and it is quickly correctable.
 - **Body:** a `$` or `>` sigil in Rust Glow, then the command in monospace bone. The copy action is a `--ink-4` plate separated by a 1px left seam, Silkscreen uppercase, with a 16px inline copy icon.
+- **Note:** every tab carries one line of Anybody 0.8125rem dust below the plate, held to the plate's own 40rem and closer to the action than the meta facts that follow it: where the binary lands, whether the install needs elevation, and a bone link to the script on GitHub. The path, the privilege phrase, and the link target swap with the tab — `~/.local/bin`, `no sudo`, `install`, or `%LOCALAPPDATA%\mars`, `no admin`, `install.ps1`. The line is the product's own claim, not decoration: nothing here explains what a command already says.
 - **States:** the copy button swaps to "Copied" (`#8ee08e` on `#16201a`) or "Copy failed" (`#ff9d9d` on `#241417`), resets after 1.8s, and updates its `aria-label` to match the visible label. A successful copy also triggers the mascot's hop.
-- **Narrow behavior:** below 30rem the copy plate moves under the command, the filename is dropped, and the command keeps `overflow-wrap: normal` so a URL never breaks mid-token.
+- **Narrow behavior:** below 30rem the copy plate moves under the command, the filename is dropped, and the command keeps `overflow-wrap: normal` so a URL never breaks mid-token. The note wraps to two lines and the script link keeps `white-space: nowrap`, so it never breaks inside the link text.
 
 ### Alternative Install Cards
 - **Style:** 1px `--line` border, `--ink` body, Silkscreen heading in dust, command in monospace bone.
