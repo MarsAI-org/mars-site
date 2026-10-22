@@ -256,6 +256,9 @@ A bordered `--ink-2` figure holding a real product capture: 1px `--line-2` frame
 ### Stage Numeral
 A 0.75rem Silkscreen numeral in Rust Glow, floated left inside each stage `h2` with `0.35rem 0.85rem 0 0` of margin, so the heading text wraps around it. It is `aria-hidden`; a visually hidden `Stage 01:` prefix inside the same heading carries the number for assistive technology.
 
+### Closing Block
+The last section repeats the working action rather than linking back up to it. A display-size headline at 116% width sits above an installer plate — same frame, sigil, command, and copy action as the hero, one command wide at 40rem — followed by a row of secondary buttons: Download binary, View source, View on npm. The plate mirrors the selected OS tab, so a reader who switched to Windows in the hero finds `install.ps1` waiting here instead of a POSIX command they cannot run. The primary plate is the command itself; there is no separate primary button, because a button that only scrolls to another button is the thing this block exists to remove.
+
 ### Motion
 Entrances are hard-edged, stepped, and short. The hero headline wipes in with a `steps(7)` clip, the ridge draws itself with `steps(8)`, and the mascot falls and lands with `steps(4)` — all gated on `prefers-reduced-motion: no-preference` and on a `js` class set by the inline script. Capture plates use a separate, slower clip wipe (760ms) so the two effects never read as one. The mascot idles on a 3.2s `steps(2)` two-frame bob. Under reduced motion every animation and transition is cut to 0.001ms and smooth scrolling is turned off.
 
