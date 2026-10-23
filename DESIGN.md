@@ -24,7 +24,7 @@ typography:
     fontSize: "clamp(2rem, 1.3rem + 3.2vw, 4rem)"
     fontWeight: 700
     lineHeight: 0.96
-    letterSpacing: "-0.045em"
+    letterSpacing: "-0.03em"
   lead:
     fontFamily: "Pilcrow Rounded, ui-sans-serif, system-ui, sans-serif"
     fontSize: "clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem)"
@@ -165,8 +165,8 @@ is the voice; monospace is the machine's own output.
 ### Hierarchy
 - **Display** (700, `clamp(2.75rem, 1.2rem + 5.4vw, 5.5rem)`, 0.96, -0.045em):
   the hero only, capped at 15ch, dropping to 12ch and a smaller step below 24rem.
-- **Heading** (700, `clamp(2rem, 1.3rem + 3.2vw, 4rem)`, capped at 18ch): section
-  headings.
+- **Heading** (700, `clamp(2rem, 1.3rem + 3.2vw, 4rem)`, -0.03em, capped at 18ch):
+  section headings.
 - **Lead** (400, `clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem)`): the hero lede and
   the stage clause.
 - **Body** (400, `clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem)`): running text,
