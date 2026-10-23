@@ -780,7 +780,7 @@
 
             <p class="plate-note">
               <span>Installs to <code id="note-path">~/.local/bin</code>, <span id="note-priv">no sudo</span></span>
-              <span>Checksum verified</span>
+              <span>Checksum when released</span>
               <a id="script-link" href="https://github.com/MarsAI-org/mars-site/blob/main/install" target="_blank" rel="noopener">Read the script</a>
             </p>
           </div>
@@ -962,6 +962,8 @@
           var i = tabs.indexOf(tab), next = null;
           if (e.key === "ArrowRight") next = tabs[(i + 1) % tabs.length];
           if (e.key === "ArrowLeft") next = tabs[(i - 1 + tabs.length) % tabs.length];
+          if (e.key === "Home") next = tabs[0];
+          if (e.key === "End") next = tabs[tabs.length - 1];
           if (next) { e.preventDefault(); select(next, true); }
         });
       });
