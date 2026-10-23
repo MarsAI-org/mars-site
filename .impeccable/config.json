@@ -1,0 +1,29 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "design-system-font",
+        "value": "jost",
+        "createdAt": "2026-10-23T04:23:07.632Z",
+        "reason": "Decided by the dealt design-taste direction sheet (type system bodoni-jost), adopted for the redesign"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "bodoni moda",
+        "createdAt": "2026-10-23T04:23:07.641Z",
+        "reason": "Decided by the dealt design-taste direction sheet (type system bodoni-jost), adopted for the redesign"
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-10-23T04:23:34.952Z",
+        "reason": "Measured inner padding 40-64px on the guest card, 176px inset in features, 144px in cta at 1440px; detector reads the section box not its inner grid"
+      }
+    ]
+  }
+}
