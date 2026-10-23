@@ -109,7 +109,7 @@ A print palette of three functional inks and two stock tones.
 - **Hard Rule** (`#a9a294`): the title-block divider and bounding rules.
 
 ### Named Rules
-**The Red Is a Mark Rule.** Stamp red is a mark, a tick, a stamp, or an armed state. It never sets a sentence.
+**The Red Is a Mark Rule.** Stamp red is a mark, a tick, a stamp, or a passed flag. It never sets a sentence.
 
 **The No-Shadow Rule.** Depth is created through hairline rules and tone steps between reference stock and sheet plates. Surfaces are flat; no shadows exist.
 
@@ -158,7 +158,7 @@ Shapes are strictly rectangular with zero radius (`0px`), echoing the cut of pap
 A 2px carbon-bordered plate in Sheet Plate (`#faf8f3`). The top bar holds the OS tablist and filename; the body holds the command with a red prompt sigil (`$`, `>`) and the stamp-red `COPY` button. Below, a ruled note details installation path, privilege requirements, and script links.
 
 ### Flag Switch
-A man-page option row (`--lsp`, `--inprocess`) featuring a square two-state marker (`[■]` armed, `[ ]` cleared) that is a full 44px hit target. Toggling arms the flag and smoothly opens the consequence explanation below it.
+A man-page option row (`--prewalk`, `--no-lsp`) featuring a square two-state marker (`[■]` passed, `[ ]` cleared) that is a full 44px hit target. Toggling marks the flag and smoothly opens the consequence explanation below it.
 
 ### Example Ruler
 A range input styled as a mechanical measuring ruler with alternating millimeter-scale tick marks and a sliding stamp-red vernier thumb. Stepping through stops switches the figure capture and descriptive prose.
@@ -180,7 +180,7 @@ Motion is minimal and physical, like paper being printed:
 - Preserve the man-page section ladder: `NAME`, `SYNOPSIS`, `DESCRIPTION`, `PARAMETERS`, `FLAGS`, `FILES`, `EXAMPLES`.
 - Keep every interactive target at least 44px tall.
 - Set machine facts and literal syntax in monospace; set running text in Archivo.
-- Use stamp red (`#bf2f1c`) only for the stamp, ticks, sigils, and armed states.
+- Use stamp red (`#bf2f1c`) only for the stamp, ticks, sigils, and passed flags.
 - Pre-compose or bake textures so contrast ratios stay ≥ 5.0:1 everywhere.
 
 ### Don't

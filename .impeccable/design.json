@@ -165,7 +165,7 @@
       {
         "name": "flag-reveal",
         "value": "grid-template-rows 0fr to 1fr over 220ms",
-        "purpose": "Consequence lines open smoothly beneath armed flags."
+        "purpose": "Consequence lines open smoothly beneath passed flags."
       }
     ],
     "breakpoints": [
@@ -223,7 +223,7 @@
       },
       {
         "name": "The Red Is a Mark Rule",
-        "body": "Stamp red is a mark, a tick, a stamp, or an armed state. It never sets a sentence.",
+        "body": "Stamp red is a mark, a tick, a stamp, or an passed flag. It never sets a sentence.",
         "section": "colors"
       },
       {
@@ -240,7 +240,7 @@
     "dos": [
       "Set machine literals in monospace.",
       "Keep the section ladder intact: LABEL on the rail, content in the body.",
-      "Use stamp red (#bf2f1c) only for stamps, rules, ticks, armed indicators, and the primary action.",
+      "Use stamp red (#bf2f1c) only for stamps, rules, ticks, passed flags, and the primary action.",
       "Keep all interactive targets at least 44px tall.",
       "Preserve the paper-grain tile as the tactile ground."
     ],
