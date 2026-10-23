@@ -49,6 +49,15 @@
         ],
         "createdAt": "2026-10-23T10:43:29.750Z",
         "reason": "Paper tone is the roll-assigned world (man page printed on uncoated reference stock, seed 482115d03558fcc2), recorded in the direction contract; not a reflex default."
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "*getmars.eu.cc*"
+        ],
+        "createdAt": "2026-10-23T11:25:42.560Z",
+        "reason": "Live URL detection of the same sanctioned paper stock recorded in .impeccable/config.json for index.html; the world is roll-assigned, not a reflex default."
       }
     ]
   }
