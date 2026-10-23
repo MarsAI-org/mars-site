@@ -1,399 +1,254 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-23T07:47:19Z",
-  "title": "Design System: Mars",
+  "generatedAt": "2026-10-23T10:25:34Z",
+  "title": "Design System: Mars (Reference Sheet)",
   "extensions": {
     "colorMeta": {
-      "accent": {
+      "stamp": {
         "role": "primary",
-        "displayName": "Rust",
-        "canonical": "oklch(0.664 0.188 38.0)",
-        "purpose": "The one light: the orb disc, primary buttons, the sigil, the slider thumb, the on-switch band.",
+        "displayName": "Stamp Red",
+        "canonical": "oklch(0.531 0.183 31.0)",
+        "purpose": "The page's one accent: the rubber stamp, the prompt sigil, active markers, the section ticks.",
         "tonalRamp": [
           "#3c0000",
           "#5e0000",
-          "#810000",
-          "#a30700",
-          "#c63800",
-          "#ea5a2a",
-          "#ff7b4d",
-          "#ff9c6d",
-          "#ffbd8e"
-        ]
-      },
-      "accent-hover": {
-        "role": "primary",
-        "displayName": "Rust Hover",
-        "canonical": "oklch(0.728 0.173 38.4)",
-        "purpose": "The same light raised, on hover only.",
-        "tonalRamp": [
-          "#390000",
-          "#5a0000",
-          "#7c0000",
-          "#9e1c00",
-          "#c0400c",
-          "#e36136",
-          "#ff8156",
-          "#ffa276",
-          "#ffc396"
-        ]
-      },
-      "accent-ink": {
-        "role": "neutral",
-        "displayName": "Deep Ink",
-        "canonical": "oklch(0.151 0.025 4.4)",
-        "purpose": "Text and focus rings on rust fills; the knob dot when a row is on.",
-        "tonalRamp": [
-          "#14070a",
-          "#2c1d20",
-          "#463539",
-          "#625053",
-          "#7f6c70",
-          "#9d898d",
-          "#bda8ac",
-          "#ddc7cc",
-          "#fee8ec"
-        ]
-      },
-      "bg": {
-        "role": "neutral",
-        "displayName": "Void",
-        "canonical": "oklch(0.138 0.021 300.1)",
-        "purpose": "The ground, behind everything including the star layer.",
-        "tonalRamp": [
-          "#0c0913",
-          "#231f2a",
-          "#3c3844",
-          "#57535f",
-          "#736f7c",
-          "#918d9a",
-          "#b0abb9",
-          "#d0cbda",
-          "#f0ecfb"
-        ]
-      },
-      "surface": {
-        "role": "neutral",
-        "displayName": "Slab",
-        "canonical": "oklch(0.190 0.031 305.0)",
-        "purpose": "Plates, tiles, switch rows, the stage frame.",
-        "tonalRamp": [
-          "#0e0816",
-          "#251e2e",
-          "#3e3748",
-          "#595164",
-          "#766d81",
-          "#938b9f",
-          "#b2a9be",
-          "#d2c9df",
-          "#f3eaff"
-        ]
-      },
-      "surface-2": {
-        "role": "neutral",
-        "displayName": "Slab Deep",
-        "canonical": "oklch(0.228 0.051 302.1)",
-        "purpose": "Inset wells, the range track, the failed copy fill.",
-        "tonalRamp": [
-          "#0f051c",
-          "#261b36",
-          "#3f3451",
-          "#5a4f6d",
-          "#776b8b",
-          "#9588a9",
-          "#b4a7c9",
-          "#d4c7ea",
-          "#f4e7ff"
+          "#800000",
+          "#a30500",
+          "#c63623",
+          "#e95943",
+          "#ff7962",
+          "#ff9a81",
+          "#ffbca1"
         ]
       },
       "ink": {
         "role": "neutral",
-        "displayName": "Bone",
-        "canonical": "oklch(0.950 0.014 314.8)",
-        "purpose": "Headings, body, and any text on the ground.",
+        "displayName": "Carbon Ink",
+        "canonical": "oklch(0.180 0.004 48.5)",
+        "purpose": "Headings, borders, literal tokens, and primary buttons on hover.",
         "tonalRamp": [
-          "#0d090f",
-          "#242026",
-          "#3d383f",
-          "#58535b",
-          "#756f77",
-          "#928d95",
-          "#b1abb4",
-          "#d1cbd4",
-          "#f2ecf5"
+          "#0d0b0a",
+          "#232120",
+          "#3c3a39",
+          "#575553",
+          "#737170",
+          "#918e8d",
+          "#b0adac",
+          "#d0cdcb",
+          "#f1eeec"
         ]
       },
-      "muted": {
+      "soft": {
         "role": "neutral",
-        "displayName": "Dust",
-        "canonical": "oklch(0.716 0.046 307.7)",
-        "purpose": "Secondary notes and resting switch sentences.",
+        "displayName": "Soft Carbon",
+        "canonical": "oklch(0.436 0.013 63.1)",
+        "purpose": "Secondary gloss, meta descriptions, and consequence lines.",
         "tonalRamp": [
-          "#10051a",
-          "#281b33",
-          "#41344d",
-          "#5c4f69",
-          "#796b87",
-          "#9788a5",
-          "#b6a7c5",
-          "#d6c6e6",
-          "#f7e7ff"
+          "#0f0a06",
+          "#26201b",
+          "#403933",
+          "#5b544e",
+          "#77706a",
+          "#958e87",
+          "#b4aca5",
+          "#d4ccc5",
+          "#f5ede5"
         ]
       },
-      "ok": {
-        "role": "tertiary",
-        "displayName": "Copied",
-        "canonical": "oklch(0.902 0.091 148.0)",
-        "purpose": "The copy button's success fill only.",
-        "tonalRamp": [
-          "#001300",
-          "#002c03",
-          "#0d471d",
-          "#2d6337",
-          "#4a8053",
-          "#689f6f",
-          "#86be8d",
-          "#a5dfac",
-          "#c5ffcc"
-        ]
-      },
-      "ok-ink": {
+      "paper": {
         "role": "neutral",
-        "displayName": "Copied Ink",
-        "canonical": "oklch(0.211 0.026 149.0)",
-        "purpose": "Text on the copied fill.",
+        "displayName": "Reference Stock",
+        "canonical": "oklch(0.952 0.011 89.7)",
+        "purpose": "The uncoated ground, behind everything.",
         "tonalRamp": [
-          "#040e06",
-          "#19251b",
-          "#313e33",
-          "#4c5a4d",
-          "#677669",
-          "#859487",
-          "#a3b3a5",
-          "#c3d3c5",
-          "#e3f4e5"
+          "#0d0b06",
+          "#24211c",
+          "#3d3a34",
+          "#58554e",
+          "#74716a",
+          "#928f88",
+          "#b1aea6",
+          "#d0cec6",
+          "#f1eee6"
+        ]
+      },
+      "paper-2": {
+        "role": "neutral",
+        "displayName": "Sheet Plate",
+        "canonical": "oklch(0.979 0.007 88.6)",
+        "purpose": "The installer plate and capture backings.",
+        "tonalRamp": [
+          "#0c0b08",
+          "#23211e",
+          "#3c3a36",
+          "#575551",
+          "#73716d",
+          "#918f8a",
+          "#b0aea9",
+          "#cfcdc9",
+          "#f0eee9"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Hairline Rule",
+        "canonical": "oklch(0.818 0.019 86.2)",
+        "purpose": "Horizontal and vertical section dividers.",
+        "tonalRamp": [
+          "#0f0b03",
+          "#262117",
+          "#3f3a2f",
+          "#5a5549",
+          "#767165",
+          "#948f82",
+          "#b3ada1",
+          "#d3cdc0",
+          "#f4eee0"
+        ]
+      },
+      "rule-hard": {
+        "role": "neutral",
+        "displayName": "Hard Rule",
+        "canonical": "oklch(0.714 0.021 84.6)",
+        "purpose": "Primary bounding rules and the title block split.",
+        "tonalRamp": [
+          "#0f0a03",
+          "#262116",
+          "#403a2e",
+          "#5b5548",
+          "#777164",
+          "#958e81",
+          "#b4ad9f",
+          "#d4cdbe",
+          "#f5eedf"
         ]
       }
     },
     "typographyMeta": {
       "display": {
         "displayName": "Display",
-        "purpose": "The hero only, capped at 15ch."
+        "purpose": "Hero title only. Archivo 800 at 62% width."
       },
       "heading": {
         "displayName": "Heading",
-        "purpose": "Section headings, capped at 18ch; the wide tile carries this step too."
+        "purpose": "Section labels in the ladder. Archivo 700 at 100% width, uppercase."
       },
       "lead": {
         "displayName": "Lead",
-        "purpose": "The hero lede, the stage clause and the close sentence."
+        "purpose": "The definition line and the close sentence."
       },
       "body": {
         "displayName": "Body",
-        "purpose": "Running text, held to 62ch."
+        "purpose": "Running prose and parameter glosses."
       },
       "small": {
         "displayName": "Small",
-        "purpose": "Notes, plate meta, stops. Never below 16px."
-      },
-      "wordmark": {
-        "displayName": "Wordmark",
-        "purpose": "The wordmark in the bar, nothing else."
-      },
-      "statement": {
-        "displayName": "Statement",
-        "purpose": "The switch sentences."
-      },
-      "display-narrow": {
-        "displayName": "Display-Narrow",
-        "purpose": "The hero headline below 24rem, so it holds two lines."
+        "purpose": "Meta facts, section ticks, plate notes, colophon."
       },
       "code": {
         "displayName": "Code",
-        "purpose": "Literal commands only, never prose."
+        "purpose": "Literal commands and flag names."
       }
     },
     "shadows": [],
     "motion": [
       {
-        "name": "ease-out-expo",
-        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
-        "purpose": "The shutter wipe, the settle, the staggered entrances, the stage lean."
+        "name": "stamp-land",
+        "value": "opacity 0 to 1, scale 1.5 to 1, rotate -2deg to -8deg over 520ms",
+        "purpose": "The rubber stamp hits the sheet on entry."
       },
       {
-        "name": "shutter",
-        "value": "clip-path inset(0 100% 0 0) to inset(0 0 0 0) over 1.05s",
-        "purpose": "The one authored moment: the orb opens and the headline wipes in behind it."
+        "name": "rule-wipe",
+        "value": "clip-path inset(0 100% 0 0) to inset(0 0 0 0) over 620ms",
+        "purpose": "The title block rule draws across the sheet."
       },
       {
-        "name": "settle",
-        "value": "scale 1.14 to 1 over 1.05s",
-        "purpose": "The photograph inside the orb comes to rest as the wipe clears."
-      },
-      {
-        "name": "drift",
-        "value": "translate 3% to -3% over 90s",
-        "purpose": "The star field breathes; nothing else is infinite."
-      },
-      {
-        "name": "reduced",
-        "value": "animation none; transition-duration 0.01ms",
-        "purpose": "Reduced motion keeps every element visible and in place."
+        "name": "flag-reveal",
+        "value": "grid-template-rows 0fr to 1fr over 220ms",
+        "purpose": "Consequence lines open smoothly beneath armed flags."
       }
     ],
     "breakpoints": [
       {
-        "name": "narrow-headline",
-        "value": "24rem",
-        "purpose": "The display drops to its narrow step and 12ch so it holds two lines."
+        "name": "stack-ladder",
+        "value": "48rem",
+        "purpose": "The section label moves from a left rail to above the section body; the stamp shifts below the title block."
       },
       {
-        "name": "nav-collapse",
-        "value": "46rem",
-        "purpose": "Section links leave the bar; the Install link stays."
-      },
-      {
-        "name": "copy-on-orb",
-        "value": "50rem",
-        "purpose": "The hero stacks, the copy takes the full gutter on the orb, the stage stacks with its picture first."
-      },
-      {
-        "name": "board-two",
-        "value": "52rem",
-        "purpose": "The tile board halves to two columns."
-      },
-      {
-        "name": "close-stack",
-        "value": "62rem",
-        "purpose": "The closing sentence and note stack."
+        "name": "mobile-plate",
+        "value": "30rem",
+        "purpose": "The command plate wraps its copy button beneath the code; parameter grid stacks to 2 columns."
       }
     ]
   },
   "components": [
     {
-      "name": "Primary Button",
-      "kind": "button",
-      "refersTo": "button-primary",
-      "description": "The install copy control and the closing word. Rust fill, deep ink label.",
-      "html": "<button class=\"ds-copy\" type=\"button\">Copy</button>",
-      "css": ".ds-copy{font:inherit;font-size:1rem;font-weight:700;background:#ef5f2f;color:#14070a;border:0;border-radius:999px;padding:.55rem 1.05rem;min-height:2.75rem;cursor:pointer;transition:background 160ms,color 160ms}.ds-copy:hover{background:#ff7a4f}.ds-copy:focus-visible{outline:2px solid #14070a;outline-offset:3px}.ds-copy:active{scale:.97}"
-    },
-    {
-      "name": "Copied State",
-      "kind": "button",
-      "refersTo": "button-primary",
-      "description": "The same control for 2.4s after a successful copy, with a live status line under the plate.",
-      "html": "<button class=\"ds-copy ds-copy--ok\" type=\"button\">Copied</button>",
-      "css": ".ds-copy--ok{font:inherit;font-size:1rem;font-weight:700;background:#b6f0bd;color:#101c12;border:0;border-radius:999px;padding:.55rem 1.05rem;min-height:2.75rem}"
-    },
-    {
       "name": "Install Plate",
       "kind": "card",
-      "refersTo": "surface-plate",
-      "description": "Slab plate holding the OS tabs, the command pill and the plate note.",
-      "html": "<div class=\"ds-plate\"><div class=\"ds-plate__body\"><span class=\"ds-sigil\">$</span><code>curl -fsSL https://getmars.eu.cc/install | sh</code><button class=\"ds-copy\" type=\"button\">Copy</button></div></div>",
-      "css": ".ds-plate{background:#17101f;border-radius:1.35rem;padding:.75rem;max-width:37rem}.ds-plate__body{display:flex;align-items:center;gap:.65rem;background:#0a0710;border-radius:999px;padding:.5rem .5rem .5rem 1.35rem}.ds-plate code{flex:1 1 auto;min-width:0;overflow-x:auto;white-space:nowrap;font:1rem ui-monospace,Menlo,monospace;color:#f2ecf5}.ds-sigil{color:#ef5f2f;margin-right:.45rem;user-select:none}.ds-copy{flex:0 0 auto;font:inherit;font-weight:700;background:#ef5f2f;color:#14070a;border:0;border-radius:999px;padding:.55rem 1.05rem;min-height:2.75rem;cursor:pointer}.ds-copy:hover{background:#ff7a4f}"
+      "refersTo": "install-plate",
+      "description": "A framed sheet plate with OS tabs, the copyable command, and a provenance note.",
+      "html": "<div class=\"ds-plate\"><div class=\"ds-plate-head\"><span>macOS &amp; Linux</span><span>install.sh</span></div><div class=\"ds-cmd\"><code>$ curl -fsSL https://getmars.eu.cc/install | sh</code><button class=\"ds-copy\">Copy</button></div></div>",
+      "css": ".ds-plate{border:2px solid #131110;background:#faf8f3;max-width:38rem}.ds-plate-head{display:flex;justify-content:space-between;border-bottom:1px solid #131110;font:700 .8125rem ui-monospace,monospace;letter-spacing:.14em;text-transform:uppercase;padding:.7rem 1rem}.ds-cmd{display:flex;align-items:center;gap:.9rem;padding:.85rem 1rem}.ds-cmd code{flex:1;font:400 1rem ui-monospace,monospace;color:#131110}.ds-copy{font:700 .8125rem ui-monospace,monospace;letter-spacing:.14em;text-transform:uppercase;background:#bf2f1c;color:#f2efe7;border:0;padding:.7rem 1.15rem;min-height:2.75rem;cursor:pointer}.ds-copy:hover{background:#131110}"
     },
     {
-      "name": "Switch Row",
+      "name": "Flag Switch",
       "kind": "custom",
-      "description": "A full-width slab row with a consequence sentence and a real 44px switch. On, the row floods rust.",
-      "html": "<div class=\"ds-sw ds-sw--on\"><p class=\"ds-sw__text\">Renames go through the language server</p><button class=\"ds-knob\" role=\"switch\" aria-checked=\"true\" aria-label=\"Rename through the language server\"></button></div>",
-      "css": ".ds-sw{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:1.5rem;padding:1.6rem 1.4rem;border-radius:1.35rem;background:#17101f}.ds-sw__text{font-size:1.5rem;font-weight:500;letter-spacing:-.02em;color:#ab9cba;margin:0}.ds-sw--on{background:#ef5f2f}.ds-sw--on .ds-sw__text{color:#14070a}.ds-knob{position:relative;width:3.9rem;height:2.75rem;padding:0;border:0;border-radius:999px;background:#211630;cursor:pointer}.ds-knob::after{content:\"\";position:absolute;top:.5rem;left:.3rem;width:1.75rem;height:1.75rem;border-radius:50%;background:#ab9cba;transition:translate 220ms cubic-bezier(.2,.9,.25,1)}.ds-knob[aria-checked=\"true\"]{background:rgb(20 7 10 / .22)}.ds-knob[aria-checked=\"true\"]::after{translate:1.85rem 0;background:#14070a}.ds-knob:focus-visible{outline:2px solid #14070a;outline-offset:3px}"
+      "description": "A two-state square switch that arms a flag and prints the consequence under it.",
+      "html": "<button class=\"ds-switch\" role=\"switch\" aria-checked=\"true\"><span></span>ON</button>",
+      "css": ".ds-switch{display:inline-flex;align-items:center;gap:.5rem;background:transparent;border:1px solid #bf2f1c;padding:0 .6rem;min-height:2.75rem;min-width:7.5rem;font:700 .8125rem ui-monospace,monospace;letter-spacing:.12em;text-transform:uppercase;color:#131110;cursor:pointer}.ds-switch span{width:.6rem;height:.6rem;background:#bf2f1c;display:inline-block}"
     },
     {
-      "name": "Provider Tile",
-      "kind": "card",
-      "description": "A slab tile on the board, one provider name, 3:2. The first tile spans two columns in rust and carries the heading.",
-      "html": "<div class=\"ds-tile\">Anthropic</div>",
-      "css": ".ds-tile{aspect-ratio:3/2;border-radius:1.35rem;background:#17101f;color:#f2ecf5;display:flex;align-items:flex-start;padding:1.2rem;font-weight:500;font-size:1.05rem;letter-spacing:-.02em;transition:background 200ms}.ds-tile:hover{background:#211630}"
-    },
-    {
-      "name": "Stage Slider",
+      "name": "Example Ruler",
       "kind": "input",
-      "description": "A real range input with a rust circular thumb. It swaps the clause, the stop highlight and the visible capture.",
-      "html": "<input class=\"ds-range\" type=\"range\" min=\"0\" max=\"3\" step=\"1\" value=\"0\" aria-label=\"Stage\">",
-      "css": ".ds-range{width:100%;appearance:none;background:transparent;height:2.75rem;cursor:grab}.ds-range::-webkit-slider-runnable-track{height:.5rem;border-radius:999px;background:#211630}.ds-range::-moz-range-track{height:.5rem;border-radius:999px;background:#211630}.ds-range::-webkit-slider-thumb{appearance:none;width:2rem;height:2rem;margin-top:-1.02rem;border-radius:50%;background:#ef5f2f;border:0}.ds-range::-moz-range-thumb{width:2rem;height:2rem;border-radius:50%;background:#ef5f2f;border:0}.ds-range:focus-visible{outline:2px solid #f2ecf5;outline-offset:3px}"
-    },
-    {
-      "name": "Repo Blank",
-      "kind": "input",
-      "description": "The inline text field in the closing sentence; it rewrites the copied command as it is typed.",
-      "html": "<input class=\"ds-blank\" type=\"text\" placeholder=\"a repo\" aria-label=\"Repository to work on\">",
-      "css": ".ds-blank{font:inherit;letter-spacing:inherit;width:7.5em;max-width:100%;color:#f2ecf5;background:#211630;border:0;border-radius:999px;padding:.06em .42em;margin-inline:.08em;min-height:2.2em}.ds-blank::placeholder{color:#ab9cba}.ds-blank:focus-visible{outline:2px solid #f2ecf5;outline-offset:3px}"
+      "description": "A range input styled as a technical measuring ruler with numbered millimeter ticks.",
+      "html": "<input class=\"ds-ruler\" type=\"range\" min=\"0\" max=\"3\" step=\"1\" value=\"0\">",
+      "css": ".ds-ruler{width:100%;appearance:none;background:transparent;height:2.75rem;cursor:ew-resize}.ds-ruler::-webkit-slider-runnable-track{height:1.4rem;background:repeating-linear-gradient(90deg,#131110 0 1px,transparent 1px 12.5%);border-bottom:1px solid #131110}.ds-ruler::-webkit-slider-thumb{appearance:none;width:1.1rem;height:1.75rem;background:#bf2f1c;border:0}"
     }
   ],
   "narrative": {
-    "northStar": "The Planet Is the Motif",
-    "overview": "Mars is a planet, so a circle runs the entire page. It appears at three wildly different scales and never in another shape: a 128vh orb cropped by three viewport edges behind the hero, the round press of every button and plate, the circular frame the stage captures sit in, the star dots in the field, and the knob on every switch. One geometry, committed, is the whole system. Sections are plain single or two-column layouts precisely so the circle is the only thing with character. The world is deep space: near-black ground with stars, rust as the one warm light. The field is a drawn layer at 50% opacity, it drifts over ninety seconds, and the orb carries the single photograph the page needs: NASA JPL-Caltech PIA17947, Mount Sharp on the Martian horizon, multiplied into the rust with the ground veil baked in so bone type clears AA over it.",
+    "northStar": "mars(1), Set and Printed",
+    "overview": "The page is the product's own man page, printed on uncoated reference stock. It refuses the category's dark terminal-and-neon hero and equal-card grid; it makes the manual the marketing. The world is a technical reference sheet: ivory paper with faint horizontal laid lines, dense carbon ink, red rules and markers, and a rubber stamp that signs the issue. One variable family, Archivo, carries the whole hierarchy through width rather than font mixing: compressed heavy caps for the display and section ladder, normal-width roman for reading, monospace only for machine literals. No cards, no shadows, no rounded corners, no glow.",
     "keyCharacteristics": [
-      "One motif, the circle, at hero, component and texture scale. No second shape.",
-      "Rust on near-black, and nothing else: no second hue, no gradient fill, no shadow.",
-      "Soft, fully rounded controls against a hard photographic orb.",
-      "Motion is the page's voice: a clip-wipe entrance, staggered children, a scroll-driven drift and lean, a live switch, and a slider that redraws the section. Every one has a reduced-motion path that leaves the content complete."
+      "The man-page ladder as the page's spine: an indented label rail on the left with red tick markers.",
+      "Uncoated reference stock with carbon ink and rubber-stamp red as the only accent.",
+      "One variable family, Archivo, width-stepped from 62% display to 100% text.",
+      "The install command is the SYNOPSIS; the capabilities are the FLAGS; providers are FILES.",
+      "No cards, no shadows, no glass, no glowing edges: every surface is flat paper separated by ruled ink."
     ],
     "rules": [
       {
-        "name": "The One Light Rule",
-        "body": "Rust is the only warm colour and the only accent. A second hue is a different world.",
-        "section": "colors"
-      },
-      {
-        "name": "The Mark, Not the Read Rule",
-        "body": "Rust never sets a sentence. It sets a sigil, a fill, a dot, a thumb.",
-        "section": "colors"
-      },
-      {
-        "name": "The One Family Rule",
-        "body": "No second face, no italic, no serif accent word. Emphasis is weight and size.",
+        "name": "The Bold Is Literal Rule",
+        "body": "Bold monospace means a literal CLI token; roman bold means a document section or emphasis. Never swap them.",
         "section": "typography"
       },
       {
-        "name": "The Floor Rule",
-        "body": "Nothing meant to be read drops under 16px.",
-        "section": "typography"
+        "name": "The Red Is a Mark Rule",
+        "body": "Stamp red is a mark, a tick, a stamp, or an armed state. It never sets a sentence.",
+        "section": "colors"
       },
       {
-        "name": "The Equal Margin Rule",
-        "body": "Both gutters are the same everywhere. A crop is the only thing allowed past them.",
+        "name": "The Left Ladder Rule",
+        "body": "Every major block begins with its all-caps section label indented on the left rail, bounded by a vertical rule.",
         "section": "layout"
       },
       {
-        "name": "The No Empty Half Rule",
-        "body": "Every wide layout closes its far side with the orb, the picture, the switch, or a second column.",
-        "section": "layout"
-      },
-      {
-        "name": "The One Shape Rule",
-        "body": "A circle at hero, control, texture and frame scale. A square is only the board grid.",
-        "section": "elevation"
-      },
-      {
-        "name": "The Content-First Rule",
-        "body": "No entrance may hide content that the script has not already revealed, and reduced motion shows the finished frame.",
-        "section": "elevation"
-      },
-      {
-        "name": "The Live-Focus Rule",
-        "body": "An action that moves focus names its destination tab first; focus never lands on a panel that is hidden.",
+        "name": "The Flat Surface Rule",
+        "body": "Depth is hairline rules and tone steps between paper and plate. Nothing floats; no shadow is permitted.",
         "section": "elevation"
       }
     ],
     "dos": [
-      "Keep one motif and one light.",
-      "Round every control fully; round plates at 1.35rem.",
-      "Set machine facts in <code> and everything else in Pilcrow Rounded.",
-      "Keep every control at least 44px tall and give it a visible focus ring.",
-      "Add motion with a transform or opacity, and give it a reduced-motion path.",
-      "Keep bone copy at 4.5:1 over the orb; re-bake the veil into the asset when the disc moves under the type.",
-      "Put anything that travels to the clipboard in <code> alone, never beside a decorative sigil."
+      "Set machine literals in monospace.",
+      "Keep the section ladder intact: LABEL on the rail, content in the body.",
+      "Use stamp red (#bf2f1c) only for stamps, rules, ticks, armed indicators, and the primary action.",
+      "Keep all interactive targets at least 44px tall.",
+      "Preserve the paper-grain tile as the tactile ground."
     ],
     "donts": [
-      "Add a second shape, a second accent, a gradient fill, or a shadow.",
-      "Set a sentence in rust.",
-      "Set anything meant to be read under 16px.",
-      "Let the orb cover the headline at any width.",
-      "Add decorative numbering or an eyebrow above a heading."
+      "Add rounded corners, cards, soft shadows, or glowing outlines.",
+      "Set sentences in stamp red.",
+      "Use monospace for non-literal prose.",
+      "Add floating badges or eyebrows above section headings."
     ]
   }
 }
