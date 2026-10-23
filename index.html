@@ -15,13 +15,20 @@
   <meta property="og:title" content="Mars — A coding agent with the IDE wired in">
   <meta property="og:description" content="Language servers on every write, real debuggers, and a native Rust core. One binary for macOS, Linux, and Windows.">
   <meta property="og:image" content="https://getmars.eu.cc/assets/og-image.png">
+  <meta property="og:image:alt" content="Mars wordmark and the headline: the agent lives in your IDE.">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
   <meta property="og:url" content="https://getmars.eu.cc/">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Mars — A coding agent with the IDE wired in">
   <meta name="twitter:description" content="Language servers on every write, real debuggers, and a native Rust core. One binary for macOS, Linux, and Windows.">
   <meta name="twitter:image" content="https://getmars.eu.cc/assets/og-image.png">
+  <meta name="twitter:image:alt" content="Mars wordmark and the headline: the agent lives in your IDE.">
   <link rel="preload" href="assets/fonts/pilcrow-rounded-700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" as="image" type="image/webp"
+        imagesrcset="assets/mars-surface-600.webp 600w, assets/mars-surface-900.webp 900w, assets/mars-surface-1400.webp 1400w"
+        imagesizes="(max-width: 50rem) 100vw, 128vh" fetchpriority="high">
 
   <style>
     /* ── Type ─────────────────────────────────────────────────────────
@@ -56,7 +63,10 @@
       --ink: #f2ecf5;
       --muted: #ab9cba;
       --accent: #ef5f2f;
+      --accent-hover: #ff7a4f;
       --accent-ink: #14070a;
+      --ok: #b6f0bd;
+      --ok-ink: #101c12;
       --radius: 999px;
 
       --margin: clamp(1rem, 3.2vw, 2.5rem);
@@ -65,7 +75,7 @@
 
       --step-small: clamp(1rem, 0.94rem + 0.18vw, 1.0625rem);
       --step-body: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
-      --step-lead: clamp(1.25rem, 1.35rem + 0.7vw, 1.625rem);
+      --step-lead: clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem);
       --step-head: clamp(2rem, 1.3rem + 3.2vw, 4rem);
       --step-display: clamp(2.75rem, 1.2rem + 5.4vw, 5.5rem);
     }
@@ -108,11 +118,15 @@
       outline: 2px solid var(--ink);
       outline-offset: 3px;
     }
+    /* On the rust fill the bone ring only reaches 2.85:1; the deep ink does. */
+    .copy:focus-visible,
+    .close-sentence button:focus-visible,
+    .sw.on .knob:focus-visible { outline-color: var(--accent-ink); }
 
     a { color: var(--ink); text-underline-offset: 0.24em; text-decoration-thickness: 1px; }
-    a:hover { color: var(--accent); }
-    /* On a bone-tinted surface rust hover is 2.85:1: use the deep ink there. */
-    .skip:hover, .plate-note a:hover { color: var(--accent-ink); }
+    a:hover { color: var(--accent-hover); }
+    /* The skip link fills with bone, where raised rust is only 2.22:1. */
+    .skip:hover { color: var(--accent-ink); }
 
     h1, h2, h3 {
       margin: 0;
@@ -134,6 +148,15 @@
       max-width: var(--shell);
       margin-inline: auto;
       padding-inline: var(--margin);
+    }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
     }
 
     .skip {
@@ -198,7 +221,10 @@
       align-items: center;
       padding-block: clamp(2rem, 5vh, 4rem) clamp(3rem, 8vh, 6rem);
     }
-    /* The giant shape enters from the right and is cropped on three edges. */
+    /* The giant shape enters from the right and is cropped on three edges.
+       The photograph is pre-composited onto the rust disc with the ground veil
+       baked in, so contrast holds without a stacking layer the detector (and
+       some readers) cannot see through. */
     .hero-orb {
       position: absolute;
       z-index: -1;
@@ -211,12 +237,11 @@
       background: var(--accent);
       overflow: hidden;
     }
+    .hero-orb picture { display: contents; }
     .hero-orb img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      opacity: 0.34;
-      mix-blend-mode: multiply;
     }
     .hero-copy { max-width: 40rem; min-width: 0; }
     .hero h1 {
@@ -233,8 +258,10 @@
       color: var(--ink);
       line-height: 1.45;
     }
-    @media (max-width: 30rem) {
-      .hero p { font-size: var(--step-body); }
+    /* Below 50rem the copy sits on the orb rather than beside it; the copy
+       keeps the lead step there instead of shrinking to body. */
+    @media (max-width: 50rem) {
+      .hero-orb { opacity: 0.9; }
     }
 
     /* ── Install plate ──────────────────────────────────────────────── */
@@ -271,7 +298,6 @@
       border: 0;
       border-radius: var(--radius);
       padding: 0.35rem 0.75rem;
-      min-height: 2.75rem;
       cursor: pointer;
     }
     .os button[aria-selected="true"] { background: var(--bg); color: var(--ink); }
@@ -284,13 +310,16 @@
       border-radius: var(--radius);
       padding: 0.5rem 0.5rem 0.5rem 1.35rem;
     }
-    .plate-body code {
+    .cmd {
       flex: 1 1 auto;
       min-width: 0;
-      min-width: 0;
+      display: flex;
+      align-items: baseline;
       overflow-x: auto;
-      white-space: nowrap;
       scrollbar-width: thin;
+      white-space: nowrap;
+    }
+    .plate-body code {
       font-size: 1rem;
       color: var(--ink);
     }
@@ -309,8 +338,9 @@
       cursor: pointer;
       transition: background 160ms, color 160ms;
     }
-    .copy:hover { background: #ff7a4f; }
-    .copy[data-state="copied"] { background: #b6f0bd; color: #101c12; }
+    .copy:hover { background: var(--accent-hover); }
+    .copy[data-state="copied"] { background: var(--ok); color: var(--ok-ink); }
+    .copy[data-state="failed"] { background: var(--surface-2); color: var(--ink); }
     .plate-note {
       margin-top: 0.65rem;
       padding-inline: 0.35rem 0.85rem;
@@ -319,6 +349,13 @@
       display: flex;
       flex-wrap: wrap;
       gap: 0.3rem 0.9rem;
+    }
+    .copy-status {
+      min-height: 1.6em;
+      margin-top: 0.35rem;
+      padding-inline: 0.35rem;
+      font-size: var(--step-small);
+      color: var(--ok);
     }
     .plate-note code { color: var(--ink); }
     .plate-note a { color: var(--ink); display: inline-flex; align-items: center; min-height: 2.75rem; }
@@ -408,7 +445,8 @@
       overflow: hidden;
       transition: opacity 240ms, max-height 240ms;
     }
-    .sw.on .sw-why { opacity: 1; max-height: 4rem; }
+    /* Two lines at the narrowest step measure 74px; 8rem clears them. */
+    .sw.on .sw-why { opacity: 1; max-height: 8rem; }
     .sw-why b { font-weight: 700; }
     /* The knob is the motif: a filled circle on a pill track. */
     .knob {
@@ -434,9 +472,9 @@
       background: var(--muted);
       transition: translate 220ms cubic-bezier(0.2, 0.9, 0.25, 1), background 200ms;
     }
-    .knob[aria-checked="true"] { background: rgba(20, 7, 10, 0.22); }
+    .knob[aria-checked="true"] { background: color-mix(in srgb, var(--accent-ink) 22%, transparent); }
     .knob[aria-checked="true"]::after { translate: 1.85rem 0; background: var(--accent-ink); }
-    .sw.on .knob { background: rgba(20, 7, 10, 0.22); }
+    .sw.on .knob { background: color-mix(in srgb, var(--accent-ink) 22%, transparent); }
 
     /* ── Stages: the drag ───────────────────────────────────────────── */
     .stages {
@@ -565,7 +603,7 @@
       cursor: pointer;
       transition: background 160ms;
     }
-    .close-sentence button:hover { background: #ff7a4f; }
+    .close-sentence button:hover { background: var(--accent-hover); }
     .close-note {
       margin-top: 0;
       padding-bottom: 0.4rem;
@@ -610,30 +648,32 @@
       .hero h1 {
         animation: shutter 720ms 120ms cubic-bezier(0.16, 1, 0.3, 1) both;
       }
-      .rise {
+      /* Entrance is script-gated: without JS the page still shows every
+         element, because the hidden states only exist under .js. */
+      .js .rise {
         opacity: 0;
         translate: 0 22px;
         transition: opacity 520ms cubic-bezier(0.16, 1, 0.3, 1),
                     translate 520ms cubic-bezier(0.16, 1, 0.3, 1);
       }
-      .rise.in { opacity: 1; translate: 0 0; }
+      .js .rise.in { opacity: 1; translate: 0 0; }
 
       /* Staggered children: a tile, a sentence and its switch arrive on their
          own beat instead of dropping in as one block. */
-      .board .tile,
-      .switches .sw {
+      .js .board .tile,
+      .js .switches .sw {
         opacity: 0;
         translate: 0 18px;
         transition: opacity 480ms cubic-bezier(0.16, 1, 0.3, 1),
                     translate 480ms cubic-bezier(0.16, 1, 0.3, 1),
                     background 220ms ease;
       }
-      .board .tile.in,
-      .switches .sw.in { opacity: 1; translate: 0 0; }
-      .board .tile:nth-child(2n) { transition-delay: 60ms; }
-      .board .tile:nth-child(3n) { transition-delay: 110ms; }
-      .switches .sw:nth-child(2n) { transition-delay: 70ms; }
-      .switches .sw:nth-child(3n) { transition-delay: 120ms; }
+      .js .board .tile.in,
+      .js .switches .sw.in { opacity: 1; translate: 0 0; }
+      .js .board .tile:nth-child(2n) { transition-delay: 60ms; }
+      .js .board .tile:nth-child(3n) { transition-delay: 110ms; }
+      .js .switches .sw:nth-child(2n) { transition-delay: 70ms; }
+      .js .switches .sw:nth-child(3n) { transition-delay: 120ms; }
 
       .stage-shot img { transition: opacity 260ms ease; }
       .stage-shot { transition: scale 620ms cubic-bezier(0.16, 1, 0.3, 1); }
@@ -704,7 +744,15 @@
     <section class="hero">
       <div class="shell hero-shell">
         <div class="hero-orb" aria-hidden="true">
-          <img src="assets/space-horizon.jpg" alt="Earth curved horizon with a green aurora, seen from orbit." width="2400" height="1350" fetchpriority="high">
+          <picture>
+            <source type="image/webp"
+                    srcset="assets/mars-surface-600.webp 600w, assets/mars-surface-900.webp 900w, assets/mars-surface-1400.webp 1400w"
+                    sizes="(max-width: 50rem) 100vw, 128vh">
+            <img src="assets/mars-surface-900.jpg"
+                 srcset="assets/mars-surface-600.jpg 600w, assets/mars-surface-900.jpg 900w, assets/mars-surface-1400.jpg 1400w"
+                 sizes="(max-width: 50rem) 100vw, 128vh"
+                 alt="Mount Sharp on the Martian horizon, with striated rock rows in the foreground." width="1400" height="1400" fetchpriority="high">
+          </picture>
         </div>
 
         <div class="hero-copy">
@@ -721,13 +769,14 @@
             </div>
 
             <div class="plate-body" role="tabpanel" id="panel-posix" aria-labelledby="tab-posix">
-              <code id="cmd-posix"><span class="sigil" aria-hidden="true">$</span>curl -fsSL https://getmars.eu.cc/install | sh</code>
-              <button class="copy" type="button" data-copy="cmd-posix-raw" aria-label="Copy the macOS and Linux install command">Copy</button>
+              <span class="cmd"><span class="sigil" aria-hidden="true">$</span><code id="cmd-posix">curl -fsSL https://getmars.eu.cc/install | sh</code></span>
+              <button class="copy" type="button" aria-describedby="copy-status" aria-label="Copy the macOS and Linux install command">Copy</button>
             </div>
             <div class="plate-body" role="tabpanel" id="panel-win" aria-labelledby="tab-win" hidden>
-              <code id="cmd-win"><span class="sigil" aria-hidden="true">&gt;</span>irm https://getmars.eu.cc/install.ps1 | iex</code>
-              <button class="copy" type="button" data-copy="cmd-win-raw" aria-label="Copy the Windows install command">Copy</button>
+              <span class="cmd"><span class="sigil" aria-hidden="true">&gt;</span><code id="cmd-win">irm https://getmars.eu.cc/install.ps1 | iex</code></span>
+              <button class="copy" type="button" aria-describedby="copy-status" aria-label="Copy the Windows install command">Copy</button>
             </div>
+            <p class="copy-status" id="copy-status" role="status"></p>
 
             <p class="plate-note">
               <span>Installs to <code id="note-path">~/.local/bin</code>, <span id="note-priv">no sudo</span></span>
@@ -761,12 +810,12 @@
     <section class="band shell" id="abilities" aria-labelledby="abilities-h">
       <h2 id="abilities-h" class="rise">Turn on what the agent may touch.</h2>
       <div class="switches">
-        <div class="sw">
+        <div class="sw on">
           <p class="sw-text">Renames go through the language server</p>
           <button class="knob" type="button" role="switch" aria-checked="true" aria-label="Rename through the language server"></button>
           <p class="sw-why"><b>workspace/willRenameFiles</b>: re-exports, barrel files and aliased imports update before the file moves.</p>
         </div>
-        <div class="sw">
+        <div class="sw on">
           <p class="sw-text">Search runs inside the process</p>
           <button class="knob" type="button" role="switch" aria-checked="true" aria-label="Run search inside the process"></button>
           <p class="sw-why"><b>36 tools</b> and 12 Rust crates in-process, no fork per call, on machines with no <code>rg</code> and no <code>grep</code>.</p>
@@ -816,18 +865,18 @@
 
     <!-- ── Close ────────────────────────────────────────────────── -->
     <section class="close shell" aria-labelledby="close-h">
-      <h2 id="close-h" class="visually-hidden" style="position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);">Install Mars</h2>
+      <h2 id="close-h" class="visually-hidden">Install Mars</h2>
       <p class="close-sentence rise">
         Give the agent <input type="text" id="repo" placeholder="a repo" aria-label="Repository to work on">
         and <button type="button" id="close-install">install</button> it.
       </p>
-      <p class="close-note">One command, <b>~/.local/bin</b>, no sudo. <a href="https://github.com/MarsAI-org/mars-agent/releases" target="_blank" rel="noopener">Or take the binary</a>.</p>
+      <p class="close-note">One command. <b>~/.local/bin</b>, no sudo. <a href="https://github.com/MarsAI-org/mars-agent/releases" target="_blank" rel="noopener">Or take the binary</a>.</p>
     </section>
   </main>
 
   <footer class="shell">
     <div class="foot">
-      <p>Hero photograph by NASA via Unsplash. Mars is a fork of <a href="https://github.com/can1357/oh-my-pi" target="_blank" rel="noopener">oh-my-pi</a> by can1357, itself a fork of <a href="https://github.com/badlogic/pi-mono" target="_blank" rel="noopener">Pi</a> by Mario Zechner. Both MIT licensed.</p>
+      <p>Hero photograph: <a href="https://images.nasa.gov/details/PIA17947" target="_blank" rel="noopener">Mount Sharp from the Curiosity rover</a>, NASA/JPL-Caltech. Mars is a fork of <a href="https://github.com/can1357/oh-my-pi" target="_blank" rel="noopener">oh-my-pi</a> by can1357, itself a fork of <a href="https://github.com/badlogic/pi-mono" target="_blank" rel="noopener">Pi</a> by Mario Zechner. Both MIT licensed.</p>
       <nav aria-label="Elsewhere">
         <a href="https://github.com/MarsAI-org/mars-agent" target="_blank" rel="noopener">GitHub</a>
         <a href="https://github.com/MarsAI-org/mars-agent/releases" target="_blank" rel="noopener">Releases</a>
@@ -838,6 +887,43 @@
 
   <script>
     document.documentElement.classList.add("js");
+
+    /* ── The repo blank: it changes the command that is shown and copied ──
+       What is on screen is what lands on the clipboard, so the plate can
+       never promise something different from what it copies. */
+    (function () {
+      var input = document.getElementById("repo");
+      var codes = {
+        "tab-posix": document.getElementById("cmd-posix"),
+        "tab-win": document.getElementById("cmd-win")
+      };
+      var suffix = {
+        "tab-posix": function (r) { return " && cd " + r + " && mars"; },
+        "tab-win": function (r) { return "; cd " + r + "; mars"; }
+      };
+      Object.keys(codes).forEach(function (k) {
+        if (codes[k]) codes[k].dataset.base = codes[k].textContent.trim();
+      });
+
+      /* Single quotes so a path with spaces survives either shell. */
+      function quote(value) {
+        return "'" + value.replace(/'/g, "'\\''") + "'";
+      }
+
+      function render() {
+        var repo = input ? input.value.trim() : "";
+        var arg = repo ? quote(repo) : "";
+        Object.keys(codes).forEach(function (k) {
+          if (!codes[k]) return;
+          codes[k].textContent = codes[k].dataset.base + (arg ? suffix[k](arg) : "");
+        });
+      }
+      window.marsRender = render;
+      if (input) {
+        input.addEventListener("input", render);
+        input.addEventListener("search", render);
+      }
+    })();
 
     /* ── Platform detection, tabs, and the mirrored note ─────────── */
     (function () {
@@ -886,22 +972,30 @@
       if (auto) select(auto, false);
     })();
 
-    /* ── Copy ────────────────────────────────────────────────────── */
+    /* ── Copy: the clipboard gets the bare command, never the prompt ── */
     (function () {
+      var status = document.getElementById("copy-status");
       document.querySelectorAll(".copy").forEach(function (btn) {
         var base = btn.textContent;
         var timer = 0;
         btn.addEventListener("click", function () {
-          var code = btn.parentElement.querySelector("code");
+          var host = btn.closest(".plate-body");
+          var code = host && host.querySelector("code");
           var text = code ? code.textContent.trim() : "";
           function done(ok) {
             btn.setAttribute("data-state", ok ? "copied" : "failed");
             btn.textContent = ok ? "Copied" : "Failed";
+            if (status) {
+              status.textContent = ok
+                ? "Command copied to the clipboard."
+                : "Copy failed. Select the command and copy it manually.";
+            }
             clearTimeout(timer);
             timer = setTimeout(function () {
               btn.removeAttribute("data-state");
               btn.textContent = base;
-            }, 1800);
+              if (status) status.textContent = "";
+            }, 2400);
           }
           if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(false); });
@@ -954,20 +1048,45 @@
       apply(0);
     })();
 
-    /* ── Close: the button carries the repo name into the copy ───── */
+    /* ── Close: run means install, land in the repo, and start ───── */
     (function () {
       var input = document.getElementById("repo");
       var btn = document.getElementById("close-install");
+      var status = document.getElementById("copy-status");
       if (!btn) return;
+
       btn.addEventListener("click", function () {
         var repo = input && input.value.trim();
-        var code = document.getElementById("cmd-posix");
-        var target = document.querySelector(".plate");
-        if (target) target.scrollIntoView({ block: "center", behavior: "smooth" });
-        var copyBtn = document.querySelector(".copy");
-        if (copyBtn) copyBtn.focus({ preventScroll: true });
-        if (repo && code) code.setAttribute("data-repo", repo);
+        if (window.marsRender) window.marsRender();
+        /* Always copy the POSIX line: the closing sentence is shell-shaped. */
+        var posixTab = document.getElementById("tab-posix");
+        if (posixTab) posixTab.click();
+
+        var plate = document.querySelector(".plate");
+        if (plate) plate.scrollIntoView({ block: "center", behavior: "smooth" });
+
+        var panel = document.getElementById("panel-posix");
+        var copyBtn = panel && panel.querySelector(".copy");
+        if (copyBtn) {
+          copyBtn.focus({ preventScroll: true });
+          copyBtn.click();
+          /* The copy handler announces over the same status line; write this
+             one after it has settled. */
+          if (status) {
+            setTimeout(function () {
+              status.textContent = repo
+                ? "Copied. It installs Mars, enters " + repo + ", and starts it."
+                : "Command copied to the clipboard.";
+            }, 0);
+          }
+        }
       });
+
+      if (input) {
+        input.addEventListener("keydown", function (e) {
+          if (e.key === "Enter") { e.preventDefault(); btn.click(); }
+        });
+      }
     })();
 
     /* ── Entrance and scroll response ─────────────────────────────── */

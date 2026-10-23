@@ -112,7 +112,9 @@ character.
 The world is deep space, given by the user: near-black ground with stars, rust
 as the one warm light. It is not a starfield wallpaper with a page on top. The
 field is a drawn layer at 50% opacity, it drifts over ninety seconds, and the orb
-carries the single photograph the page needs.
+carries the single photograph the page needs: NASA/JPL-Caltech PIA17947, Mount
+Sharp on the Martian horizon, multiplied into the rust and wiped by the ground
+tone so bone type clears AA over it.
 
 **Key Characteristics:**
 - One motif, the circle, at hero, component, and texture scale. No second shape.
@@ -141,6 +143,8 @@ Two roles plus one status pair.
 
 ### Status
 - **Copied** (`#b6f0bd` on `#101c12`): the copy button's success fill only.
+- **Copy failed** (`Bone` on `Slab Deep`): the copy button's failure fill, when
+  the clipboard API rejects or is missing.
 
 ### Named Rules
 **The One Light Rule.** Rust is the only warm colour and the only accent. A second
@@ -187,8 +191,11 @@ on both sides at every width. Stacked to two columns at 50rem; the tile board
 runs four across, two below 52rem.
 
 The hero is `min(84svh, 46rem)` with copy on the left and the orb anchored at 74%
-and cropped on three edges. Below 52rem the orb stays behind the type and the copy
-takes the full gutter, so the headline is never covered.
+and cropped on three edges. Below 50rem the orb stays behind the type and the copy
+takes the full gutter; the copy holds the lead step there rather than shrinking
+to body. The photograph is pre-composited in the file itself (multiplied into the
+rust, veil baked in, 0.9 opacity under 50rem) so contrast does not depend on a
+stacking layer and the measured floor is 5.02:1 under the headline.
 
 Section rhythm is 3.5–7rem. The close inverts it: a two-column grid with the
 sentence at 24ch on the left and the note aligned to its baseline on the right.
@@ -221,12 +228,17 @@ square is only the board grid.
 ### Install plate
 `--slab` plate at 1.35rem, an OS pill well at the top with the file name opposite,
 then the command on `--bg` inside a pill with the copy button at its right. The
-plate mirror the chosen OS tab: file name, install path, privilege phrase and the
+plate mirrors the chosen OS tab: file name, install path, privilege phrase and the
 linked script all swap together. Below, one Dust line states the path, the
 privilege and the script link.
 
-Copy has three states: rest (Rust), copied (`--ok` on `--ok-ink`, 1.8s), and the
-label swaps to "Copied" then back.
+The prompt sigil (`$`, `>`) is a `.cmd` child beside the `<code>`, so the
+clipboard always receives the bare command. The repo blank in the close appends
+its own segment to both commands, quoted, so what is shown is what is copied.
+
+Copy has three states: rest (Rust), copied (`--ok` on `--ok-ink`, 2.4s), and
+failed (`--surface-2` on `--ink`). The label swaps with the fill and a `role=
+"status"` line below the plate announces the outcome in words, then clears.
 
 ### Tiles
 A `--slab` slab at 1.35rem holding one provider name, 3:2. The first tile spans
@@ -238,7 +250,8 @@ A full-width `--slab` row, rounded, with the consequence sentence at 1.25–2.1r
 in Dust, and a real `role="switch"` knob at the right. Off, the row is dark. On,
 the row floods Rust, the sentence turns `--accent-ink` (5.96:1) and the
 consequence line opens beneath it. Two rows start on. Click, Space and Enter all
-work; the knob is 44px tall.
+work; the knob is 44px tall. The open line is capped at 8rem, which clears its
+two-line worst case at 320px.
 
 ### Stage slider
 A real `input[type=range]` with four stops. The thumb is a Rust circle. Moving it
@@ -248,7 +261,10 @@ Nothing depends on scroll position.
 ### Close sentence
 A statement at the display-adjacent step with two real fields inline: a text
 input on `--surface-2` for the repo name, and the final word as a Rust button.
-Both scale with the sentence in `em` and stay at least 44px tall.
+Both scale with the sentence in `em` and stay at least 44px tall. The blank
+rewrites the command in both OS tabs as it is typed; Enter submits, and the
+button switches to the POSIX tab, scrolls the plate into view, focuses its copy
+control and copies there, so focus never lands on a hidden panel.
 
 ## Motion
 
@@ -264,11 +280,16 @@ inside settles from 1.14 to rest, 1.05s, once. Then:
 The field drifts over 90s. All of it is transform, opacity, clip-path and
 transition, all of it under `prefers-reduced-motion: no-preference`, and the
 reduced path removes the drift and the wipe while keeping every element at full
-opacity and in place.
+opacity and in place. The hidden entrance states are scoped to `.js`, which the
+script adds to `<html>`, so a visitor without scripts sees the finished page
+instead of a blank one.
 
 ### Named Rules
 **The Content-First Rule.** No entrance may hide content that the script has not
 already revealed, and reduced motion shows the finished frame.
+
+**The Live-Focus Rule.** An action that moves focus names its destination tab
+first; focus never lands on a panel that is `hidden`.
 
 ## Do's and Don'ts
 
@@ -278,6 +299,10 @@ already revealed, and reduced motion shows the finished frame.
 - Set machine facts in `<code>` and everything else in Pilcrow Rounded.
 - Keep every control at least 44px tall and give it a visible focus ring.
 - Add motion with a transform or opacity, and give it a reduced-motion path.
+- Keep bone copy at 4.5:1 over the orb; re-bake the veil into the asset when the
+  disc moves under the type.
+- Put anything that travels to the clipboard in `<code>` alone, never beside a
+  decorative sigil.
 
 ### Don't
 - Add a second shape, a second accent, a gradient fill, or a shadow.

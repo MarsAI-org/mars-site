@@ -85,6 +85,11 @@ Constraints:
   `review.webp`, `ttsr.webp`, `python.webp`, `arxiv.webp`. They are real product
   screenshots and may be used as proof, subject to file size.
 - No customer logos, testimonials, or benchmark results exist. Do not invent any.
+- `assets/mars-surface-*.{webp,jpg}` — NASA/JPL-Caltech PIA17947, "Martian
+  Landscape with Rock Rows and Mount Sharp" (Curiosity, 2014), cropped square for
+  the hero orb. Public domain via `images.nasa.gov`; credit NASA/JPL-Caltech.
+- `assets/mars-surface-*` are the only hero plate; the old Earth-from-orbit
+  photograph is retired.
 
 ## Product Principles
 
