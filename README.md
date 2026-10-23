@@ -45,10 +45,17 @@ finishes:
 `index.html` is a single self-contained page with an inline `<style>` block and
 no build step. Brand assets live in `assets/` and are also served from the site
 root (`/favicon.ico`, `/favicon.svg`, `/favicon-32x32.png`). Fonts are
-self-hosted from `assets/fonts/` (Pilcrow Rounded, SIL OFL 1.1), so the
-page makes no third-party requests. The Pages workflow in
-`.github/workflows/pages.yml` copies `index.html`, the installers, `CNAME`,
-`LICENSE`, and both asset directories into the `_site` publishing directory.
+self-hosted from `assets/fonts/` (Pilcrow Rounded by the Indian Type Foundry,
+see `assets/fonts/OFL.txt`), so the page makes no third-party requests. The
+Pages workflow in `.github/workflows/pages.yml` copies `index.html`, the
+installers, `CNAME`, `LICENSE`, and both asset directories into the `_site`
+publishing directory.
+
+The hero photograph is NASA/JPL-Caltech PIA17947, "Martian Landscape with Rock
+Rows and Mount Sharp" (Curiosity, 2014). It is served as WebP with a JPEG
+fallback at three widths, and the orb keeps it at or above AA contrast for the
+headline and lede. `assets/og-image.png` is rendered from `.og-card.html`, which
+is a build-time helper and not published.
 
 `DESIGN.md` records the page's design system; `PRODUCT.md` records the product
 truth it must not contradict. `.impeccable/review/` holds the last screenshot
@@ -57,3 +64,5 @@ pass and is git-ignored.
 ## Credits
 
 Mars is a fork of oh-my-pi by can1357, which is a fork of Pi by Mario Zechner. Both are MIT licensed.
+
+Hero photograph: NASA/JPL-Caltech, public domain.
