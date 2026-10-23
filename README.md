@@ -45,7 +45,7 @@ finishes:
 `index.html` is a single self-contained page with an inline `<style>` block and
 no build step. Brand assets live in `assets/` and are also served from the site
 root (`/favicon.ico`, `/favicon.svg`, `/favicon-32x32.png`). Fonts are
-self-hosted from `assets/fonts/` (Space Grotesk, SIL OFL 1.1), so the
+self-hosted from `assets/fonts/` (Pilcrow Rounded, SIL OFL 1.1), so the
 page makes no third-party requests. The Pages workflow in
 `.github/workflows/pages.yml` copies `index.html`, the installers, `CNAME`,
 `LICENSE`, and both asset directories into the `_site` publishing directory.
