@@ -194,8 +194,8 @@ The hero is `min(84svh, 46rem)` with copy on the left and the orb anchored at 74
 and cropped on three edges. Below 50rem the orb stays behind the type and the copy
 takes the full gutter; the copy holds the lead step there rather than shrinking
 to body. The photograph is pre-composited in the file itself (multiplied into the
-rust, veil baked in, 0.9 opacity under 50rem) so contrast does not depend on a
-stacking layer and the measured floor is 5.02:1 under the headline.
+rust, 0.8 over the disc, veil baked in, 0.9 opacity under 50rem) so contrast does
+not depend on a stacking layer; the measured floor is 5.2:1 under the headline.
 
 Section rhythm is 3.5–7rem. The close inverts it: a two-column grid with the
 sentence at 24ch on the left and the note aligned to its baseline on the right.
