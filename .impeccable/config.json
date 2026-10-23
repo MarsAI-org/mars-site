@@ -23,6 +23,23 @@
         ],
         "createdAt": "2026-10-23T04:23:34.952Z",
         "reason": "Measured inner padding 40-64px on the guest card, 176px inset in features, 144px in cta at 1440px; detector reads the section box not its inner grid"
+      },
+      {
+        "rule": "buried-raster",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-10-23T05:19:50.799Z",
+        "reason": "The three hidden captures are the stage slider's other frames; the visible one is fixed at opacity 1 and swaps on input"
+      },
+      {
+        "rule": "buried-raster",
+        "value": "*",
+        "files": [
+          "*mars-site/index.html"
+        ],
+        "createdAt": "2026-10-23T05:19:50.807Z"
       }
     ]
   }

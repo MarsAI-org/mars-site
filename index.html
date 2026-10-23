@@ -21,32 +21,32 @@
   <meta name="twitter:title" content="Mars — A coding agent with the IDE wired in">
   <meta name="twitter:description" content="Language servers on every write, real debuggers, and a native Rust core. One binary for macOS, Linux, and Windows.">
   <meta name="twitter:image" content="https://getmars.eu.cc/assets/og-image.png">
-  <link rel="preload" href="assets/fonts/space-grotesk-700.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/pilcrow-rounded-700.woff2" as="font" type="font/woff2" crossorigin>
 
   <style>
     /* ── Type ─────────────────────────────────────────────────────────
-       One family. Space Grotesk carries the voice, the figures and the
+       One family. Pilcrow Rounded carries the voice, the figures and the
        commands; the monospace stack is only for real code. */
     @font-face {
-      font-family: "Space Grotesk";
+      font-family: "Pilcrow Rounded";
       font-style: normal;
       font-weight: 400;
       font-display: swap;
-      src: url("assets/fonts/space-grotesk-400.woff2") format("woff2");
+      src: url("assets/fonts/pilcrow-rounded-400.woff2") format("woff2");
     }
     @font-face {
-      font-family: "Space Grotesk";
+      font-family: "Pilcrow Rounded";
       font-style: normal;
       font-weight: 500;
       font-display: swap;
-      src: url("assets/fonts/space-grotesk-500.woff2") format("woff2");
+      src: url("assets/fonts/pilcrow-rounded-500.woff2") format("woff2");
     }
     @font-face {
-      font-family: "Space Grotesk";
+      font-family: "Pilcrow Rounded";
       font-style: normal;
       font-weight: 700;
       font-display: swap;
-      src: url("assets/fonts/space-grotesk-700.woff2") format("woff2");
+      src: url("assets/fonts/pilcrow-rounded-700.woff2") format("woff2");
     }
 
     :root {
@@ -83,7 +83,7 @@
       margin: 0;
       background: var(--bg);
       color: var(--ink);
-      font-family: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+      font-family: "Pilcrow Rounded", ui-sans-serif, system-ui, sans-serif;
       font-size: var(--step-body);
       line-height: 1.55;
       -webkit-font-smoothing: antialiased;
@@ -117,7 +117,7 @@
     h1, h2, h3 {
       margin: 0;
       font-weight: 700;
-      letter-spacing: -0.045em;
+      letter-spacing: -0.03em;
       line-height: 0.96;
       text-wrap: balance;
     }
@@ -165,7 +165,7 @@
       text-decoration: none;
       font-weight: 700;
       font-size: 1.375rem;
-      letter-spacing: -0.03em;
+      letter-spacing: -0.01em;
       min-height: 2.75rem;
     }
     .mark img { width: 1.9rem; height: 1.9rem; image-rendering: pixelated; }
@@ -364,7 +364,7 @@
       font-weight: 700;
       font-size: var(--step-head);
       line-height: 1;
-      letter-spacing: -0.04em;
+      letter-spacing: -0.025em;
     }
     .tile-wide h2 { font-size: inherit; line-height: inherit; letter-spacing: inherit; text-wrap: balance; }
     @media (max-width: 52rem) {
@@ -392,7 +392,7 @@
     .sw-text {
       font-size: clamp(1.25rem, 2.6vw, 2.1rem);
       font-weight: 500;
-      letter-spacing: -0.035em;
+      letter-spacing: -0.02em;
       line-height: 1.1;
       color: var(--muted);
       transition: color 220ms;
@@ -527,13 +527,17 @@
       gap: 1rem clamp(1.5rem, 4vw, 3rem);
       align-items: end;
     }
-    @media (max-width: 52rem) { .close { grid-template-columns: minmax(0, 1fr); } }
     .close-sentence {
       font-size: var(--step-lead);
       font-weight: 700;
       letter-spacing: -0.04em;
       line-height: 1.3;
-      max-width: 24ch;
+      max-width: 30ch;
+    }
+    @media (max-width: 62rem) {
+      .close { grid-template-columns: minmax(0, 1fr); }
+      .close-sentence { max-width: none; }
+      .close-note { margin-top: 0.5rem; }
     }
     .close-sentence input {
       font: inherit;
@@ -546,7 +550,7 @@
       border-radius: var(--radius);
       padding: 0.06em 0.42em;
       margin-inline: 0.08em;
-      min-height: 1.9em;
+      min-height: 2.2em;
     }
     .close-sentence input::placeholder { color: var(--muted); }
     .close-sentence button {
@@ -557,7 +561,7 @@
       border: 0;
       border-radius: var(--radius);
       padding: 0.1em 0.5em;
-      min-height: 1.95em;
+      min-height: 2.2em;
       cursor: pointer;
       transition: background 160ms;
     }

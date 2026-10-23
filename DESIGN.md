@@ -14,49 +14,49 @@ colors:
   ok-ink: "#101c12"
 typography:
   display:
-    fontFamily: "Space Grotesk, ui-sans-serif, system-ui, sans-serif"
+    fontFamily: "Pilcrow Rounded, ui-sans-serif, system-ui, sans-serif"
     fontSize: "clamp(2.75rem, 1.2rem + 5.4vw, 5.5rem)"
     fontWeight: 700
     lineHeight: 0.96
-    letterSpacing: "-0.045em"
+    letterSpacing: "-0.03em"
   heading:
-    fontFamily: "Space Grotesk, ui-sans-serif, system-ui, sans-serif"
+    fontFamily: "Pilcrow Rounded, ui-sans-serif, system-ui, sans-serif"
     fontSize: "clamp(2rem, 1.3rem + 3.2vw, 4rem)"
     fontWeight: 700
     lineHeight: 0.96
     letterSpacing: "-0.045em"
   lead:
-    fontFamily: "Space Grotesk, ui-sans-serif, system-ui, sans-serif"
+    fontFamily: "Pilcrow Rounded, ui-sans-serif, system-ui, sans-serif"
     fontSize: "clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem)"
     fontWeight: 400
     lineHeight: 1.45
     letterSpacing: "normal"
   body:
-    fontFamily: "Space Grotesk, ui-sans-serif, system-ui, sans-serif"
+    fontFamily: "Pilcrow Rounded, ui-sans-serif, system-ui, sans-serif"
     fontSize: "clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem)"
     fontWeight: 400
     lineHeight: 1.55
     letterSpacing: "normal"
   small:
-    fontFamily: "Space Grotesk, ui-sans-serif, system-ui, sans-serif"
+    fontFamily: "Pilcrow Rounded, ui-sans-serif, system-ui, sans-serif"
     fontSize: "clamp(1rem, 0.94rem + 0.18vw, 1.0625rem)"
     fontWeight: 400
     lineHeight: 1.55
     letterSpacing: "normal"
   wordmark:
-    fontFamily: "Space Grotesk, ui-sans-serif, system-ui, sans-serif"
+    fontFamily: "Pilcrow Rounded, ui-sans-serif, system-ui, sans-serif"
     fontSize: "1.375rem"
     fontWeight: 700
     lineHeight: 1
     letterSpacing: "-0.03em"
   statement:
-    fontFamily: "Space Grotesk, ui-sans-serif, system-ui, sans-serif"
+    fontFamily: "Pilcrow Rounded, ui-sans-serif, system-ui, sans-serif"
     fontSize: "clamp(1.25rem, 2.6vw, 2.1rem)"
     fontWeight: 500
     lineHeight: 1.1
-    letterSpacing: "-0.035em"
+    letterSpacing: "-0.02em"
   display-narrow:
-    fontFamily: "Space Grotesk, ui-sans-serif, system-ui, sans-serif"
+    fontFamily: "Pilcrow Rounded, ui-sans-serif, system-ui, sans-serif"
     fontSize: "clamp(2.4rem, 12.5vw, 2.9rem)"
     fontWeight: 700
     lineHeight: 0.96
@@ -151,12 +151,11 @@ fill, a dot, a thumb.
 
 ## Typography
 
-**One family: Space Grotesk** (400 / 500 / 700, self-hosted from
-`assets/fonts/space-grotesk-*.woff2`). A geometric grotesk with a squared
-terminal and a wide round bowl: it echoes the circle without imitating it. It
+**One family: Pilcrow Rounded** (400 / 500 / 700, self-hosted from
+`assets/fonts/pilcrow-rounded-*.woff2`). Fully rounded stroke ends, bold and tight: the terminals are the motif at letter scale, so the type and the circle are the same gesture. It
 carries the headlines, the running text, the figures and the switch sentences.
 
-The monospace stack is only for literal commands inside `<code>`. Space Grotesk
+The monospace stack is only for literal commands inside `<code>`. Pilcrow Rounded
 is the voice; monospace is the machine's own output.
 
 ### Hierarchy
@@ -276,7 +275,7 @@ already revealed, and reduced motion shows the finished frame.
 ### Do
 - Keep one motif and one light.
 - Round every control fully; round plates at 1.35rem.
-- Set machine facts in `<code>` and everything else in Space Grotesk.
+- Set machine facts in `<code>` and everything else in Pilcrow Rounded.
 - Keep every control at least 44px tall and give it a visible focus ring.
 - Add motion with a transform or opacity, and give it a reduced-motion path.
 
