@@ -1,5 +1,5 @@
 ---
-version: 1
+version: 2
 slug: "index-html"
 primary_target: "index.html"
 related_targets: []
@@ -11,55 +11,53 @@ related_targets: []
 
 Single route, `/`. Mode: **Persuade**. The visitor is a developer evaluating a
 coding agent with their terminal already open; the page's success is an install
-command copied or a binary downloaded.
+command copied.
 
 ## Audience and job
 
-Developers on macOS or Linux (sometimes Windows or Termux) arriving from GitHub
-or a colleague's link. They need to know what Mars is, why it differs from other
-agents, and how to install it — in that order, within one viewport.
+Developers on macOS, Linux or Windows arriving from GitHub or a colleague's
+link. They need to know what Mars is, why it differs, and how to install it —
+inside one viewport.
 
 ## Action and proof
 
 Primary action: the working install command, switchable between POSIX and
-Windows, pre-selected from the visitor's platform, with copy feedback and a line
-naming where the binary lands, whether elevation is needed, and a link to the
-script itself. The closing block repeats that plate, mirroring the selected tab,
-above Download binary, View source, and View on npm. Secondary: GitHub Releases,
-npm, Bun, Nix, mise.
-Proof is the real product: TUI captures from `mars-agent/assets/`, plus measured
-repository facts (75 providers, 36 built-in tools, ~240k Rust lines, 12 crates,
-6 release targets, MIT). No customer logos or benchmarks exist; do not invent.
+Windows, pre-selected from the platform, with copy feedback. Secondary: Releases,
+npm, Bun, Nix, mise. Proof is the real product: TUI captures plus repository
+facts (75 providers, 36 tools, ~240k Rust lines, 12 crates, 6 targets, MIT).
 
 ## Constraints
 
 Single static `index.html`, inline CSS and JS, no build step, GitHub Pages.
-Logo and name are fixed. Installer URLs, paths, and flags are product truth.
-Version numbers must not lead the page: the npm registry and GitHub Releases
-disagree.
+Logo and name are fixed. Installer URLs, paths and flags are product truth.
+Version numbers must not lead the page.
 
 ## Direction contract
 
-THESIS: The page is a surface traverse — a pixel-art planet standing on a chunky
-ridge, with each capability as a stage you clear. It refuses the category's dark
-terminal-screenshot hero and equal-card grid.
+THESIS: The page is `mars(1)` — the product's own man page, printed on reference
+stock. It refuses both the dark terminal-and-neon hero and the equal-card grid,
+and it makes the manual the marketing.
 
-OWN-WORLD: Near-black ground (#0a090d) with a Mars-rust ink (#d64a27) that owns
-the mascot, the active stage, and the primary action; bone (#f4ece2) type; dust
-(#ada4ad) secondary; a single cool cyan only for focus. Anybody (variable, wide)
-carries voice; Silkscreen is the machine voice on numbers, labels, and commands.
-Surfaces are flat, separated by 1px lines and 2px strokes — no glass, no glow,
-no gradient text. Pixel blocks and 4px increments are the only decoration.
+OWN-WORLD: Uncoated stock `#f2efe7` with ink `#131110`; rubber-stamp red
+`#bf2f1c` as the single accent, carried by rules, markers and the stamp; hairline
+rules `#c9c3b6`. Archivo variable: compressed caps for display and section
+markers, normal width for reading. Man-page grammar only — a bold left section
+ladder with a vertical rule, indented bodies, literal tokens in bold, monospace
+only for code. No cards, no shadows, no rounded corners, no glow.
 
-STORY: This is a serious native tool that is also fun to run. The visitor sees a
-creature standing on a planet, understands that the agent works inside the
-editor's real machinery, and copies a command.
+STORY: This is a serious native tool that documents itself precisely and is
+confident enough to sign its own sheet. The visitor reads a specification, trusts
+it, and presses the stamp to copy the command.
 
-FIRST VIEWPORT: HUD with the pixel mark and a five-segment stage bar. Headline
-left at 80px, lede below, then the live installer with OS tabs and a copy button,
-then four meta facts. The mascot stands at the right, its feet on the ridge; the
-ridge and the stage trail close the viewport. Primary action sits above the fold.
+FIRST VIEWPORT: A drawn title block: MARS in compressed caps with the section
+suffix `(1)`, a ruled meta column (issue, licence, targets, core) and a red
+round approval stamp. Under it, NAME on one line with the definition, then
+SYNOPSIS holding the live installer at full width — tabs, command, stamp-shaped
+COPY — plus the path, privilege and script note. Sheet colophon at the foot of
+the page.
 
-FORM: Chosen world, top of the ordered list. seed: c8032afaaa3595c6
+FORM: Chosen world, assigned by the roll; seed: 482115d03558fcc2
 
-FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance.
+FINISH: unreviewed and undocumented is unfinished; this build ends with the
+finish review, the verdict, DESIGN.md, and every shipping raster carrying its
+provenance.

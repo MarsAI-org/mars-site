@@ -1,1143 +1,1049 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mars — A coding agent with the IDE wired in</title>
-  <meta name="description" content="Mars is a coding agent with the IDE wired in. Language servers on every write, real debuggers, a native Rust core, one binary for macOS, Linux, and Windows.">
-  <meta name="color-scheme" content="dark">
-  <meta name="theme-color" content="#0a0710">
-  <link rel="canonical" href="https://getmars.eu.cc/">
-  <link rel="icon" href="/favicon.ico" sizes="any">
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-  <link rel="apple-touch-icon" href="/assets/mars-mark-256.png">
-  <meta property="og:title" content="Mars — A coding agent with the IDE wired in">
-  <meta property="og:description" content="Language servers on every write, real debuggers, and a native Rust core. One binary for macOS, Linux, and Windows.">
-  <meta property="og:image" content="https://getmars.eu.cc/assets/og-image.png">
-  <meta property="og:image:alt" content="Mars wordmark and the headline: the agent lives in your IDE.">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:url" content="https://getmars.eu.cc/">
-  <meta property="og:type" content="website">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Mars — A coding agent with the IDE wired in">
-  <meta name="twitter:description" content="Language servers on every write, real debuggers, and a native Rust core. One binary for macOS, Linux, and Windows.">
-  <meta name="twitter:image" content="https://getmars.eu.cc/assets/og-image.png">
-  <meta name="twitter:image:alt" content="Mars wordmark and the headline: the agent lives in your IDE.">
-  <link rel="preload" href="assets/fonts/pilcrow-rounded-700.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" as="image" type="image/webp"
-        imagesrcset="assets/mars-surface-600.webp 600w, assets/mars-surface-900.webp 900w, assets/mars-surface-1400.webp 1400w"
-        imagesizes="(max-width: 50rem) 100vw, 128vh" fetchpriority="high">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mars — a coding agent with the IDE wired in</title>
+<meta name="description" content="Mars is a coding agent with the IDE wired in. Language servers on every write, real debuggers, a native Rust core. One binary for macOS, Linux and Windows.">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#f2efe7">
+<link rel="canonical" href="https://getmars.eu.cc/">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="apple-touch-icon" href="/assets/mars-mark-256.png">
+<meta property="og:title" content="Mars — a coding agent with the IDE wired in">
+<meta property="og:description" content="Language servers on every write, real debuggers, and a native Rust core. One binary for macOS, Linux and Windows.">
+<meta property="og:image" content="https://getmars.eu.cc/assets/og-image.png">
+<meta property="og:image:alt" content="Mars printed as a reference sheet, with the install command in SYNOPSIS.">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://getmars.eu.cc/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Mars — a coding agent with the IDE wired in">
+<meta name="twitter:description" content="Language servers on every write, real debuggers, and a native Rust core. One binary for macOS, Linux and Windows.">
+<meta name="twitter:image" content="https://getmars.eu.cc/assets/og-image.png">
+<meta name="twitter:image:alt" content="Mars printed as a reference sheet, with the install command in SYNOPSIS.">
+<link rel="preload" href="assets/fonts/archivo-var.woff2" as="font" type="font/woff2" crossorigin>
 
-  <style>
-    /* ── Type ─────────────────────────────────────────────────────────
-       One family. Pilcrow Rounded carries the voice, the figures and the
-       commands; the monospace stack is only for real code. */
-    @font-face {
-      font-family: "Pilcrow Rounded";
-      font-style: normal;
-      font-weight: 400;
-      font-display: swap;
-      src: url("assets/fonts/pilcrow-rounded-400.woff2") format("woff2");
+<style>
+  /* ── Type ─────────────────────────────────────────────────────────
+     One variable family. Width is the voice: compressed for the display
+     and the section ladder, normal for reading. */
+  @font-face {
+    font-family: "Archivo";
+    font-style: normal;
+    font-weight: 100 900;
+    font-stretch: 62% 125%;
+    font-display: swap;
+    src: url("assets/fonts/archivo-var.woff2") format("woff2");
+  }
+
+  :root {
+    --paper: #f2efe7;
+    --paper-2: #faf8f3;
+    --ink: #131110;
+    --soft: #57504a;
+    --rule: #c9c3b6;
+    --rule-hard: #a9a294;
+    --stamp: #bf2f1c;
+    --margin: clamp(1.15rem, 4vw, 4.5rem);
+    --shell: 84rem;
+    --measure: 66ch;
+    --sans: "Archivo", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --step-small: 0.9375rem;
+    --step-body: clamp(1.0625rem, 1rem + 0.22vw, 1.125rem);
+    --step-lead: clamp(1.1875rem, 1.1rem + 0.5vw, 1.4375rem);
+    --step-head: clamp(1.75rem, 1.2rem + 2.2vw, 2.75rem);
+    --step-display: clamp(3.5rem, 1.6rem + 7.4vw, 7.5rem);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--paper) url("assets/paper-grain.webp") 0 0 / 180px 180px;
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: var(--step-body);
+    line-height: 1.55;
+    font-variant-numeric: lining-nums;
+  }
+
+  .shell {
+    max-width: var(--shell);
+    margin-inline: auto;
+    padding-inline: var(--margin);
+  }
+
+  .visually-hidden {
+    position: absolute; width: 1px; height: 1px;
+    overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+  }
+
+  ::selection { background: var(--stamp); color: var(--paper); }
+
+  :focus-visible {
+    outline: 3px solid var(--ink);
+    outline-offset: 2px;
+  }
+  .on-red:focus-visible { outline-color: var(--ink); }
+
+  a {
+    color: var(--ink);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.22em;
+  }
+  a:hover { color: var(--stamp); }
+  .copy:hover, .close-sentence button:hover { color: var(--paper); }
+
+  h1, h2, h3, p, ol, ul, figure { margin: 0; }
+  img { display: block; max-width: 100%; height: auto; }
+  b, strong { font-weight: 700; }
+
+  code {
+    font-family: var(--mono);
+    font-size: 0.94em;
+    font-weight: 500;
+  }
+
+  .skip {
+    position: absolute; left: 1rem; top: -4rem; z-index: 20;
+    background: var(--ink); color: var(--paper);
+    padding: 0.8rem 1.1rem; font-weight: 700; font-size: var(--step-small);
+  }
+  .skip:focus { top: 1rem; }
+  .skip:hover { color: var(--paper); text-decoration-color: var(--paper); }
+
+  /* ── Title block ─────────────────────────────────────────────────── */
+  .sheet { padding-top: clamp(1.25rem, 3vw, 2.25rem); }
+
+  .stamp-mark { width: 1.1rem; height: 1.1rem; }
+
+  .title-block {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: clamp(1rem, 3vw, 2.5rem);
+    align-items: end;
+    border-bottom: 3px solid var(--ink);
+    padding-bottom: 0.7rem;
+  }
+  h1 {
+    font-size: var(--step-display);
+    font-weight: 800;
+    font-stretch: 62%;
+    line-height: 0.8;
+    letter-spacing: -0.035em;
+    text-transform: lowercase;
+    display: flex;
+    align-items: baseline;
+    gap: 0.12em;
+  }
+  h1 .suffix {
+    font-size: clamp(1.4rem, 0.28em, 2.2rem);
+    font-weight: 500;
+    letter-spacing: 0;
+    font-stretch: 100%;
+  }
+  .meta {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 0.1rem 1.1rem;
+    padding-left: 1.1rem;
+    border-left: 1px solid var(--rule-hard);
+    font-family: var(--mono);
+    font-size: var(--step-small);
+    line-height: 1.5;
+    text-transform: uppercase;
+    letter-spacing: 0.13em;
+    color: var(--soft);
+  }
+  .meta dt { font-weight: 700; color: var(--ink); }
+  .meta dd { margin: 0; }
+
+  /* The stamp is the page's one gesture: it lands, once. */
+  .stamp {
+    position: absolute;
+    right: var(--margin);
+    top: calc(100% + 1.1rem);
+    width: clamp(5.5rem, 9vw, 7.5rem);
+    height: clamp(5.5rem, 9vw, 7.5rem);
+    rotate: -8deg;
+    color: var(--stamp);
+    mix-blend-mode: multiply;
+    pointer-events: none;
+  }
+  .stamp text { fill: currentColor; font-family: var(--mono); }
+  .stamp .disc { fill: none; stroke: currentColor; stroke-width: 0.5; }
+  .stamp .block { fill: currentColor; }
+  .stamp .knock { fill: var(--paper); }
+
+  .top { position: relative; }
+
+  /* ── Man-page ladder ─────────────────────────────────────────────── */
+  .sec {
+    display: grid;
+    grid-template-columns: clamp(6.5rem, 13vw, 10.5rem) minmax(0, 1fr);
+    border-bottom: 1px solid var(--rule);
+    padding-block: clamp(1.1rem, 2.4vw, 1.7rem);
+  }
+  .sec > .label {
+    font-family: var(--mono);
+    font-size: var(--step-small);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.17em;
+    color: var(--ink);
+    text-align: right;
+    padding-right: clamp(0.9rem, 2vw, 1.5rem);
+    border-right: 1px solid var(--ink);
+    position: relative;
+  }
+  /* the marker: a red tick on the rule, one per section */
+  .sec > .label::after {
+    content: "";
+    position: absolute;
+    right: -2px; top: 0.35em;
+    width: 4px; height: 0.9em;
+    background: var(--stamp);
+  }
+  .sec > .body { padding-left: clamp(0.9rem, 2vw, 1.6rem); min-width: 0; }
+
+  .definition { font-size: var(--step-lead); line-height: 1.35; max-width: 46ch; }
+  .definition b { font-weight: 800; }
+  .gloss {
+    margin-top: 0.6rem;
+    max-width: var(--measure);
+    color: var(--soft);
+  }
+
+  /* ── Synopsis: the live installer ────────────────────────────────── */
+  .plate {
+    border: 2px solid var(--ink);
+    background: var(--paper-2);
+  }
+  .plate-head {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--ink);
+    font-family: var(--mono);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: var(--step-small);
+  }
+  .os { display: flex; flex-wrap: wrap; }
+  .os button {
+    font: inherit;
+    font-weight: 600;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    color: var(--soft);
+    background: transparent;
+    border: 0;
+    border-right: 1px solid var(--rule);
+    padding: 0.7rem 1rem;
+    min-height: 2.75rem;
+    cursor: pointer;
+  }
+  .os button:hover { color: var(--ink); }
+  .os button[aria-selected="true"] {
+    color: var(--ink);
+    font-weight: 800;
+    background: var(--paper);
+    box-shadow: inset 0 -3px 0 var(--stamp);
+  }
+  .plate-file {
+    align-self: center;
+    padding: 0 1rem;
+    color: var(--soft);
+    letter-spacing: 0.1em;
+  }
+  .cmd {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0.85rem 0.9rem 0.85rem 1.1rem;
+    font-family: var(--mono);
+    font-size: clamp(0.9375rem, 0.9rem + 0.2vw, 1.125rem);
+    line-height: 1.3;
+  }
+  .cmd .sigil { color: var(--stamp); font-weight: 700; flex: none; }
+  .cmd code {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: thin;
+    font-size: inherit;
+    font-weight: 400;
+  }
+  .copy {
+    flex: none;
+    font-family: var(--mono);
+    font-size: var(--step-small);
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--paper);
+    background: var(--stamp);
+    border: 0;
+    padding: 0.7rem 1.15rem;
+    min-height: 2.75rem;
+    cursor: pointer;
+    transition: background 140ms;
+  }
+  .copy:hover { background: var(--ink); }
+  .copy[data-state="copied"] { background: var(--ink); color: var(--paper); }
+  .copy[data-state="failed"] { background: var(--paper); color: var(--ink); box-shadow: inset 0 0 0 2px var(--ink); }
+  .plate-note {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem 1.4rem;
+    border-top: 1px solid var(--rule);
+    padding: 0.55rem 1.1rem;
+    font-family: var(--mono);
+    font-size: var(--step-small);
+    color: var(--soft);
+  }
+  .plate-note b { color: var(--ink); font-weight: 700; }
+  .plate-note a { display: inline-flex; align-items: center; min-height: 2.75rem; }
+  .status {
+    min-height: 1.5em;
+    margin-top: 0.4rem;
+    font-family: var(--mono);
+    font-size: var(--step-small);
+    color: var(--stamp);
+    font-weight: 600;
+  }
+
+  /* ── Body copy ───────────────────────────────────────────────────── */
+  .prose { max-width: var(--measure); }
+  .prose + .prose { margin-top: 0.85rem; }
+  .prose b { font-weight: 700; }
+
+  /* ── Figures ─────────────────────────────────────────────────────── */
+  figure { margin-top: 1.4rem; }
+  figure img {
+    width: 100%;
+    max-width: 47.5rem;
+    border: 1px solid var(--ink);
+    background: var(--paper-2);
+  }
+  figcaption {
+    margin-top: 0.5rem;
+    font-family: var(--mono);
+    font-size: var(--step-small);
+    color: var(--soft);
+    max-width: 62ch;
+  }
+  figcaption b { color: var(--ink); }
+
+  /* ── Parameters table ────────────────────────────────────────────── */
+  .params {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border-top: 1px solid var(--ink);
+  }
+  .params div {
+    padding: 0.7rem 0.9rem 0.9rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .params div + div { padding-left: 0.9rem; border-left: 1px solid var(--rule); }
+  .params b {
+    display: block;
+    font-size: clamp(1.75rem, 1.2rem + 1.4vw, 2.5rem);
+    font-weight: 800;
+    font-stretch: 74%;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .params span {
+    display: block;
+    margin-top: 0.35rem;
+    font-family: var(--mono);
+    font-size: var(--step-small);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--soft);
+  }
+  .params em {
+    display: block;
+    margin-top: 0.45rem;
+    font-style: normal;
+    font-size: 1rem;
+    line-height: 1.35;
+  }
+
+  /* ── Flags: the switches, as man-page options ────────────────────── */
+  .flags { display: grid; gap: 0; }
+  .flag {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 1rem 1.4rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .flag:first-child { border-top: 1px solid var(--ink); }
+  .flag-text { font-size: var(--step-lead); line-height: 1.3; font-weight: 500; }
+  .flag-text code {
+    font-weight: 700;
+    font-size: 0.86em;
+    margin-right: 0.5em;
+    color: var(--stamp);
+  }
+  .flag-why {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 220ms ease;
+    font-size: 1rem;
+    color: var(--soft);
+    max-width: 68ch;
+  }
+  .flag-why > span { overflow: hidden; }
+  .flag[data-on="true"] .flag-why { grid-template-rows: 1fr; }
+  .flag-why b { color: var(--ink); }
+
+  /* the switch reads as a two-state man-page marker, not an iOS knob */
+  .switch {
+    display: inline-flex;
+    min-width: 7.5rem;
+    align-items: center;
+    gap: 0.5rem;
+    background: transparent;
+    border: 1px solid var(--ink);
+    padding: 0 0.6rem;
+    min-height: 2.75rem;
+    font-family: var(--mono);
+    font-size: var(--step-small);
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--soft);
+    cursor: pointer;
+  }
+  .switch::before {
+    content: "";
+    width: 0.6rem; height: 0.6rem;
+    border: 1px solid currentColor;
+    flex: none;
+  }
+  .switch[aria-checked="true"] { color: var(--ink); border-color: var(--stamp); }
+  .switch[aria-checked="true"]::before { background: var(--stamp); border-color: var(--stamp); }
+  .switch:hover { color: var(--ink); }
+
+  /* ── Files: providers as an index ────────────────────────────────── */
+  .files {
+    columns: 4;
+    column-gap: 1.6rem;
+    font-family: var(--mono);
+    font-size: 1rem;
+    line-height: 1.7;
+    list-style: none;
+    padding: 0;
+    margin-top: 0.9rem;
+  }
+  .files li { break-inside: avoid; }
+  .files li::before {
+    content: "·  ";
+    color: var(--soft);
+    font-weight: 500;
+  }
+
+  /* ── Examples: the ruler ─────────────────────────────────────────── */
+  .ruler-wrap { margin-top: 1.3rem; }
+  .ruler {
+    width: 100%;
+    appearance: none;
+    background: transparent;
+    height: 2.75rem;
+    cursor: ew-resize;
+    margin: 0;
+  }
+  .ruler::-webkit-slider-runnable-track {
+    height: 1.4rem;
+    background:
+      repeating-linear-gradient(90deg, var(--ink) 0 1px, transparent 1px 12.5%);
+    border-bottom: 1px solid var(--ink);
+  }
+  .ruler::-moz-range-track {
+    height: 1.4rem;
+    background:
+      repeating-linear-gradient(90deg, var(--ink) 0 1px, transparent 1px 12.5%);
+    border-bottom: 1px solid var(--ink);
+  }
+  .ruler::-webkit-slider-thumb {
+    appearance: none;
+    width: 1.1rem; height: 1.75rem;
+    margin-top: 0.1rem;
+    background: var(--stamp);
+    border: 0;
+  }
+  .ruler::-moz-range-thumb {
+    width: 1.1rem; height: 1.75rem;
+    background: var(--stamp);
+    border: 0;
+    border-radius: 0;
+  }
+  .stops {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    font-family: var(--mono);
+    font-size: var(--step-small);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--soft);
+    margin-top: 0.15rem;
+  }
+  .stops span[data-on="true"] { color: var(--ink); font-weight: 800; }
+  .stops span:nth-child(n+2) { text-align: center; }
+  .stops span:last-child { text-align: right; }
+
+  /* ── Close ───────────────────────────────────────────────────────── */
+  .close { padding-top: clamp(1.6rem, 3vw, 2.4rem); }
+  .close-sentence {
+    font-size: clamp(1.75rem, 1.1rem + 2.2vw, 2.75rem);
+    font-weight: 800;
+    font-stretch: 88%;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    max-width: 24ch;
+  }
+  .close-sentence input {
+    font: inherit;
+    letter-spacing: inherit;
+    min-height: 1.6em;
+    width: 6.5em;
+    max-width: 100%;
+    color: var(--ink);
+    background: transparent;
+    border: 0;
+    border-bottom: 2px solid var(--stamp);
+    padding: 0 0.1em;
+    margin-inline: 0.1em;
+  }
+  .close-sentence input::placeholder { color: var(--soft); }
+  .close-sentence button {
+    font: inherit;
+    font-stretch: inherit;
+    letter-spacing: inherit;
+    color: var(--paper);
+    background: var(--stamp);
+    border: 0;
+    padding: 0 0.35em;
+    min-height: 1.6em;
+    cursor: pointer;
+  }
+  .close-sentence button:hover { background: var(--ink); }
+  .close .gloss a { display: inline-flex; align-items: center; min-height: 2.75rem; }
+
+  /* ── Colophon ────────────────────────────────────────────────────── */
+  .colophon {
+    margin-top: clamp(2rem, 5vw, 3.5rem);
+    border-top: 3px solid var(--ink);
+    padding: 0.7rem 0 3rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.4rem 2rem;
+    font-family: var(--mono);
+    font-size: var(--step-small);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--soft);
+  }
+  .colophon b { color: var(--ink); }
+  .colophon nav { display: flex; flex-wrap: wrap; gap: 0 1.4rem; }
+  .colophon a { display: inline-flex; align-items: center; min-height: 2.75rem; }
+  .credit-line a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    vertical-align: middle;
+  }
+
+  .credit-line {
+    max-width: 60ch;
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 0.3rem;
+    flex-basis: 100%;
+  }
+
+  /* ── Responsive ──────────────────────────────────────────────────── */
+  @media (max-width: 62rem) {
+    .files { columns: 3; }
+  }
+  @media (max-width: 48rem) {
+    .sec {
+      grid-template-columns: minmax(0, 1fr);
+      padding-block: 1.15rem;
     }
-    @font-face {
-      font-family: "Pilcrow Rounded";
-      font-style: normal;
-      font-weight: 500;
-      font-display: swap;
-      src: url("assets/fonts/pilcrow-rounded-500.woff2") format("woff2");
+    .sec > .label {
+      text-align: left;
+      border-right: 0;
+      padding: 0 0 0.5rem;
+      border-bottom: 1px solid var(--ink);
     }
-    @font-face {
-      font-family: "Pilcrow Rounded";
-      font-style: normal;
-      font-weight: 700;
-      font-display: swap;
-      src: url("assets/fonts/pilcrow-rounded-700.woff2") format("woff2");
+    .sec > .label::after { right: auto; left: 0; top: auto; bottom: -2px; }
+    .sec > .body { padding-left: 0; padding-top: 0.85rem; }
+    .params { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .params div:nth-child(3) { padding-left: 0; border-left: 0; }
+    .files { columns: 2; }
+    /* On a phone the stamp leaves the corner and sits under the rule. */
+    .stamp {
+      position: static;
+      display: block;
+      width: 4.5rem; height: 4.5rem;
+      margin: 0.7rem 0 0 auto;
     }
-
-    :root {
-      --bg: #0a0710;
-      --surface: #17101f;
-      --surface-2: #211630;
-      --ink: #f2ecf5;
-      --muted: #ab9cba;
-      --accent: #ef5f2f;
-      --accent-hover: #ff7a4f;
-      --accent-ink: #14070a;
-      --ok: #b6f0bd;
-      --ok-ink: #101c12;
-      --radius: 999px;
-
-      --margin: clamp(1rem, 3.2vw, 2.5rem);
-      --shell: 78rem;
-      --measure: 62ch;
-
-      --step-small: clamp(1rem, 0.94rem + 0.18vw, 1.0625rem);
-      --step-body: clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
-      --step-lead: clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem);
-      --step-head: clamp(2rem, 1.3rem + 3.2vw, 4rem);
-      --step-display: clamp(2.75rem, 1.2rem + 5.4vw, 5.5rem);
+    .title-block { padding-right: 0; }
+    .title-block {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 0.7rem;
     }
-
-    *, *::before, *::after { box-sizing: border-box; }
-    [hidden] { display: none !important; }
-
-    html {
-      scroll-behavior: smooth;
-      -webkit-text-size-adjust: 100%;
-      scrollbar-color: var(--surface-2) var(--bg);
-    }
-
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--ink);
-      font-family: "Pilcrow Rounded", ui-sans-serif, system-ui, sans-serif;
-      font-size: var(--step-body);
-      line-height: 1.55;
-      -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
-    }
-
-    /* The star field is one drawn layer behind everything: the only texture,
-       and it carries the motif at its smallest scale. */
-    .sky {
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      pointer-events: none;
+    .meta dd:first-of-type { padding-right: 0.2rem; }
+    .meta {
       width: 100%;
-      height: 100%;
+      grid-template-columns: auto minmax(0, 1fr);
+      letter-spacing: 0.1em;
+      border-left: 0;
+      padding-left: 0;
     }
-    .sky circle { fill: var(--ink); }
-
-    ::selection { background: var(--accent); color: var(--accent-ink); }
-
-    :focus-visible {
-      outline: 2px solid var(--ink);
-      outline-offset: 3px;
-    }
-    /* On the rust fill the bone ring only reaches 2.85:1; the deep ink does. */
-    .copy:focus-visible,
-    .close-sentence button:focus-visible,
-    .sw.on .knob:focus-visible { outline-color: var(--accent-ink); }
-
-    a { color: var(--ink); text-underline-offset: 0.24em; text-decoration-thickness: 1px; }
-    a:hover { color: var(--accent-hover); }
-    /* The skip link fills with bone, where raised rust is only 2.22:1. */
-    .skip:hover { color: var(--accent-ink); }
-
-    h1, h2, h3 {
-      margin: 0;
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      line-height: 0.96;
-      text-wrap: balance;
-    }
-
-    p { margin: 0; }
-    img { display: block; max-width: 100%; height: auto; }
-
-    code {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      font-size: 0.92em;
-    }
-
-    .shell {
-      max-width: var(--shell);
-      margin-inline: auto;
-      padding-inline: var(--margin);
-    }
-
-    .visually-hidden {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      clip-path: inset(50%);
-      white-space: nowrap;
-    }
-
-    .skip {
-      position: absolute;
-      left: 1rem;
-      top: -4rem;
-      z-index: 100;
-      background: var(--ink);
-      color: var(--bg);
-      padding: 0.7rem 1.2rem;
-      border-radius: var(--radius);
-      font-weight: 700;
-    }
-    .skip:focus { top: 1rem; }
-
-    /* ── Bar ────────────────────────────────────────────────────────── */
-    .bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-      padding-block: 1.25rem;
-    }
-    .mark {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.55rem;
-      color: var(--ink);
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 1.375rem;
-      letter-spacing: -0.01em;
-      min-height: 2.75rem;
-    }
-    .mark img { width: 1.9rem; height: 1.9rem; image-rendering: pixelated; }
-    .bar nav { display: flex; align-items: center; gap: clamp(1rem, 2.4vw, 1.9rem); }
-    .bar nav a {
-      color: var(--muted);
-      text-decoration: none;
-      font-size: var(--step-small);
-      font-weight: 500;
-      display: inline-flex;
-      align-items: center;
-      min-height: 2.75rem;
-    }
-    .bar nav a:hover { color: var(--ink); }
-    .bar nav .bar-cta { color: var(--ink); font-weight: 700; display: inline-flex; align-items: center; min-height: 2.75rem; }
-    @media (max-width: 46rem) {
-      .bar nav a:not(.bar-cta) { display: none; }
-    }
-
-    /* ── The motif: one circle, at every scale ──────────────────────── */
-    .hero {
-      position: relative;
-      overflow: clip;
-      isolation: isolate;
-    }
-    .hero-shell {
-      position: relative;
-      min-height: min(84svh, 46rem);
-      display: flex;
-      align-items: center;
-      padding-block: clamp(2rem, 5vh, 4rem) clamp(3rem, 8vh, 6rem);
-    }
-    /* The giant shape enters from the right and is cropped on three edges.
-       The photograph is pre-composited onto the rust disc with the ground veil
-       baked in, so contrast holds without a stacking layer the detector (and
-       some readers) cannot see through. */
-    .hero-orb {
-      position: absolute;
-      z-index: -1;
-      top: 50%;
-      left: 74%;
-      width: 128vh;
-      aspect-ratio: 1;
-      border-radius: 50%;
-      translate: -50% -50%;
-      background: var(--accent);
-      overflow: hidden;
-    }
-    .hero-orb picture { display: contents; }
-    .hero-orb img {
+  }
+  @media (max-width: 30rem) {
+    .cmd { flex-wrap: wrap; padding: 0.8rem; }
+    .cmd code {
+      font-size: 0.9375rem;
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      overflow-x: visible;
     }
-    .hero-copy { max-width: 40rem; min-width: 0; }
-    .hero h1 {
-      font-size: var(--step-display);
-      max-width: 15ch;
-      letter-spacing: -0.045em;
-    }
-    @media (max-width: 24rem) {
-      .hero h1 { font-size: clamp(2.4rem, 12.5vw, 2.9rem); max-width: 12ch; }
-    }
-    .hero p {
-      margin-top: 1.25rem;
-      max-width: 44ch;
-      font-size: var(--step-lead);
-      color: var(--ink);
-      line-height: 1.45;
-    }
-    /* Below 50rem the copy sits on the orb rather than beside it; the copy
-       keeps the lead step there instead of shrinking to body. */
-    @media (max-width: 50rem) {
-      .hero-orb { opacity: 0.9; }
-    }
+    .copy { width: 100%; }
+    .plate-file { display: none; }
+    .files { columns: 2; font-size: 0.9375rem; }
+    .close-sentence input { width: 100%; margin-inline: 0; }
+  }
 
-    /* ── Install plate ──────────────────────────────────────────────── */
-    .plate {
-      margin-top: 2rem;
-      min-width: 0;
-      max-width: 37rem;
-      background: var(--surface);
-      border-radius: 1.35rem;
-      padding: 0.75rem;
+  /* ── Motion: the sheet prints, once ─────────────────────────────── */
+  @keyframes land {
+    from { opacity: 0; scale: 1.5; rotate: -2deg; }
+    to { opacity: 1; scale: 1; rotate: -8deg; }
+  }
+  @keyframes rule-in {
+    from { clip-path: inset(0 100% 0 0); }
+    to { clip-path: inset(0 0 0 0); }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .stamp { animation: land 520ms 240ms cubic-bezier(0.2, 1.1, 0.3, 1) both; }
+    .title-block { animation: rule-in 620ms cubic-bezier(0.16, 1, 0.3, 1) both; }
+    .js .mark-in { opacity: 0; translate: 0 10px; }
+    .js .mark-in.in {
+      opacity: 1;
+      translate: 0 0;
+      transition: opacity 340ms ease, translate 340ms ease;
     }
-    .plate-head {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0 0.35rem 0.6rem;
-    }
-    .os {
-      display: inline-flex;
-      gap: 0.25rem;
-      background: var(--surface-2);
-      border-radius: var(--radius);
-      padding: 0.2rem;
-    }
-    .os button {
-      font: inherit;
-      font-size: var(--step-small);
-      font-weight: 500;
-      color: var(--muted);
-      display: inline-flex;
-      align-items: center;
-      min-height: 2.75rem;
-      background: transparent;
-      border: 0;
-      border-radius: var(--radius);
-      padding: 0.35rem 0.75rem;
-      cursor: pointer;
-    }
-    .os button[aria-selected="true"] { background: var(--bg); color: var(--ink); }
-    .plate-file { margin-left: auto; padding-right: 0.35rem; font-size: var(--step-small); color: var(--muted); }
-    .plate-body {
-      display: flex;
-      align-items: center;
-      gap: 0.65rem;
-      background: var(--bg);
-      border-radius: var(--radius);
-      padding: 0.5rem 0.5rem 0.5rem 1.35rem;
-    }
-    .cmd {
-      flex: 1 1 auto;
-      min-width: 0;
-      display: flex;
-      align-items: baseline;
-      overflow-x: auto;
-      scrollbar-width: thin;
-      white-space: nowrap;
-    }
-    .plate-body code {
-      font-size: 1rem;
-      color: var(--ink);
-    }
-    .sigil { color: var(--accent); margin-right: 0.45rem; user-select: none; }
-    .copy {
-      flex: 0 0 auto;
-      font: inherit;
-      font-size: var(--step-small);
-      font-weight: 700;
-      background: var(--accent);
-      color: var(--accent-ink);
-      border: 0;
-      border-radius: var(--radius);
-      padding: 0.55rem 1.05rem;
-      min-height: 2.75rem;
-      cursor: pointer;
-      transition: background 160ms, color 160ms;
-    }
-    .copy:hover { background: var(--accent-hover); }
-    .copy[data-state="copied"] { background: var(--ok); color: var(--ok-ink); }
-    .copy[data-state="failed"] { background: var(--surface-2); color: var(--ink); }
-    .plate-note {
-      margin-top: 0.65rem;
-      padding-inline: 0.35rem 0.85rem;
-      font-size: var(--step-small);
-      color: var(--muted);
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.3rem 0.9rem;
-    }
-    .copy-status {
-      min-height: 1.6em;
-      margin-top: 0.35rem;
-      padding-inline: 0.35rem;
-      font-size: var(--step-small);
-      color: var(--ok);
-    }
-    .plate-note code { color: var(--ink); }
-    .plate-note a { color: var(--ink); display: inline-flex; align-items: center; min-height: 2.75rem; }
-    @media (min-width: 40rem) { .plate-note a { min-height: 2.75rem; margin-block: -0.5rem; } }
-    @media (max-width: 30rem) {
-      .plate-body { flex-direction: column; align-items: stretch; padding: 0.75rem; gap: 0.7rem; }
-      .plate-body code { font-size: 1rem; }
-      .copy { text-align: center; }
-    }
-
-    /* ── Section furniture ──────────────────────────────────────────── */
-    .band { padding-block: clamp(3.5rem, 8vw, 7rem); }
-    .band h2 {
-      font-size: var(--step-head);
-      max-width: 18ch;
-      margin-bottom: clamp(1.75rem, 4vw, 3rem);
-    }
-
-    /* ── Proof: the tile board ──────────────────────────────────────── */
-    .board {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 0.5rem;
-    }
-    .tile {
-      aspect-ratio: 3 / 2;
-      border-radius: 1.35rem;
-      background: var(--surface);
-      display: flex;
-      align-items: flex-start;
-      padding: 1.2rem;
-      font-weight: 500;
-      font-size: 1.05rem;
-      letter-spacing: -0.02em;
-      color: var(--ink);
-    }
-    .tile-wide {
-      grid-column: span 2;
-      aspect-ratio: auto;
-      min-height: 100%;
-      background: var(--accent);
-      color: var(--accent-ink);
-      font-weight: 700;
-      font-size: var(--step-head);
-      line-height: 1;
-      letter-spacing: -0.025em;
-    }
-    .tile-wide h2 { font-size: inherit; line-height: inherit; letter-spacing: inherit; text-wrap: balance; }
-    @media (max-width: 52rem) {
-      .board { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.4rem; }
-      .tile { font-size: 1rem; padding: 0.9rem; }
-      .tile-wide { grid-column: span 2; aspect-ratio: 2 / 1; font-size: 1.375rem; }
-    }
-    @media (max-width: 30rem) {
-      .tile:nth-child(n + 10) { display: none; }
-    }
-
-    /* ── Features: statement bands with real switches ───────────────── */
-    .switches { display: flex; flex-direction: column; gap: 0.5rem; }
-    .sw {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      align-items: center;
-      gap: 1.5rem;
-      padding: clamp(1.4rem, 3.2vw, 2.4rem) clamp(1.2rem, 3vw, 2.4rem);
-      border-radius: 1.35rem;
-      background: var(--surface);
-      transition: background 220ms;
-    }
-    .sw.on { background: var(--accent); color: var(--accent-ink); }
-    .sw-text {
-      font-size: clamp(1.25rem, 2.6vw, 2.1rem);
-      font-weight: 500;
-      letter-spacing: -0.02em;
-      line-height: 1.1;
-      color: var(--muted);
-      transition: color 220ms;
-    }
-    .sw.on .sw-text { color: var(--accent-ink); }
-    .sw.on .sw-why { color: var(--accent-ink); }
-    .sw-why {
-      grid-column: 1 / -1;
-      font-size: var(--step-small);
-      color: var(--muted);
-      opacity: 0;
-      max-height: 0;
-      overflow: hidden;
-      transition: opacity 240ms, max-height 240ms;
-    }
-    /* Two lines at the narrowest step measure 74px; 8rem clears them. */
-    .sw.on .sw-why { opacity: 1; max-height: 8rem; }
-    .sw-why b { font-weight: 700; }
-    /* The knob is the motif: a filled circle on a pill track. */
-    .knob {
-      position: relative;
-      flex: none;
-      width: 3.9rem;
-      height: 2.75rem;
-      padding: 0;
-      border: 0;
-      border-radius: var(--radius);
-      background: var(--surface-2);
-      cursor: pointer;
-      transition: background 200ms;
-    }
-    .knob::after {
-      content: "";
-      position: absolute;
-      top: 0.5rem;
-      left: 0.3rem;
-      width: 1.75rem;
-      height: 1.75rem;
-      border-radius: 50%;
-      background: var(--muted);
-      transition: translate 220ms cubic-bezier(0.2, 0.9, 0.25, 1), background 200ms;
-    }
-    .knob[aria-checked="true"] { background: color-mix(in srgb, var(--accent-ink) 22%, transparent); }
-    .knob[aria-checked="true"]::after { translate: 1.85rem 0; background: var(--accent-ink); }
-    .sw.on .knob { background: color-mix(in srgb, var(--accent-ink) 22%, transparent); }
-
-    /* ── Stages: the drag ───────────────────────────────────────────── */
-    .stages {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
-      align-items: center;
-      min-height: 30rem;
-    }
-    .stage-copy h2 { max-width: 14ch; }
-    .stage-why {
-      margin-top: 1.35rem;
-      max-width: 40ch;
-      color: var(--muted);
-    }
-    .stage-shot {
-      margin: 0;
-      position: relative;
-      justify-self: end;
-      width: min(100%, 34rem);
-      aspect-ratio: 4 / 3;
-      border-radius: 50%;
-      overflow: hidden;
-      background: var(--surface);
-    }
-    .stage-shot img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center;
-    }
-    .stage-shot img + img { position: absolute; inset: 0; opacity: 0; }
-    .stage-shot img[data-on="true"] { opacity: 1; }
-    .slider-wrap { margin-top: clamp(1.75rem, 4vw, 3rem); }
-    .slider-wrap input[type="range"] {
-      width: 100%;
-      appearance: none;
-      background: transparent;
-      height: 2.75rem;
-      cursor: grab;
-    }
-    .slider-wrap input[type="range"]::-webkit-slider-runnable-track {
-      height: 0.5rem;
-      border-radius: var(--radius);
-      background: var(--surface-2);
-    }
-    .slider-wrap input[type="range"]::-moz-range-track {
-      height: 0.5rem;
-      border-radius: var(--radius);
-      background: var(--surface-2);
-    }
-    .slider-wrap input[type="range"]::-webkit-slider-thumb {
-      appearance: none;
-      width: 2rem;
-      height: 2rem;
-      margin-top: -1.02rem;
-      border-radius: 50%;
-      background: var(--accent);
-      border: 0;
-    }
-    .slider-wrap input[type="range"]::-moz-range-thumb {
-      width: 2rem;
-      height: 2rem;
-      border-radius: 50%;
-      background: var(--accent);
-      border: 0;
-    }
-    .stops {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 0.5rem;
-      margin-top: 0.5rem;
-      font-size: var(--step-small);
-      color: var(--muted);
-    }
-    .stops span[data-on="true"] { color: var(--ink); font-weight: 700; }
-    @media (max-width: 50rem) {
-      .stages { grid-template-columns: minmax(0, 1fr); }
-      .stage-shot { order: -1; justify-self: stretch; width: auto; }
-      .stops { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    }
-
-    /* ── Close: a sentence with a blank ─────────────────────────────── */
-    .close {
-      padding-block: clamp(4rem, 9vw, 8rem) clamp(2rem, 5vw, 4rem);
-      display: grid;
-      grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
-      gap: 1rem clamp(1.5rem, 4vw, 3rem);
-      align-items: end;
-    }
-    .close-sentence {
-      font-size: var(--step-lead);
-      font-weight: 700;
-      letter-spacing: -0.04em;
-      line-height: 1.3;
-      max-width: 30ch;
-    }
-    @media (max-width: 62rem) {
-      .close { grid-template-columns: minmax(0, 1fr); }
-      .close-sentence { max-width: none; }
-      .close-note { margin-top: 0.5rem; }
-    }
-    .close-sentence input {
-      font: inherit;
-      letter-spacing: inherit;
-      width: 7.5em;
-      max-width: 100%;
-      color: var(--ink);
-      background: var(--surface-2);
-      border: 0;
-      border-radius: var(--radius);
-      padding: 0.06em 0.42em;
-      margin-inline: 0.08em;
-      min-height: 2.2em;
-    }
-    .close-sentence input::placeholder { color: var(--muted); }
-    .close-sentence button {
-      font: inherit;
-      letter-spacing: inherit;
-      color: var(--accent-ink);
-      background: var(--accent);
-      border: 0;
-      border-radius: var(--radius);
-      padding: 0.1em 0.5em;
-      min-height: 2.2em;
-      cursor: pointer;
-      transition: background 160ms;
-    }
-    .close-sentence button:hover { background: var(--accent-hover); }
-    .close-note {
-      margin-top: 0;
-      padding-bottom: 0.4rem;
-      font-size: var(--step-small);
-      color: var(--muted);
-    }
-    .close-note b { color: var(--ink); font-weight: 700; }
-    .close-note a { display: inline-flex; align-items: center; min-height: 2.75rem; }
-
-    /* ── Footer ─────────────────────────────────────────────────────── */
-    footer {
-      padding-block: 2.5rem 3rem;
-      font-size: var(--step-small);
-      color: var(--muted);
-    }
-    .foot {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 1.5rem;
-    }
-    .foot p { max-width: var(--measure); }
-    .foot nav { display: flex; flex-wrap: wrap; gap: 0 1.25rem; }
-    .foot a { color: var(--ink); display: inline-flex; align-items: center; min-height: 2.75rem; }
-
-    /* ── Motion ─────────────────────────────────────────────────────── */
-    @keyframes shutter {
-      from { clip-path: inset(0 100% 0 0); }
-      to { clip-path: inset(0 0 0 0); }
-    }
-    @keyframes settle {
-      from { scale: 1.14; }
-      to { scale: 1; }
-    }
-    @media (prefers-reduced-motion: no-preference) {
-      .hero-orb {
-        animation: shutter 1.05s cubic-bezier(0.16, 1, 0.3, 1) both,
-                   settle 1.05s cubic-bezier(0.16, 1, 0.3, 1) both;
-      }
-      .hero h1 {
-        animation: shutter 720ms 120ms cubic-bezier(0.16, 1, 0.3, 1) both;
-      }
-      /* Entrance is script-gated: without JS the page still shows every
-         element, because the hidden states only exist under .js. */
-      .js .rise {
-        opacity: 0;
-        translate: 0 22px;
-        transition: opacity 520ms cubic-bezier(0.16, 1, 0.3, 1),
-                    translate 520ms cubic-bezier(0.16, 1, 0.3, 1);
-      }
-      .js .rise.in { opacity: 1; translate: 0 0; }
-
-      /* Staggered children: a tile, a sentence and its switch arrive on their
-         own beat instead of dropping in as one block. */
-      .js .board .tile,
-      .js .switches .sw {
-        opacity: 0;
-        translate: 0 18px;
-        transition: opacity 480ms cubic-bezier(0.16, 1, 0.3, 1),
-                    translate 480ms cubic-bezier(0.16, 1, 0.3, 1),
-                    background 220ms ease;
-      }
-      .js .board .tile.in,
-      .js .switches .sw.in { opacity: 1; translate: 0 0; }
-      .js .board .tile:nth-child(2n) { transition-delay: 60ms; }
-      .js .board .tile:nth-child(3n) { transition-delay: 110ms; }
-      .js .switches .sw:nth-child(2n) { transition-delay: 70ms; }
-      .js .switches .sw:nth-child(3n) { transition-delay: 120ms; }
-
-      .stage-shot img { transition: opacity 260ms ease; }
-      .stage-shot { transition: scale 620ms cubic-bezier(0.16, 1, 0.3, 1); }
-      .stage-shot.scrub { scale: 0.98; }
-      .tile { transition: background 200ms ease; }
-      .tile:not(.tile-wide):hover { background: var(--surface-2); }
-
-      /* The knob has weight. */
-      .knob:active::after { width: 1.86rem; }
-      .copy:active { scale: 0.97; }
-
-      /* Controls answer the pointer on the way in, not only on click. */
-      .bar nav a, .foot a {
-        transition: color 160ms ease;
-      }
-      .os button { transition: background 180ms ease, color 180ms ease; }
-
-      /* Stars drift, very slowly, so the field is alive without moving. */
-      .sky { animation: drift 90s linear infinite; }
-      @keyframes drift {
-        from { translate: 3% 0; }
-        50% { translate: -3% 1.5%; }
-        to { translate: 3% 0; }
-      }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      html { scroll-behavior: auto; }
-      .hero-orb, .hero h1 { animation: none; }
-      * { transition-duration: 0.01ms !important; }
-    }
-  </style>
+    .plate, figure img, .flag { transition: background 160ms; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .stamp, .title-block { animation: none; }
+    * { transition-duration: 0.01ms !important; }
+  }
+</style>
 </head>
 
 <body>
-  <a class="skip" href="#main">Skip to content</a>
+<a class="skip" href="#main">Skip to content</a>
 
-  <svg class="sky" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-hidden="true">
-    <g opacity="0.5">
-      <circle cx="80" cy="140" r="1.1"/><circle cx="210" cy="380" r="0.9"/>
-      <circle cx="330" cy="80" r="1.2"/><circle cx="470" cy="270" r="0.8"/>
-      <circle cx="610" cy="120" r="1.1"/><circle cx="740" cy="330" r="0.9"/>
-      <circle cx="880" cy="190" r="1.2"/><circle cx="950" cy="410" r="0.8"/>
-      <circle cx="140" cy="620" r="1"/><circle cx="290" cy="760" r="1.1"/>
-      <circle cx="430" cy="560" r="0.9"/><circle cx="560" cy="700" r="1.2"/>
-      <circle cx="690" cy="520" r="0.8"/><circle cx="820" cy="660" r="1"/>
-      <circle cx="60" cy="880" r="1.1"/><circle cx="380" cy="920" r="0.9"/>
-      <circle cx="660" cy="880" r="1"/><circle cx="910" cy="780" r="1.1"/>
-    </g>
-  </svg>
-
-  <header class="shell">
-    <div class="bar">
-      <a class="mark" href="/">
-        <img src="assets/mars-mark.svg" alt="" width="30" height="30">
-        Mars
-      </a>
-      <nav aria-label="Sections">
-        <a href="#providers">Providers</a>
-        <a href="#abilities">Abilities</a>
-        <a href="#stages">Stages</a>
-        <a class="bar-cta" href="#install">Install</a>
-      </nav>
+<div class="shell sheet">
+  <header class="top">
+    <div class="title-block">
+      <h1>mars<span class="suffix">(1)</span></h1>
+      <dl class="meta">
+        <dt>issue</dt><dd>reference sheet</dd>
+        <dt>licence</dt><dd>MIT</dd>
+        <dt>targets</dt><dd>macOS · Linux · Windows</dd>
+        <dt>core</dt><dd>Rust, in-process</dd>
+      </dl>
     </div>
+
+    <svg class="stamp" viewBox="0 0 100 100" aria-hidden="true">
+      <circle class="disc" cx="50" cy="50" r="47"/>
+      <text x="50" y="24" font-size="8.5" text-anchor="middle" letter-spacing="1.4">CONTROLLED</text>
+      <rect class="block" x="25" y="31" width="50" height="34" rx="17"/>
+      <path class="knock" d="M34 39h7v18h-7zM44 39h7v5.5h1V39h7v18h-7v-6h-1v6h-7z"/>
+      <text x="50" y="80" font-size="7.5" text-anchor="middle" letter-spacing="1.1">REV 4</text>
+    </svg>
   </header>
 
   <main id="main">
-    <!-- ── Hero ──────────────────────────────────────────────────── -->
-    <section class="hero">
-      <div class="shell hero-shell">
-        <div class="hero-orb" aria-hidden="true">
-          <picture>
-            <source type="image/webp"
-                    srcset="assets/mars-surface-600.webp 600w, assets/mars-surface-900.webp 900w, assets/mars-surface-1400.webp 1400w"
-                    sizes="(max-width: 50rem) 100vw, 128vh">
-            <img src="assets/mars-surface-900.jpg"
-                 srcset="assets/mars-surface-600.jpg 600w, assets/mars-surface-900.jpg 900w, assets/mars-surface-1400.jpg 1400w"
-                 sizes="(max-width: 50rem) 100vw, 128vh"
-                 alt="Mount Sharp on the Martian horizon, with striated rock rows in the foreground." width="1400" height="1400" fetchpriority="high">
-          </picture>
+    <section class="sec" aria-labelledby="name-h">
+      <h2 class="label" id="name-h">Name</h2>
+      <div class="body">
+        <p class="definition"><b>mars</b> — <b>a coding agent with the IDE wired in</b></p>
+        <p class="gloss">Language servers on every write, real debuggers over DAP, and a Rust core that keeps search and the shell inside the process. One binary, no WSL bridge.</p>
+      </div>
+    </section>
+
+    <section class="sec" aria-labelledby="syn-h">
+      <h2 class="label" id="syn-h">Synopsis</h2>
+      <div class="body">
+        <div class="plate" id="install">
+          <div class="plate-head">
+            <div class="os" role="tablist" aria-label="Install command for your platform">
+              <button type="button" role="tab" id="tab-posix" aria-controls="panel-posix" aria-selected="true">macOS &amp; Linux</button>
+              <button type="button" role="tab" id="tab-win" aria-controls="panel-win" aria-selected="false">Windows</button>
+            </div>
+            <span class="plate-file" id="plate-file">install.sh</span>
+          </div>
+          <div class="cmd" role="tabpanel" id="panel-posix" aria-labelledby="tab-posix">
+            <span class="sigil" aria-hidden="true">$</span>
+            <code id="cmd-posix">curl -fsSL https://getmars.eu.cc/install | sh</code>
+            <button class="copy on-red" type="button" aria-describedby="copy-status" aria-label="Copy the macOS and Linux install command">Copy</button>
+          </div>
+          <div class="cmd" role="tabpanel" id="panel-win" aria-labelledby="tab-win" hidden>
+            <span class="sigil" aria-hidden="true">&gt;</span>
+            <code id="cmd-win">irm https://getmars.eu.cc/install.ps1 | iex</code>
+            <button class="copy on-red" type="button" aria-describedby="copy-status" aria-label="Copy the Windows install command">Copy</button>
+          </div>
+          <p class="plate-note">
+            <span>Installs to <b id="note-path">~/.local/bin</b>, <span id="note-priv">no sudo</span></span>
+            <span>Checksum when released</span>
+            <a id="script-link" href="https://github.com/MarsAI-org/mars-site/blob/main/install" target="_blank" rel="noopener">Read the script</a>
+          </p>
         </div>
+        <p class="status" id="copy-status" role="status"></p>
+        <p class="gloss"><b>mars</b> [<code>--model</code> <i>name</i>] [<code>--cwd</code> <i>dir</i>] [<i>message</i>] · also via npm, Bun, Nix and mise.</p>
+      </div>
+    </section>
 
-        <div class="hero-copy">
-          <h1>The agent lives in your IDE.</h1>
-          <p>Mars drives your shell, reads your repo, and writes through the same language servers and debuggers your editor already runs. One binary, three platforms.</p>
+    <section class="sec" aria-labelledby="desc-h">
+      <h2 class="label" id="desc-h">Description</h2>
+      <div class="body">
+        <p class="prose mark-in">Most agents shell out to <code>rg</code>, <code>grep</code> and <code>bash</code>. Where those binaries are missing the agent is blind, and where they exist every call is a fork. Mars links the real implementations into the process: search, glob, find and a bash with sessions are in-process, alongside thirty-six built-in tools.</p>
+        <p class="prose mark-in">Writes go through the same language servers your editor already runs. A rename calls <code>workspace/willRenameFiles</code>, so re-exports and barrel files follow before the file moves. Debuggers attach over DAP (lldb, dlv, debugpy) instead of print statements.</p>
+        <figure class="mark-in">
+          <img src="assets/proof-lspv.webp" alt="The Mars terminal with a TypeScript and a Biome language server both active." width="760" height="430" fetchpriority="high" decoding="async">
+          <figcaption><b>Fig. 1</b>: two language servers attached while the agent works.</figcaption>
+        </figure>
+      </div>
+    </section>
 
-          <div class="plate" id="install">
-            <div class="plate-head">
-              <div class="os" role="tablist" aria-label="Install command for your platform">
-                <button type="button" role="tab" id="tab-posix" aria-controls="panel-posix" aria-selected="true">macOS &amp; Linux</button>
-                <button type="button" role="tab" id="tab-win" aria-controls="panel-win" aria-selected="false">Windows</button>
-              </div>
-              <span class="plate-file" id="plate-file">install.sh</span>
-            </div>
+    <section class="sec" aria-labelledby="param-h">
+      <h2 class="label" id="param-h">Parameters</h2>
+      <div class="body">
+        <div class="params">
+          <div><b>75</b><span>providers</span><em>One router across nine model roles.</em></div>
+          <div><b>36</b><span>built-in tools</span><em>No fork for a single call.</em></div>
+          <div><b>240k</b><span>Rust lines</span><em>Twelve crates, compiled in.</em></div>
+          <div><b>6</b><span>targets</span><em>The same binary on every platform.</em></div>
+        </div>
+      </div>
+    </section>
 
-            <div class="plate-body" role="tabpanel" id="panel-posix" aria-labelledby="tab-posix">
-              <span class="cmd"><span class="sigil" aria-hidden="true">$</span><code id="cmd-posix">curl -fsSL https://getmars.eu.cc/install | sh</code></span>
-              <button class="copy" type="button" aria-describedby="copy-status" aria-label="Copy the macOS and Linux install command">Copy</button>
-            </div>
-            <div class="plate-body" role="tabpanel" id="panel-win" aria-labelledby="tab-win" hidden>
-              <span class="cmd"><span class="sigil" aria-hidden="true">&gt;</span><code id="cmd-win">irm https://getmars.eu.cc/install.ps1 | iex</code></span>
-              <button class="copy" type="button" aria-describedby="copy-status" aria-label="Copy the Windows install command">Copy</button>
-            </div>
-            <p class="copy-status" id="copy-status" role="status"></p>
-
-            <p class="plate-note">
-              <span>Installs to <code id="note-path">~/.local/bin</code>, <span id="note-priv">no sudo</span></span>
-              <span>Checksum when released</span>
-              <a id="script-link" href="https://github.com/MarsAI-org/mars-site/blob/main/install" target="_blank" rel="noopener">Read the script</a>
-            </p>
+    <section class="sec" aria-labelledby="flags-h">
+      <h2 class="label" id="flags-h">Flags</h2>
+      <div class="body">
+        <p class="gloss" style="margin:0 0 0.4rem">What the agent may touch. Each flag is passed or cleared; the consequence prints under it.</p>
+        <div class="flags">
+          <div class="flag" data-on="false">
+            <p class="flag-text"><code>--prewalk</code> The first edit hands off to a smaller model.</p>
+            <button class="switch" type="button" role="switch" aria-checked="false" aria-label="Hand the first edit to a smaller model"></button>
+            <p class="flag-why"><span>A one-shot handoff at the first eligible edit or write turn, gated on a successful <b>todo</b> call. <b>--prewalk-into</b> picks a different target than the smol role.</span></p>
+          </div>
+          <div class="flag" data-on="false">
+            <p class="flag-text"><code>--plan-yolo</code> Plan read-only, then execute unattended.</p>
+            <button class="switch" type="button" role="switch" aria-checked="false" aria-label="Plan read-only and then execute unattended"></button>
+            <p class="flag-why"><span>Starts in read-only plan mode, auto-approves the model's own plan, then switches to the execution target to implement it.</span></p>
+          </div>
+          <div class="flag" data-on="false">
+            <p class="flag-text"><code>--advisor</code> A second reader watches every turn.</p>
+            <button class="switch" type="button" role="switch" aria-checked="false" aria-label="Run a second reader over every turn"></button>
+            <p class="flag-why"><span>A passive reviewer reads each turn and injects notes; it never takes the turn itself.</span></p>
+          </div>
+          <div class="flag" data-on="false">
+            <p class="flag-text"><code>--no-lsp</code> Clears language servers, formatting and diagnostics.</p>
+            <button class="switch" type="button" role="switch" aria-checked="false" aria-label="Clear language servers, formatting and diagnostics"></button>
+            <p class="flag-why"><span>Left clear, LSP tools run on every write and renames go through <b>workspace/willRenameFiles</b>, so re-exports and barrel files follow before the file moves.</span></p>
+          </div>
+          <div class="flag" data-on="false">
+            <p class="flag-text"><code>--auto-approve</code> Force the yolo approval tier.</p>
+            <button class="switch" type="button" role="switch" aria-checked="false" aria-label="Force the yolo approval tier"></button>
+            <p class="flag-why"><span>Explicit tool and user policies still apply, and so do provider safety checks. This raises the ceiling, it does not remove the checks.</span></p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ── Providers: the tile board ─────────────────────────────── -->
-    <section class="band shell" id="providers" aria-labelledby="providers-h">
-      <div class="board">
-        <div class="tile tile-wide"><h2 id="providers-h">75 providers, one router.</h2></div>
-        <div class="tile">Anthropic</div>
-        <div class="tile">OpenAI</div>
-        <div class="tile">Google</div>
-        <div class="tile">Bedrock</div>
-        <div class="tile">Vertex</div>
-        <div class="tile">Azure</div>
-        <div class="tile">DeepSeek</div>
-        <div class="tile">Mistral</div>
-        <div class="tile">Groq</div>
-        <div class="tile">Ollama</div>
-        <div class="tile">OpenRouter</div>
+    <section class="sec" aria-labelledby="files-h">
+      <h2 class="label" id="files-h">Files</h2>
+      <div class="body">
+        <p class="gloss" style="margin:0">Sixteen of the seventy-five bundled providers; bring your own key for any one.</p>
+        <ol class="files">
+          <li>Anthropic</li><li>OpenAI</li><li>Google</li><li>Bedrock</li>
+          <li>Vertex</li><li>Azure</li><li>DeepSeek</li><li>Mistral</li>
+          <li>Groq</li><li>Ollama</li><li>OpenRouter</li><li>Fireworks</li>
+          <li>Together</li><li>Cerebras</li><li>xAI</li><li>Perplexity</li>
+        </ol>
       </div>
     </section>
 
-    <!-- ── Abilities: sentences with switches ────────────────────── -->
-    <section class="band shell" id="abilities" aria-labelledby="abilities-h">
-      <h2 id="abilities-h" class="rise">Turn on what the agent may touch.</h2>
-      <div class="switches">
-        <div class="sw on">
-          <p class="sw-text">Renames go through the language server</p>
-          <button class="knob" type="button" role="switch" aria-checked="true" aria-label="Rename through the language server"></button>
-          <p class="sw-why"><b>workspace/willRenameFiles</b>: re-exports, barrel files and aliased imports update before the file moves.</p>
-        </div>
-        <div class="sw on">
-          <p class="sw-text">Search runs inside the process</p>
-          <button class="knob" type="button" role="switch" aria-checked="true" aria-label="Run search inside the process"></button>
-          <p class="sw-why"><b>36 tools</b> and 12 Rust crates in-process, no fork per call, on machines with no <code>rg</code> and no <code>grep</code>.</p>
-        </div>
-        <div class="sw">
-          <p class="sw-text">Reviews come back ranked</p>
-          <button class="knob" type="button" role="switch" aria-checked="false" aria-label="Rank review findings"></button>
-          <p class="sw-why"><b>/review</b> sorts findings P0 to P3 and ends on a verdict instead of a wall of comments.</p>
-        </div>
-        <div class="sw">
-          <p class="sw-text">Parallel work stays in worktrees</p>
-          <button class="knob" type="button" role="switch" aria-checked="false" aria-label="Isolate parallel work in worktrees"></button>
-          <p class="sw-why">Subagents get their own <b>isolated worktree</b> and return schema-validated results, never a dirty tree.</p>
-        </div>
-        <div class="sw">
-          <p class="sw-text">Debuggers attach, not describe</p>
-          <button class="knob" type="button" role="switch" aria-checked="false" aria-label="Attach real debuggers"></button>
-          <p class="sw-why"><b>lldb, dlv and debugpy</b> over DAP: breakpoints, frames and locals, on the real binary.</p>
-        </div>
-      </div>
-    </section>
+    <section class="sec" aria-labelledby="ex-h">
+      <h2 class="label" id="ex-h">Examples</h2>
+      <div class="body">
+        <p class="prose mark-in" id="ex-copy">Mars opens the file through the same language server your editor uses, so the read is already typed.</p>
 
-    <!-- ── Stages: drag through it ───────────────────────────────── -->
-    <section class="band shell" id="stages" aria-labelledby="stage-h">
-      <div class="stages">
-        <div class="stage-copy">
-          <h2 id="stage-h" class="rise">Read. Rename. Verify. Ship.</h2>
-          <p class="stage-why" id="stage-why">Mars opens the file through the same language server your editor uses, so the read is already typed.</p>
+        <div class="ruler-wrap">
+          <input class="ruler" type="range" id="ex-range" min="0" max="3" step="1" value="0"
+                 aria-label="Example one to four: read, rename, verify, ship" aria-valuetext="Read">
+          <div class="stops" id="ex-stops" aria-hidden="true">
+            <span data-on="true">Read</span><span>Rename</span><span>Verify</span><span>Ship</span>
+          </div>
         </div>
 
-        <figure class="stage-shot rise">
-          <img src="assets/proof-lspv.webp" alt="Mars terminal listing an active TypeScript language server and a Biome language server." width="760" height="430" data-on="true" loading="lazy" decoding="async">
-          <img src="assets/proof-task.webp" alt="Mars terminal fanning out three explore agents over the packages directory." width="760" height="430" loading="lazy" decoding="async">
-          <img src="assets/proof-review.webp" alt="Mars reviewer subagent working through a code review." width="760" height="430" loading="lazy" decoding="async">
-          <img src="assets/proof-python.webp" alt="Mars terminal rendering a chart from a persistent Python cell." width="760" height="430" loading="lazy" decoding="async">
+        <figure class="mark-in">
+          <img src="assets/proof-task.webp" alt="The Mars terminal fanning out three explore agents over one packages directory." width="760" height="430" loading="lazy" decoding="async" data-step="0">
+          <img src="assets/proof-lspv.webp" alt="A rename resolved through the language server before the move." width="760" height="430" loading="lazy" decoding="async" data-step="1" hidden>
+          <img src="assets/proof-review.webp" alt="A reviewer subagent working through a ranked code review." width="760" height="430" loading="lazy" decoding="async" data-step="2" hidden>
+          <img src="assets/proof-python.webp" alt="A chart rendered from a persistent Python cell inside the agent." width="760" height="430" loading="lazy" decoding="async" data-step="3" hidden>
+          <figcaption><b>Fig. 2</b>: the four stages, in order: read, rename, verify, ship. Step the ruler.</figcaption>
         </figure>
       </div>
-
-      <div class="slider-wrap">
-        <input type="range" id="stage-range" min="0" max="3" step="1" value="0"
-               aria-label="Stage: read, rename, verify or ship" aria-valuetext="Read">
-        <div class="stops" id="stage-stops" aria-hidden="true">
-          <span data-on="true">Read</span><span>Rename</span><span>Verify</span><span>Ship</span>
-        </div>
-      </div>
     </section>
 
-    <!-- ── Close ────────────────────────────────────────────────── -->
-    <section class="close shell" aria-labelledby="close-h">
-      <h2 id="close-h" class="visually-hidden">Install Mars</h2>
-      <p class="close-sentence rise">
+    <section class="close" aria-labelledby="close-h">
+      <h2 class="visually-hidden" id="close-h">Install Mars</h2>
+      <p class="close-sentence mark-in">
         Give the agent <input type="text" id="repo" placeholder="a repo" aria-label="Repository to work on">
         and <button type="button" id="close-install">install</button> it.
       </p>
-      <p class="close-note">One command. <b>~/.local/bin</b>, no sudo. <a href="https://github.com/MarsAI-org/mars-agent/releases" target="_blank" rel="noopener">Or take the binary</a>.</p>
+      <p class="gloss">One command, <b>~/.local/bin</b>, no sudo. <a href="https://github.com/MarsAI-org/mars-agent/releases" target="_blank" rel="noopener">Or take the binary</a>.</p>
+
+      <div class="colophon">
+        <p class="credit-line">Mars is a fork of <a href="https://github.com/can1357/oh-my-pi" target="_blank" rel="noopener">oh-my-pi</a> by can1357, itself a fork of <a href="https://github.com/badlogic/pi-mono" target="_blank" rel="noopener">Pi</a> by Mario Zechner. Both MIT licensed.</p>
+        <span><b>colophon</b> — static sheet, no build step, self-hosted type</span>
+        <nav aria-label="Elsewhere">
+          <a href="https://github.com/MarsAI-org/mars-agent" target="_blank" rel="noopener">Source</a>
+          <a href="https://github.com/MarsAI-org/mars-agent/releases" target="_blank" rel="noopener">Releases</a>
+          <a href="https://github.com/MarsAI-org/mars-agent/blob/main/LICENSE" target="_blank" rel="noopener">Licence</a>
+        </nav>
+        <span>getmars.eu.cc</span>
+      </div>
     </section>
   </main>
+</div>
 
-  <footer class="shell">
-    <div class="foot">
-      <p>Hero photograph: <a href="https://images.nasa.gov/details/PIA17947" target="_blank" rel="noopener">Mount Sharp from the Curiosity rover</a>, NASA/JPL-Caltech. Mars is a fork of <a href="https://github.com/can1357/oh-my-pi" target="_blank" rel="noopener">oh-my-pi</a> by can1357, itself a fork of <a href="https://github.com/badlogic/pi-mono" target="_blank" rel="noopener">Pi</a> by Mario Zechner. Both MIT licensed.</p>
-      <nav aria-label="Elsewhere">
-        <a href="https://github.com/MarsAI-org/mars-agent" target="_blank" rel="noopener">GitHub</a>
-        <a href="https://github.com/MarsAI-org/mars-agent/releases" target="_blank" rel="noopener">Releases</a>
-        <a href="https://github.com/MarsAI-org/mars-agent/blob/main/LICENSE" target="_blank" rel="noopener">License</a>
-      </nav>
-    </div>
-  </footer>
+<script>
+  document.documentElement.classList.add("js");
 
-  <script>
-    document.documentElement.classList.add("js");
+  /* ── The repo blank rewrites the command that is copied ──────────── */
+  (function () {
+    var input = document.getElementById("repo");
+    var codes = {
+      "tab-posix": document.getElementById("cmd-posix"),
+      "tab-win": document.getElementById("cmd-win")
+    };
+    var suffix = {
+      "tab-posix": function (r) { return " && cd " + r + " && mars"; },
+      "tab-win": function (r) { return "; cd " + r + "; mars"; }
+    };
+    Object.keys(codes).forEach(function (k) {
+      if (codes[k]) codes[k].dataset.base = codes[k].textContent.trim();
+    });
 
-    /* ── The repo blank: it changes the command that is shown and copied ──
-       What is on screen is what lands on the clipboard, so the plate can
-       never promise something different from what it copies. */
-    (function () {
-      var input = document.getElementById("repo");
-      var codes = {
-        "tab-posix": document.getElementById("cmd-posix"),
-        "tab-win": document.getElementById("cmd-win")
-      };
-      var suffix = {
-        "tab-posix": function (r) { return " && cd " + r + " && mars"; },
-        "tab-win": function (r) { return "; cd " + r + "; mars"; }
-      };
+    function quote(v) { return "'" + v.replace(/'/g, "'\\''") + "'"; }
+
+    window.marsRender = function () {
+      var repo = input ? input.value.trim() : "";
+      var arg = repo ? quote(repo) : "";
       Object.keys(codes).forEach(function (k) {
-        if (codes[k]) codes[k].dataset.base = codes[k].textContent.trim();
+        if (!codes[k]) return;
+        codes[k].textContent = codes[k].dataset.base + (arg ? suffix[k](arg) : "");
       });
+    };
+    if (input) {
+      input.addEventListener("input", window.marsRender);
+      input.addEventListener("search", window.marsRender);
+    }
+  })();
 
-      /* Single quotes so a path with spaces survives either shell. */
-      function quote(value) {
-        return "'" + value.replace(/'/g, "'\\''") + "'";
-      }
+  /* ── Platform detection, tabs, and the mirrored note ─────────────── */
+  (function () {
+    var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+    if (!tabs.length) return;
+    var fileLabel = document.getElementById("plate-file");
+    var notePath = document.getElementById("note-path");
+    var notePriv = document.getElementById("note-priv");
+    var scriptLink = document.getElementById("script-link");
+    var data = {
+      "tab-posix": { file: "install.sh", path: "~/.local/bin", priv: "no sudo", script: "install" },
+      "tab-win": { file: "install.ps1", path: "%LOCALAPPDATA%\\mars", priv: "no admin", script: "install.ps1" }
+    };
 
-      function render() {
-        var repo = input ? input.value.trim() : "";
-        var arg = repo ? quote(repo) : "";
-        Object.keys(codes).forEach(function (k) {
-          if (!codes[k]) return;
-          codes[k].textContent = codes[k].dataset.base + (arg ? suffix[k](arg) : "");
-        });
-      }
-      window.marsRender = render;
-      if (input) {
-        input.addEventListener("input", render);
-        input.addEventListener("search", render);
-      }
-    })();
-
-    /* ── Platform detection, tabs, and the mirrored note ─────────── */
-    (function () {
-      var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
-      if (!tabs.length) return;
-      var fileLabel = document.getElementById("plate-file");
-      var notePath = document.getElementById("note-path");
-      var notePriv = document.getElementById("note-priv");
-      var scriptLink = document.getElementById("script-link");
-      var data = {
-        "tab-posix": { file: "install.sh", path: "~/.local/bin", priv: "no sudo", script: "install" },
-        "tab-win": { file: "install.ps1", path: "%LOCALAPPDATA%\\mars", priv: "no admin", script: "install.ps1" }
-      };
-
-      function select(tab, focus) {
-        tabs.forEach(function (t) {
-          var on = t === tab;
-          t.setAttribute("aria-selected", on ? "true" : "false");
-          t.tabIndex = on ? 0 : -1;
-          var panel = document.getElementById(t.getAttribute("aria-controls"));
-          if (panel) panel.hidden = !on;
-        });
-        var d = data[tab.id];
-        if (d) {
-          if (fileLabel) fileLabel.textContent = d.file;
-          if (notePath) notePath.textContent = d.path;
-          if (notePriv) notePriv.textContent = d.priv;
-          if (scriptLink) scriptLink.href = "https://github.com/MarsAI-org/mars-site/blob/main/" + d.script;
-        }
-        if (focus) tab.focus();
-      }
-
-      tabs.forEach(function (tab) {
-        tab.addEventListener("click", function () { select(tab, false); });
-        tab.addEventListener("keydown", function (e) {
-          var i = tabs.indexOf(tab), next = null;
-          if (e.key === "ArrowRight") next = tabs[(i + 1) % tabs.length];
-          if (e.key === "ArrowLeft") next = tabs[(i - 1 + tabs.length) % tabs.length];
-          if (e.key === "Home") next = tabs[0];
-          if (e.key === "End") next = tabs[tabs.length - 1];
-          if (next) { e.preventDefault(); select(next, true); }
-        });
+    function select(tab, focus) {
+      tabs.forEach(function (t) {
+        var on = t === tab;
+        t.setAttribute("aria-selected", on ? "true" : "false");
+        t.tabIndex = on ? 0 : -1;
+        var panel = document.getElementById(t.getAttribute("aria-controls"));
+        if (panel) panel.hidden = !on;
       });
-
-      var ua = navigator.userAgent || "";
-      var name = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || "";
-      var auto = document.getElementById(/Win/i.test(name) || /Windows/i.test(ua) ? "tab-win" : "tab-posix");
-      if (auto) select(auto, false);
-    })();
-
-    /* ── Copy: the clipboard gets the bare command, never the prompt ── */
-    (function () {
-      var status = document.getElementById("copy-status");
-      document.querySelectorAll(".copy").forEach(function (btn) {
-        var base = btn.textContent;
-        var timer = 0;
-        btn.addEventListener("click", function () {
-          var host = btn.closest(".plate-body");
-          var code = host && host.querySelector("code");
-          var text = code ? code.textContent.trim() : "";
-          function done(ok) {
-            btn.setAttribute("data-state", ok ? "copied" : "failed");
-            btn.textContent = ok ? "Copied" : "Failed";
-            if (status) {
-              status.textContent = ok
-                ? "Command copied to the clipboard."
-                : "Copy failed. Select the command and copy it manually.";
-            }
-            clearTimeout(timer);
-            timer = setTimeout(function () {
-              btn.removeAttribute("data-state");
-              btn.textContent = base;
-              if (status) status.textContent = "";
-            }, 2400);
-          }
-          if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(false); });
-          } else { done(false); }
-        });
-      });
-    })();
-
-    /* ── Switches: click, Space and Enter ────────────────────────── */
-    (function () {
-      document.querySelectorAll(".knob").forEach(function (knob) {
-        var row = knob.closest(".sw");
-        function flip() {
-          var on = knob.getAttribute("aria-checked") !== "true";
-          knob.setAttribute("aria-checked", String(on));
-          row.classList.toggle("on", on);
-        }
-        knob.addEventListener("click", flip);
-        /* A <button> already fires click for Enter and Space, so the key
-           handler only has to stop Space from also scrolling the page. */
-        knob.addEventListener("keydown", function (e) {
-          if (e.key === " ") e.preventDefault();
-        });
-        row.classList.toggle("on", knob.getAttribute("aria-checked") === "true");
-      });
-    })();
-
-    /* ── Stages: the slider drives copy and picture ──────────────── */
-    (function () {
-      var range = document.getElementById("stage-range");
-      if (!range) return;
-      var why = document.getElementById("stage-why");
-      var stops = Array.prototype.slice.call(document.querySelectorAll("#stage-stops span"));
-      var shots = Array.prototype.slice.call(document.querySelectorAll(".stage-shot img"));
-      var copy = [
-        "Mars opens the file through the same language server your editor uses, so the read is already typed.",
-        "A rename hits workspace/willRenameFiles, so re-exports and barrel files follow before the move.",
-        "Subagents verify in isolated worktrees and hand back ranked findings, P0 first.",
-        "The change lands with tests run and a debugger attach one keystroke away."
-      ];
-      var labels = ["Read", "Rename", "Verify", "Ship"];
-
-      function apply(i) {
-        if (why) why.textContent = copy[i];
-        stops.forEach(function (s, n) { s.setAttribute("data-on", String(n === i)); });
-        shots.forEach(function (img, n) { img.setAttribute("data-on", String(n === i)); });
-        range.setAttribute("aria-valuetext", labels[i]);
+      var d = data[tab.id];
+      if (d) {
+        if (fileLabel) fileLabel.textContent = d.file;
+        if (notePath) notePath.textContent = d.path;
+        if (notePriv) notePriv.textContent = d.priv;
+        if (scriptLink) scriptLink.href = "https://github.com/MarsAI-org/mars-site/blob/main/" + d.script;
       }
-      range.addEventListener("input", function () { apply(Number(range.value)); });
-      apply(0);
-    })();
+      if (focus) tab.focus();
+    }
 
-    /* ── Close: run means install, land in the repo, and start ───── */
-    (function () {
-      var input = document.getElementById("repo");
-      var btn = document.getElementById("close-install");
-      var status = document.getElementById("copy-status");
-      if (!btn) return;
+    tabs.forEach(function (tab) {
+      tab.addEventListener("click", function () { select(tab, false); });
+      tab.addEventListener("keydown", function (e) {
+        var i = tabs.indexOf(tab), next = null;
+        if (e.key === "ArrowRight") next = tabs[(i + 1) % tabs.length];
+        if (e.key === "ArrowLeft") next = tabs[(i - 1 + tabs.length) % tabs.length];
+        if (e.key === "Home") next = tabs[0];
+        if (e.key === "End") next = tabs[tabs.length - 1];
+        if (next) { e.preventDefault(); select(next, true); }
+      });
+    });
 
+    var ua = navigator.userAgent || "";
+    var name = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || "";
+    var auto = document.getElementById(/Win/i.test(name) || /Windows/i.test(ua) ? "tab-win" : "tab-posix");
+    if (auto) select(auto, false);
+  })();
+
+  /* ── Copy: the clipboard gets the bare command ───────────────────── */
+  (function () {
+    var status = document.getElementById("copy-status");
+    document.querySelectorAll(".copy").forEach(function (btn) {
+      var base = btn.textContent;
+      var timer = 0;
       btn.addEventListener("click", function () {
-        var repo = input && input.value.trim();
-        if (window.marsRender) window.marsRender();
-        /* Always copy the POSIX line: the closing sentence is shell-shaped. */
-        var posixTab = document.getElementById("tab-posix");
-        if (posixTab) posixTab.click();
-
-        var plate = document.querySelector(".plate");
-        if (plate) plate.scrollIntoView({ block: "center", behavior: "smooth" });
-
-        var panel = document.getElementById("panel-posix");
-        var copyBtn = panel && panel.querySelector(".copy");
-        if (copyBtn) {
-          copyBtn.focus({ preventScroll: true });
-          copyBtn.click();
-          /* The copy handler announces over the same status line; write this
-             one after it has settled. */
+        var host = btn.closest(".cmd");
+        var code = host && host.querySelector("code");
+        var text = code ? code.textContent.trim() : "";
+        function done(ok) {
+          btn.setAttribute("data-state", ok ? "copied" : "failed");
+          btn.textContent = ok ? "Copied" : "Failed";
           if (status) {
-            setTimeout(function () {
-              status.textContent = repo
-                ? "Copied. It installs Mars, enters " + repo + ", and starts it."
-                : "Command copied to the clipboard.";
-            }, 0);
+            status.textContent = ok
+              ? "Command copied. Paste it in a terminal."
+              : "Copy failed; select the command and copy it by hand.";
           }
+          clearTimeout(timer);
+          timer = setTimeout(function () {
+            btn.removeAttribute("data-state");
+            btn.textContent = base;
+            if (status) status.textContent = "";
+          }, 2600);
         }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(false); });
+        } else { done(false); }
       });
+    });
+  })();
 
-      if (input) {
-        input.addEventListener("keydown", function (e) {
-          if (e.key === "Enter") { e.preventDefault(); btn.click(); }
-        });
+  /* ── Flags ───────────────────────────────────────────────────────── */
+  (function () {
+    document.querySelectorAll(".switch").forEach(function (sw) {
+      var row = sw.closest(".flag");
+      function flip() {
+        var on = sw.getAttribute("aria-checked") !== "true";
+        sw.setAttribute("aria-checked", String(on));
+        row.dataset.on = String(on);
       }
-    })();
+      sw.addEventListener("click", flip);
+      sw.addEventListener("keydown", function (e) { if (e.key === " ") e.preventDefault(); });
+    });
+  })();
 
-    /* ── Entrance and scroll response ─────────────────────────────── */
-    (function () {
-      var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (reduce || !("IntersectionObserver" in window)) return;
+  /* ── Examples: the ruler drives copy and picture ─────────────────── */
+  (function () {
+    var range = document.getElementById("ex-range");
+    if (!range) return;
+    var copy = document.getElementById("ex-copy");
+    var stops = Array.prototype.slice.call(document.querySelectorAll("#ex-stops span"));
+    var shots = Array.prototype.slice.call(document.querySelectorAll("figure img[data-step]"));
+    var text = [
+      "Mars opens the file through the same language server your editor uses, so the read is already typed.",
+      "A rename hits workspace/willRenameFiles, so re-exports and barrel files follow before the move.",
+      "Subagents verify in isolated worktrees and hand back ranked findings, P0 first.",
+      "The change lands with tests run and a debugger attach one keystroke away."
+    ];
+    var labels = ["Read", "Rename", "Verify", "Ship"];
 
-      var targets = document.querySelectorAll(".rise, .sw, .tile, .plate, .close-note");
-      targets.forEach(function (el) { el.classList.add("rise"); });
+    function apply(i) {
+      if (copy) copy.textContent = text[i];
+      stops.forEach(function (s, n) { s.setAttribute("data-on", String(n === i)); });
+      shots.forEach(function (img, n) { img.hidden = n !== i; });
+      range.setAttribute("aria-valuetext", labels[i]);
+    }
+    range.addEventListener("input", function () { apply(Number(range.value)); });
+    apply(0);
+  })();
 
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) {
-          if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
-        });
-      }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
-      targets.forEach(function (el) { io.observe(el); });
+  /* ── Close: run means install, land in the repo, and start ───────── */
+  (function () {
+    var input = document.getElementById("repo");
+    var btn = document.getElementById("close-install");
+    var status = document.getElementById("copy-status");
+    if (!btn) return;
 
-      /* The picture leans back while it is being scrolled into place, then
-         settles. One moving picture, driven by position, no animation loop. */
-      var shot = document.querySelector(".stage-shot");
-      if (shot) {
-        var ticking = false;
-        function lean() {
-          var box = shot.getBoundingClientRect();
-          var mid = box.top + box.height / 2;
-          var off = Math.abs(mid - innerHeight / 2) / innerHeight;
-          shot.classList.toggle("scrub", off > 0.34);
-          ticking = false;
+    btn.addEventListener("click", function () {
+      var repo = input && input.value.trim();
+      if (window.marsRender) window.marsRender();
+      var posixTab = document.getElementById("tab-posix");
+      if (posixTab) posixTab.click();
+      document.getElementById("install").scrollIntoView({ block: "center", behavior: "smooth" });
+      var panel = document.getElementById("panel-posix");
+      var copyBtn = panel && panel.querySelector(".copy");
+      if (copyBtn) {
+        copyBtn.focus({ preventScroll: true });
+        copyBtn.click();
+        if (status) {
+          setTimeout(function () {
+            status.textContent = repo
+              ? "Copied. It installs Mars, enters " + repo + ", and starts it."
+              : "Command copied. Paste it in a terminal.";
+          }, 0);
         }
-        addEventListener("scroll", function () {
-          if (!ticking) { ticking = true; requestAnimationFrame(lean); }
-        }, { passive: true });
-        lean();
       }
+    });
 
-      /* The orb drifts against the scroll, so the hero has depth. */
-      var orb = document.querySelector(".hero-orb");
-      if (orb) {
-        var oTicking = false;
-        addEventListener("scroll", function () {
-          if (oTicking) return;
-          oTicking = true;
-          requestAnimationFrame(function () {
-            orb.style.translate = "-50% calc(-50% + " + Math.min(scrollY * 0.12, 90) + "px)";
-            oTicking = false;
-          });
-        }, { passive: true });
-      }
-    })();
-  </script>
+    if (input) {
+      input.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") { e.preventDefault(); btn.click(); }
+      });
+    }
+  })();
+
+  /* ── Entrance ────────────────────────────────────────────────────── */
+  (function () {
+    var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce || !("IntersectionObserver" in window)) return;
+    var targets = document.querySelectorAll(".mark-in");
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+      });
+    }, { rootMargin: "0px 0px -6% 0px", threshold: 0.05 });
+    targets.forEach(function (el) { io.observe(el); });
+  })();
+</script>
 </body>
 </html>

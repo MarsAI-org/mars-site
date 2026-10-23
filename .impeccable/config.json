@@ -40,6 +40,15 @@
           "*mars-site/index.html"
         ],
         "createdAt": "2026-10-23T05:19:50.807Z"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-10-23T10:43:29.750Z",
+        "reason": "Paper tone is the roll-assigned world (man page printed on uncoated reference stock, seed 482115d03558fcc2), recorded in the direction contract; not a reflex default."
       }
     ]
   }
