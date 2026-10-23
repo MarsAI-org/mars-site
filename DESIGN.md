@@ -1,289 +1,288 @@
 ---
 name: Mars
-description: A coding agent landing page that plays as a surface traverse across a pixel planet.
+description: A coding agent landing page built on one motif, the planet, at every scale.
 colors:
-  rust: "#d64a27"
-  rust-hi: "#ff8a5f"
-  focus: "#93d9e3"
-  on-rust: "#150609"
-  ink: "#0a090d"
-  ink-2: "#100e14"
-  ink-3: "#16131b"
-  ink-4: "#1d1922"
-  line: "#2b2532"
-  line-2: "#3b3344"
-  bone: "#f4ece2"
-  dust: "#ada4ad"
+  accent: "#ef5f2f"
+  accent-hover: "#ff7a4f"
+  accent-ink: "#14070a"
+  bg: "#0a0710"
+  surface: "#17101f"
+  surface-2: "#211630"
+  ink: "#f2ecf5"
+  muted: "#ab9cba"
+  ok: "#b6f0bd"
+  ok-ink: "#101c12"
 typography:
   display:
-    fontFamily: "Anybody, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "clamp(2.5rem, 1.3rem + 4.6vw, 5rem)"
-    fontWeight: 850
-    lineHeight: 0.92
-    letterSpacing: "-0.035em"
-  headline:
-    fontFamily: "Anybody, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "clamp(1.9rem, 1.4rem + 2.3vw, 3.15rem)"
-    fontWeight: 800
-    lineHeight: 1.02
-    letterSpacing: "-0.028em"
-  title:
-    fontFamily: "Anybody, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "1.0625rem"
+    fontFamily: "Space Grotesk, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "clamp(2.75rem, 1.2rem + 5.4vw, 5.5rem)"
     fontWeight: 700
-    lineHeight: 1.02
-    letterSpacing: "-0.01em"
-  body:
-    fontFamily: "Anybody, ui-sans-serif, system-ui, sans-serif"
-    fontSize: "clamp(1rem, 0.95rem + 0.22vw, 1.0938rem)"
+    lineHeight: 0.96
+    letterSpacing: "-0.045em"
+  heading:
+    fontFamily: "Space Grotesk, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "clamp(2rem, 1.3rem + 3.2vw, 4rem)"
+    fontWeight: 700
+    lineHeight: 0.96
+    letterSpacing: "-0.045em"
+  lead:
+    fontFamily: "Space Grotesk, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem)"
     fontWeight: 400
-    lineHeight: 1.62
+    lineHeight: 1.45
     letterSpacing: "normal"
-  label:
-    fontFamily: "Silkscreen, ui-monospace, monospace"
-    fontSize: "0.6875rem"
+  body:
+    fontFamily: "Space Grotesk, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem)"
     fontWeight: 400
-    lineHeight: 1.62
-    letterSpacing: "0.08em"
-  metric:
-    fontFamily: "Silkscreen, ui-monospace, monospace"
-    fontSize: "clamp(1.15rem, 2vw, 1.6rem)"
+    lineHeight: 1.55
+    letterSpacing: "normal"
+  small:
+    fontFamily: "Space Grotesk, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "clamp(1rem, 0.94rem + 0.18vw, 1.0625rem)"
     fontWeight: 400
+    lineHeight: 1.55
+    letterSpacing: "normal"
+  wordmark:
+    fontFamily: "Space Grotesk, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "1.375rem"
+    fontWeight: 700
     lineHeight: 1
-    letterSpacing: "0.02em"
+    letterSpacing: "-0.03em"
+  statement:
+    fontFamily: "Space Grotesk, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "clamp(1.25rem, 2.6vw, 2.1rem)"
+    fontWeight: 500
+    lineHeight: 1.1
+    letterSpacing: "-0.035em"
+  display-narrow:
+    fontFamily: "Space Grotesk, ui-sans-serif, system-ui, sans-serif"
+    fontSize: "clamp(2.4rem, 12.5vw, 2.9rem)"
+    fontWeight: 700
+    lineHeight: 0.96
+    letterSpacing: "-0.045em"
   code:
-    fontFamily: "ui-monospace, SFMono-Regular, \"SF Mono\", Menlo, Consolas, monospace"
-    fontSize: "0.8125rem"
+    fontFamily: "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+    fontSize: "1rem"
     fontWeight: 400
-    lineHeight: 1.62
+    lineHeight: 1.55
     letterSpacing: "normal"
 rounded:
-  none: "0px"
+  plate: "1.35rem"
+  pill: "999px"
 spacing:
-  gutter: "clamp(1.25rem, 4vw, 2.5rem)"
+  gutter: "clamp(1rem, 3.2vw, 2.5rem)"
 components:
   button-primary:
-    backgroundColor: "{colors.rust}"
-    textColor: "{colors.on-rust}"
-    rounded: "{rounded.none}"
-    padding: "0.7rem 1.1rem"
-  button-primary-hover:
-    backgroundColor: "{colors.rust-hi}"
-    textColor: "{colors.on-rust}"
-    rounded: "{rounded.none}"
-    padding: "0.7rem 1.1rem"
-  button-secondary:
-    backgroundColor: "transparent"
-    textColor: "{colors.bone}"
-    rounded: "{rounded.none}"
-    padding: "0.7rem 1.1rem"
-  button-secondary-hover:
-    backgroundColor: "{colors.ink-3}"
-    textColor: "{colors.bone}"
-    rounded: "{rounded.none}"
-    padding: "0.7rem 1.1rem"
-  nav-cta:
-    backgroundColor: "{colors.rust}"
-    textColor: "{colors.on-rust}"
-    rounded: "{rounded.none}"
-    padding: "0.5rem 1rem"
+    backgroundColor: "{colors.accent}"
+    textColor: "{colors.accent-ink}"
+    rounded: "{rounded.pill}"
+    padding: "0.55rem 1.05rem"
     height: "2.75rem"
-  chip-tool:
-    backgroundColor: "{colors.ink-3}"
-    textColor: "{colors.bone}"
-    rounded: "{rounded.none}"
-    padding: "0.22rem 0.5rem"
-  card-surface:
-    backgroundColor: "{colors.ink-2}"
-    textColor: "{colors.bone}"
-    rounded: "{rounded.none}"
-    padding: "1.25rem"
+  button-primary-hover:
+    backgroundColor: "{colors.accent-hover}"
+    textColor: "{colors.accent-ink}"
+    rounded: "{rounded.pill}"
+  surface-plate:
+    backgroundColor: "{colors.surface}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.plate}"
+    padding: "0.75rem"
+  tile:
+    backgroundColor: "{colors.surface}"
+    textColor: "{colors.ink}"
+    rounded: "{rounded.plate}"
+    padding: "1.2rem"
 ---
 
 # Design System: Mars
 
 ## Overview
 
-**Creative North Star: "The Surface Traverse"**
+**Creative North Star: "The Planet Is the Motif".**
 
-The page is a planet you land on and a series of stages you clear. A pixel-art mascot stands on a stepped ridge; each capability is a numbered stage on a rail below the horizon. The interface is built from the same blocks the mascot is built from: flat plates, hard edges, and a 1px seam between every surface. Nothing floats. Nothing glows. Depth comes from the ground ladder — four near-black steps — and from the seam, not from shadow.
+Mars is a planet, so a circle runs the entire page. It appears at three wildly
+different scales and never in another shape: a 128vh orb cropped by three
+viewport edges behind the hero, the round press of every button and plate, the
+circular frame the stage captures sit in, the star dots in the field, and the
+knob on every switch. One geometry, committed, is the whole system. Sections are
+plain single or two-column layouts precisely so the circle is the only thing with
+character.
 
-The palette is almost entirely absence: near-black grounds, bone type, dust secondary, and one rust accent that behaves like a light source without ever becoming one. Rust marks action and position — the primary plate, the active stage flag, the underline under the current stop, the small square before each meta fact, the stage numerals. It is never used as body text. A single cool cyan exists for one job only: the focus ring.
-
-Two type voices carry the whole system. Anybody, a variable face run wide (108–118% width) and heavy (800–850) for headlines, speaks as the product. Silkscreen, a bitmap face, prints as the machine: stage numerals, OS tabs, commands, labels, spec figures, meta facts. The division is strict — if a human wrote the sentence, it is Anybody; if a machine would print it, it is Silkscreen or monospace.
+The world is deep space, given by the user: near-black ground with stars, rust
+as the one warm light. It is not a starfield wallpaper with a page on top. The
+field is a drawn layer at 50% opacity, it drifts over ninety seconds, and the orb
+carries the single photograph the page needs.
 
 **Key Characteristics:**
-- Flat, bordered plates on a four-step near-black ground ladder; no shadow, blur, or glass anywhere.
-- Square corners on every surface; even the mascot and the ridge are built from rectangles and right angles.
-- One rust accent, used as fill, flag, dot, and numeral — never as body text.
-- Stepped, hard-edged motion: clip wipes in `steps()` frames, not eased fades.
-- Body copy held to 62ch; headlines capped at 16–22ch so they break in short, blunt lines.
+- One motif, the circle, at hero, component, and texture scale. No second shape.
+- Rust on near-black, and nothing else: no second hue, no gradient fill, no shadow.
+- Soft, fully rounded controls against a hard photographic orb.
+- Motion is the page's voice: a clip-wipe entrance, staggered children, a
+  scroll-driven drift and lean, a live switch, and a slider that redraws the
+  section. Every one has a reduced-motion path that leaves the content complete.
 
 ## Colors
 
-A near-black ground with a single rust light and one cool note held in reserve.
+Two roles plus one status pair.
 
 ### Primary
-- **Mars Rust** (#d64a27): the world's only warm accent. Fills the primary button and the HUD install plate, marks the active stage on the trail rail (2px underline plus a pennant flag), lights the current segment of the HUD stage bar, and sets the 4px square before each meta fact. On dark ground it reads at 4.60:1 — enough for a numeral or a dot, not enough for a paragraph, which is why it never carries body copy.
-- **Rust Glow** (#ff8a5f): the lit state of the same accent. Primary button hover fill, inline links, `<em>` emphasis inside the hero headline, stage numerals, and the `$` sigil in a command row. It is a tint of Mars Rust, not a second accent.
-
-### Tertiary
-- **Focus Cyan** (#93d9e3): reserved for `:focus-visible` outlines (2px, 3px offset). It appears in no other context in the build.
+- **Rust** (`#ef5f2f`): the light. It fills the orb, every primary control, the sigil,
+  the slider thumb and the two "on" switch bands. Never body copy.
+- **Rust Hover** (`#ff7a4f`): the same light raised, on hover only.
 
 ### Neutral
-- **Ground Ink** (#0a090d): page ground, HUD bar, install card bodies.
-- **Panel Ink** (#100e14): raised plates — the installer, capture frames, the trail rail, the install band.
-- **Bar Ink** (#16131b): inset head bars, hover fills on secondary controls, tool tags.
-- **Plate Ink** (#1d1922): the selected OS tab and the copy plate — the top step of the ladder.
-- **Seam** (#2b2532): the 1px divider between every surface.
-- **Seam Strong** (#3b3344): the outer border of a plate that must read as a separate object, and the inactive segment of the HUD stage bar.
-- **Bone** (#f4ece2): primary type, headings, command text.
-- **Dust** (#ada4ad): secondary type, ledes, labels, spec keys. Reads 7.16:1 or better on every ground in the ladder.
-- **On Rust** (#150609): the near-black that sits on a rust plate. Not declared as a custom property; it is the literal repeated on every rust surface, and it is the contrast-critical half of the primary button (4.58:1).
+- **Void** (`#0a0710`): the ground, behind everything, including the star layer.
+- **Slab** (`#17101f`): plates, tiles, switch rows and the stage frame.
+- **Slab Deep** (`#211630`): inset wells inside a plate, the range track.
+- **Bone** (`#f2ecf5`): headings, body, and any text on the ground. 17.2:1.
+- **Dust** (`#ab9cba`): secondary notes and resting switch sentences. 7.8:1 on
+  the ground, 7.3:1 on a slab. It is a real reading colour, not a whisper.
+
+### Status
+- **Copied** (`#b6f0bd` on `#101c12`): the copy button's success fill only.
 
 ### Named Rules
-**The Rust Is a Verb Rule.** Rust appears as a fill, a flag, a dot, an underline, or a numeral — never as the color of a sentence. The stylesheet has no `color: var(--mars)`; every rust-colored word is Rust Glow.
+**The One Light Rule.** Rust is the only warm colour and the only accent. A second
+hue is a different world.
 
-**The One Cool Note Rule.** Cyan is the focus ring and nothing else. It never becomes a link color, a hover state, a chart accent, or a decorative highlight.
-
-**The Ground Ladder Rule.** Depth steps one rung at a time: Ground Ink → Panel Ink → Bar Ink → Plate Ink. Never skip a rung, never invent a fifth near-black, never lighten a panel to make it "pop" — the 1px seam does that job.
+**The Mark, Not the Read Rule.** Rust never sets a sentence. It sets a sigil, a
+fill, a dot, a thumb.
 
 ## Typography
 
-**Display Font:** Anybody (variable, 400–900 weight, 75–125% width; self-hosted `assets/fonts/anybody-latin.woff2`)
-**Body Font:** Anybody (same file)
-**Label/Mono Font:** Silkscreen 400/700 for the machine voice; `ui-monospace` stack for commands, inline code, and tool tags
+**One family: Space Grotesk** (400 / 500 / 700, self-hosted from
+`assets/fonts/space-grotesk-*.woff2`). A geometric grotesk with a squared
+terminal and a wide round bowl: it echoes the circle without imitating it. It
+carries the headlines, the running text, the figures and the switch sentences.
 
-**Character:** A wide, heavy grotesque against a bitmap face. Anybody carries conviction — headlines run at 850 weight and 118% width, so they look pressed rather than typeset. Silkscreen carries data: it is small, letterspaced, and uppercase, and it is only ever used where a machine would print the words. The pairing reads as a poster printed on a terminal.
+The monospace stack is only for literal commands inside `<code>`. Space Grotesk
+is the voice; monospace is the machine's own output.
 
 ### Hierarchy
-- **Display** (850, `clamp(2.5rem, 1.3rem + 4.6vw, 5rem)`, 0.92, -0.035em, width 118%): the hero headline only, capped at 16–18ch, stepping down to `clamp(2.25rem, 11.5vw, 3rem)` below 30rem. Emphasis inside it is a color change to Rust Glow, not an italic — `em` is reset to `font-style: normal`.
-- **Headline** (800, `clamp(1.9rem, 1.4rem + 2.3vw, 3.15rem)`, 1.02, -0.028em, width 112%): section headings, capped at 22ch. The closing headline uses the display size at 116% width instead.
-- **Title** (700, 1.0625rem, 1.02, -0.01em): install card headings, paired with a 1rem stroke icon in Rust Glow.
-- **Body** (400, `clamp(1rem, 0.95rem + 0.22vw, 1.0938rem)`, 1.62): running text, held to 62ch; the hero lede is narrower at 46ch and 1.5 line-height.
-- **Label** (400, 0.6875rem, 0.08em, uppercase): Silkscreen micro-type — OS tabs, meta facts, trail numerals, alt-install headings, HUD track label.
-- **Metric** (400, `clamp(1.15rem, 2vw, 1.6rem)`, 0.02em, tabular figures): spec-sheet values. The unit that follows is set in Anybody at 0.8125rem so the number stays the loud element.
-- **Code** (400, `ui-monospace` stack, 0.8125rem, normal tracking): the install commands, inline code, and tool tags. The system stack is deliberate — a downloaded command must look like the reader's own terminal, not like a display face. The installer command steps down to 0.75rem below 34rem so the longest POSIX URL still holds one line.
+- **Display** (700, `clamp(2.75rem, 1.2rem + 5.4vw, 5.5rem)`, 0.96, -0.045em):
+  the hero only, capped at 15ch, dropping to 12ch and a smaller step below 24rem.
+- **Heading** (700, `clamp(2rem, 1.3rem + 3.2vw, 4rem)`, capped at 18ch): section
+  headings.
+- **Lead** (400, `clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem)`): the hero lede and
+  the stage clause.
+- **Body** (400, `clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem)`): running text,
+  held to 62ch.
+- **Small** (400, `clamp(1rem, 0.94rem + 0.18vw, 1.0625rem)`): notes, plate
+  meta, stops. Never below 16px, so nothing meant to be read is smaller than body
+  by more than one step.
+
+### Component steps
+Three sizes exist only on one component each, mapped to the nearest ramp step: the wordmark at 1.375rem, the switch sentence at `clamp(1.25rem, 2.6vw, 2.1rem)`, and the hero headline at `clamp(2.4rem, 12.5vw, 2.9rem)` below 24rem so it holds two lines.
 
 ### Named Rules
-**The Two Voices Rule.** Anybody speaks; Silkscreen prints. A sentence a human wrote is never set in Silkscreen, and a machine fact (a numeral, a command, an OS name, a file name) is never set in Anybody.
+**The One Family Rule.** No second face, no italic, no serif accent word.
+Emphasis is weight and size.
 
-**The Width Is the Emphasis Rule.** Scale and width move together. Display is 850 weight at 118% width; headline is 800 at 112%; body is 400 at normal width. There is no italic anywhere in the system, and no weight below 400.
-
-**The Measure Rule.** Prose stops at 62ch, the hero lede at 46ch, headlines at 16–22ch. Nothing on the page runs full-width as text.
+**The Floor Rule.** Nothing meant to be read drops under 16px.
 
 ## Layout
 
-A single centered column on a 74rem shell, with 1px horizontal rules marking every stage boundary. The shell gutter is 1.25rem, widening to 2rem at 40rem and 2.5rem at 75rem. The same gutter value also exists as `--gutter: clamp(1.25rem, 4vw, 2.5rem)` and is used directly by the HUD, the trail rail, and the mascot's left anchor.
+One centred shell at 78rem with a gutter of `clamp(1rem, 3.2vw, 2.5rem)`, equal
+on both sides at every width. Stacked to two columns at 50rem; the tile board
+runs four across, two below 52rem.
 
-Vertical rhythm is section-scale, not component-scale: a stage pads 4.5rem top and bottom, 6.5rem from 48rem, 8rem from 75rem. The proof strip is tighter (3rem → 4rem → 5rem), the closing block is larger (4rem → 5.5rem → 7rem). Within a plate, spacing is set per component in rem — 0.35rem, 0.55rem, 0.85rem, 1.1rem all appear — rather than from a single spacing scale. Spacing does not sit on a 4px grid: the 4px and 6px decorative squares are literals, and `--pixel`, `--edge`, `--step-2`, `--step-5`, `--mars-deep`, and `--cyan` are declared in `:root` but never referenced by a rule.
+The hero is `min(84svh, 46rem)` with copy on the left and the orb anchored at 74%
+and cropped on three edges. Below 52rem the orb stays behind the type and the copy
+takes the full gutter, so the headline is never covered.
 
-At 64rem the hero takes `min-height: min(84svh, 46rem)`, the copy column caps at 46rem, and the mascot moves from the left gutter to 10% from the right so its feet still meet the ridge line. Below 63.9375rem the stage reserves the mascot's width as bottom padding so copy never runs under it. Two-column splits engage at 58rem (with a reversed variant that swaps reading order), the three-up proof grid at 52rem, the install pair at 52rem, and the alternative install cards step 1 → 2 → 3 columns at 60rem and 75rem.
+Section rhythm is 3.5–7rem. The close inverts it: a two-column grid with the
+sentence at 24ch on the left and the note aligned to its baseline on the right.
 
-Breakpoints present in the build, in rem: 30, 34, 40, 48, 52, 56, 58, 60, 63.9375, 64, 75. They are one-off decisions per component rather than a named scale — 56rem exists to reveal the HUD section links, 63.9375rem is the complement of 64rem for the mascot lane, 60rem is set by the longest install command fitting on one line.
+### Named Rules
+**The Equal Margin Rule.** Both gutters are the same everywhere. A crop is the
+only thing allowed past them.
+
+**The No Empty Half Rule.** Every wide layout closes its far side with the orb,
+the picture, the switch, or a second column.
 
 ## Elevation & Depth
 
-The system is flat, and this is verified rather than assumed: the stylesheet contains no `box-shadow`, no `text-shadow`, no `drop-shadow`, no `filter`, and no `backdrop-filter`. Depth is conveyed two ways. First, the ground ladder — four near-black steps assigned by layer, so a plate reads as sitting above the page because it is one rung lighter. Second, the seam — a 1px `--line` border between adjacent surfaces, and a 1px `--line-2` outer border when a plate must detach as an object (the installer, a capture frame, the spec sheet's top rule).
-
-There is no shadow vocabulary, so there is no shadow token. Light in this world is a hairline, not a halo: the horizon line above the ridge is a 1px rust gradient that fades to transparent at both ends, and the star field is a fixed layer of 1px radial dots at 28–55% bone opacity. Both are painted behind content and never sit on a surface.
-
-### Named Rules
-**The Edge, Not the Lift Rule.** State is signalled by swapping fill or color — never by raising, blurring, or glowing an element. A hover changes background and text color; it does not add a shadow, a translate, or a scale.
-
-**The Seam Rule.** Two surfaces touch through a 1px line, never through a gap, a shadow, or a radius. Adjacent cards are separated by a 1px grid gap filled with `--line`, so the seam is the gap.
+There are no shadows. Depth is a tone step (Void → Slab → Slab Deep) and the
+circle's own scale. Nothing lifts.
 
 ## Shapes
 
-Every corner is square. There is no `border-radius` anywhere in the stylesheet, and `rounded: none` is the whole shape system.
-
-The form language comes from the pixel grid, not from geometry: the mascot and brand mark are rendered with `image-rendering: pixelated`, the ridge is an SVG stepped profile sampled on a 48-unit grid, meta facts and capture captions are marked with 4px and 6px solid squares, and the HUD stage bar is a row of 1.25rem × 0.375rem blocks with 3px gaps. Borders are 1px at rest. 2px is reserved for state lines — the focus outline, the active stage underline on the trail, and the underline that thickens on link hover — not for panel edges.
-
-Two silhouettes break the rectangle: the stage flag, a 0.75rem pennant cut with `clip-path: polygon(0 0, 100% 0, 100% 70%, 50% 100%, 0 70%)`, and the ridge itself, whose step profile is the page's only drawn landscape.
+The circle is the shape system; radius is `999px` on every interactive control
+and `1.35rem` on plates and tiles. The stage frame is a full circle, which crops
+each capture to its centre and keeps the four screenshots the same object. The
+tile board is the one square corner set, because it is a board.
 
 ### Named Rules
-**The Square Corner Rule.** Zero radius on every surface, control, and plate. A rounded corner is a different world.
-
-**The Pixelated Rule.** Any raster of the mascot or mark is scaled with `image-rendering: pixelated`. Never let a pixel asset interpolate.
+**The One Shape Rule.** A circle at hero, control, texture and frame scale. A
+square is only the board grid.
 
 ## Components
 
-### Buttons
-- **Shape:** square (0 radius), 1px border, no shadow.
-- **Primary:** rust fill, `#150609` text, 700 weight at 0.9375rem, `0.7rem 1.1rem` padding, 1px rust border. Hover swaps both fill and border to Rust Glow. The HUD variant is the same plate at `0.5rem 1rem` with `min-height: 2.75rem`.
-- **Secondary:** transparent fill, 1px `--line-2` border, bone text. Hover fills `--ink-3` and keeps the border. Used for "View source" and "View on npm".
-- **Focus:** a 2px `--focus` outline at 3px offset, applied globally via `:focus-visible`; buttons do not define their own ring.
-- **Icons:** 1rem inline SVG with `stroke-linecap: square`; the GitHub mark is filled.
+### Install plate
+`--slab` plate at 1.35rem, an OS pill well at the top with the file name opposite,
+then the command on `--bg` inside a pill with the copy button at its right. The
+plate mirror the chosen OS tab: file name, install path, privilege phrase and the
+linked script all swap together. Below, one Dust line states the path, the
+privilege and the script link.
 
-### Chips (tool tags)
-- **Style:** `--ink-3` fill, 1px `--line` border, bone text at 0.75rem in monospace, `0.22rem 0.5rem` padding, square corners.
-- **Use:** the tool names under a stage's prose (`lsp`, `ast_edit`, `read`, `debug`). They are labels, not filters — no hover or selected state.
+Copy has three states: rest (Rust), copied (`--ok` on `--ok-ink`, 1.8s), and the
+label swaps to "Copied" then back.
 
-### Cards / Containers
-- **Corner Style:** none.
-- **Background:** `--ink-2` for raised plates, `--ink` for card bodies inside a bordered pair.
-- **Border:** 1px `--line-2` outer, 1px `--line` internal seams.
-- **Shadow Strategy:** none — see Elevation & Depth.
-- **Internal Padding:** 1.25rem for install cards, 1.75rem at 75rem, 1rem 1.1rem for alternative install cards.
+### Tiles
+A `--slab` slab at 1.35rem holding one provider name, 3:2. The first tile spans
+two columns in Rust and carries the section heading instead of a name. No numbers,
+no icons.
 
-### Navigation
-The HUD is a fixed bar, 3.75rem tall (3.25rem below 30rem), with a 1px bottom seam and an opaque `--ink` fill — no blur. It carries the pixel mark and Silkscreen "MARS" wordmark, a five-segment stage bar with a live Silkscreen label, section links (dust at rest, bone on hover with an `--ink-3` fill, bone when `aria-current`), and the rust install plate. The links name stages 01–03 only; Install lives in the plate alone, so the bar never shows the same label twice. Below 56rem the section links disappear and the CTA takes the right edge; below 34rem the track label is dropped and the bar segments narrow.
+### Switch row
+A full-width `--slab` row, rounded, with the consequence sentence at 1.25–2.1rem
+in Dust, and a real `role="switch"` knob at the right. Off, the row is dark. On,
+the row floods Rust, the sentence turns `--accent-ink` (5.96:1) and the
+consequence line opens beneath it. Two rows start on. Click, Space and Enter all
+work; the knob is 44px tall.
 
-The stage trail below the hero is a second navigation: a horizontal rail on `--ink-2`, each stop separated by a 1px right seam, with a pennant flag, a Silkscreen numeral in Rust Glow, and a name in Anybody. The current stop gets bone text, a rust flag, and a 2px rust underline sitting on the rail's bottom seam. The HUD track label reuses the trail's name for the stage in view, so one name per stage reaches the reader from both navs. The rail fades only on a side that is actually clipped — the `data-edge` attribute is measured from `scrollLeft`, so a fully visible first or last label is never dimmed.
+### Stage slider
+A real `input[type=range]` with four stops. The thumb is a Rust circle. Moving it
+swaps the clause, the stop highlight and the visible capture in a 260ms crossfade.
+Nothing depends on scroll position.
 
-**No hash on click.** Every in-page link scrolls without writing a fragment, so the address stays at `/` while the reader moves through the stages. The ids remain in the markup: a shared `/#install` link still lands on the section at load, and the anchors still work with JS disabled. A click moves focus to the destination heading (given `tabindex="-1"` only while focused) so keyboard and screen-reader users arrive inside the section without a full-width focus ring under the HUD; a modified click is left to the browser.
+### Close sentence
+A statement at the display-adjacent step with two real fields inline: a text
+input on `--surface-2` for the repo name, and the final word as a Rust button.
+Both scale with the sentence in `em` and stay at least 44px tall.
 
-### Installer Panel (signature)
-The page's working action, shown in its working form rather than described.
-- **Frame:** 1px `--line-2`, `--ink-2` body, `--ink-3` head bar with a 1px bottom seam. In the install band the same plate sits on `--ink` with 0.4rem of padding, so the frame reads as an inset panel.
-- **Head:** OS tabs in Silkscreen 0.6875rem uppercase — selected tab takes `--ink-4` fill and a `--line-2` border, unselected is dust on transparent. A filename label (`install.sh` / `install.ps1`) sits right-aligned in monospace and swaps with the tab. On load the tab matching the visitor's platform is selected: Windows takes `install.ps1`, everything else including a phone takes `install.sh`, since the platform is the only signal available and it is quickly correctable.
-- **Body:** a `$` or `>` sigil in Rust Glow, then the command in monospace bone. The copy action is a `--ink-4` plate separated by a 1px left seam, Silkscreen uppercase, with a 16px inline copy icon.
-- **Note:** every tab carries one line of Anybody 0.8125rem dust below the plate, held to the plate's own 40rem and closer to the action than the meta facts that follow it: where the binary lands, whether the install needs elevation, and a bone link to the script on GitHub. The path, the privilege phrase, and the link target swap with the tab — `~/.local/bin`, `no sudo`, `install`, or `%LOCALAPPDATA%\mars`, `no admin`, `install.ps1`. The line is the product's own claim, not decoration: nothing here explains what a command already says.
-- **States:** the copy button swaps to "Copied" (`#8ee08e` on `#16201a`) or "Copy failed" (`#ff9d9d` on `#241417`), resets after 1.8s, and updates its `aria-label` to match the visible label. A successful copy also triggers the mascot's hop.
-- **Narrow behavior:** below 30rem the copy plate moves under the command, the filename is dropped, and the command keeps `overflow-wrap: normal` so a URL never breaks mid-token. The note wraps to two lines and the script link keeps `white-space: nowrap`, so it never breaks inside the link text.
+## Motion
 
-### Alternative Install Cards
-- **Style:** 1px `--line` border, `--ink` body, Silkscreen heading in dust, command in monospace bone.
-- **Command wrapping:** the package id is wrapped in a no-break span so the line wraps at the space before it and never inside the token.
-- **Copy action:** deliberately quiet — no plate, transparent background, dust text turning bone on hover, `min-height: 2.75rem` for the tap target. It is the fallback path, so it must not read as a second primary button.
+The loud moment is the orb: it opens with a `clip-path` wipe while the photograph
+inside settles from 1.14 to rest, 1.05s, once. Then:
 
-### Spec List
-Label/value rows separated by 1px `--line` seams under a 1px `--line-2` top rule. Labels are Anybody at 0.9375rem in dust; values are Silkscreen Metric in bone with tabular figures, and a unit in Anybody 0.8125rem dust follows the number. Rows align baseline, not center.
+- the headline wipes in behind it;
+- tiles, switch rows and notes arrive on a 60–120ms stagger as they enter;
+- the orb drifts against the scroll up to 90px;
+- the stage frame leans back 2% while it is off-centre and settles when it centres;
+- every control answers hover and press; the knob stretches its thumb on press.
 
-### Capture Plate
-A bordered `--ink-2` figure holding a real product capture: 1px `--line-2` frame, image with a 1px bottom seam, caption in Anybody 0.8125rem dust preceded by a 6px rust square. Captions may contain `code` in bone. No browser chrome, no fake window dots.
-
-### Stage Numeral
-A 0.75rem Silkscreen numeral in Rust Glow, floated left inside each stage `h2` with `0.35rem 0.85rem 0 0` of margin, so the heading text wraps around it. It is `aria-hidden`; a visually hidden `Stage 01:` prefix inside the same heading carries the number for assistive technology.
-
-### Closing Block
-The last section repeats the working action rather than linking back up to it. A display-size headline at 116% width sits above an installer plate — same frame, sigil, command, and copy action as the hero, one command wide at 40rem — followed by a row of secondary buttons: Download binary, View source, View on npm. The plate mirrors the selected OS tab, so a reader who switched to Windows in the hero finds `install.ps1` waiting here instead of a POSIX command they cannot run. The primary plate is the command itself; there is no separate primary button, because a button that only scrolls to another button is the thing this block exists to remove.
-
-### Motion
-Entrances are hard-edged, stepped, and short. The hero headline wipes in with a `steps(7)` clip, the ridge draws itself with `steps(8)`, and the mascot falls and lands with `steps(4)` — all gated on `prefers-reduced-motion: no-preference` and on a `js` class set by the inline script. Capture plates use a separate, slower clip wipe (760ms) so the two effects never read as one. The mascot idles on a 3.2s `steps(2)` two-frame bob. Under reduced motion every animation and transition is cut to 0.001ms and smooth scrolling is turned off.
+The field drifts over 90s. All of it is transform, opacity, clip-path and
+transition, all of it under `prefers-reduced-motion: no-preference`, and the
+reduced path removes the drift and the wipe while keeping every element at full
+opacity and in place.
 
 ### Named Rules
-**The Steps Rule.** Entrances are clip wipes timed in `steps()` frames. No eased fades, no blur-ins, no parallax on content.
-
-**The Working Action Rule.** The primary action is shown as the real, copyable thing — a command in a bordered plate with a copy button — not as a button that leads to one.
+**The Content-First Rule.** No entrance may hide content that the script has not
+already revealed, and reduced motion shows the finished frame.
 
 ## Do's and Don'ts
 
-### Do:
-- **Do** keep every surface square and flat: 0 radius, 1px seams, and the ink ladder for depth.
-- **Do** use rust for action and position only — fills, flags, dots, underlines, numerals — and Rust Glow for any rust-colored word.
-- **Do** set machine facts (numerals, commands, OS names, file names, labels) in Silkscreen or monospace, and human sentences in Anybody.
-- **Do** gate every entrance on `prefers-reduced-motion: no-preference` and on the `js` class, so a no-JS or reduced-motion visitor sees the finished frame.
-- **Do** hold prose to 62ch and headlines to 16–22ch.
-- **Do** keep every action at least 2.75rem tall — the HUD plate and the quiet copy actions set `min-height: 2.75rem`; the primary and secondary buttons reach it through padding — and give each a visible `:focus-visible` ring in Focus Cyan.
-- **Do** let the mascot's feet meet the ridge line at every breakpoint; the ridge is the ground, not a decoration behind the copy.
+### Do
+- Keep one motif and one light.
+- Round every control fully; round plates at 1.35rem.
+- Set machine facts in `<code>` and everything else in Space Grotesk.
+- Keep every control at least 44px tall and give it a visible focus ring.
+- Add motion with a transform or opacity, and give it a reduced-motion path.
 
-### Don't:
-- **Don't** add a shadow, glow, blur, or `backdrop-filter`. There are none in the build and the world does not have a vocabulary for them.
-- **Don't** round a corner, on any element, for any reason.
-- **Don't** use a gradient as a surface fill, a text fill, or a control fill. Gradients exist only in the page ground vignette, the 1px star field, the horizon hairline, and the trail's scroll-edge mask.
-- **Don't** set body copy in rust. Mars Rust on Ground Ink is 4.60:1 — it is a mark color, not a reading color.
-- **Don't** use Focus Cyan for anything but the focus ring.
-- **Don't** introduce a second accent hue, a warm neutral, or a "brand gradient".
-- **Don't** ease an entrance. Stepped frames only.
-- **Don't** put a kicker, eyebrow, or all-caps label above a headline — the stage numeral inside the heading is the only heading marker this world uses.
+### Don't
+- Add a second shape, a second accent, a gradient fill, or a shadow.
+- Set a sentence in rust.
+- Set anything meant to be read under 16px.
+- Let the orb cover the headline at any width.
+- Add decorative numbering or an eyebrow above a heading.
