@@ -88,6 +88,11 @@
     a:hover {
       color: var(--accent);
     }
+    /* The royal blue only reads as a hover on the mustard ground (5.2:1). On
+       the ink footer it drops to 1.8:1, so those links hover to the mustard. */
+    footer a:hover {
+      color: var(--bg);
+    }
 
     h1, h2, h3 {
       font-family: var(--font-display);
@@ -117,6 +122,7 @@
       font-weight: 600;
     }
     .skip:focus { top: 1rem; }
+    .skip:hover { color: var(--bg); }
 
     /* ── Header ─────────────────────────────────────────────────── */
     .site-nav {
@@ -525,8 +531,11 @@
       position: relative;
       transition: flex-grow 400ms cubic-bezier(0.16, 1, 0.3, 1), background 200ms;
     }
-    .acc-panel:nth-child(1) { background: #ab7f04; color: #ffffff; }
-    .acc-panel:nth-child(2) { background: #ba8c07; color: #ffffff; }
+    /* The first two panels are dark enough to carry white text at AA (8.9:1
+       and 6.4:1); the last two flip to ink at 8.1:1 and 9.8:1. The row still
+       reads dark to light, which is how the order is carried. */
+    .acc-panel:nth-child(1) { background: #5f4502; color: #ffffff; }
+    .acc-panel:nth-child(2) { background: #7a5a03; color: #ffffff; }
     .acc-panel:nth-child(3) { background: #cca012; color: #0b0b0b; }
     .acc-panel:nth-child(4) { background: #deb21e; color: #0b0b0b; }
     .acc-panel:not(.open) .acc-title {
@@ -748,6 +757,10 @@
     }
     .footer-left a {
       color: #f4ece2;
+      text-decoration-color: var(--bg);
+    }
+    .footer-left a:hover {
+      color: var(--bg);
     }
     .footer-nav {
       display: flex;
