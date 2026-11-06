@@ -470,6 +470,10 @@
   .vline .say { color: var(--body); }
   .vline.now .tag { color: var(--violet-deep); }
   .vline.now .say { color: var(--ink); font-weight: 500; }
+  .vline { transition: opacity 240ms ease; }
+  /* While a filter is on, the rail dims the lines that fell out of view. */
+  .rail[data-filtering="true"] .vline:not([data-lit="true"]) { opacity: 0.38; }
+  .rail .vline[data-lit="true"] .tag { color: var(--violet-deep); }
   .vline .dot {
     display: inline-block; width: 0.5rem; height: 0.5rem; border-radius: 50%;
     background: var(--violet); margin-right: 0.4rem; vertical-align: 0.05em;
@@ -484,8 +488,108 @@
   }
   .rail-foot b { color: var(--ink); font-weight: 600; display: block; margin-bottom: 0.15rem; letter-spacing: 0.1em; text-transform: uppercase; }
 
+  /* ── Register controls: filter the ledger, key the register ────────── */
+  .reg-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem 1.25rem;
+    flex-wrap: wrap;
+    padding: 0.85rem 0;
+    border-top: 1px solid var(--hair-hard);
+  }
+  .reg-filters {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+  .chip {
+    font-family: var(--mono);
+    font-size: var(--step-micro);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--body);
+    background: var(--plate);
+    border: 1px solid var(--hair-hard);
+    border-radius: var(--radius);
+    padding: 0 0.7rem;
+    min-height: 2.25rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    cursor: pointer;
+    transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
+  }
+  .chip:hover { color: var(--violet-deep); border-color: var(--violet); }
+  .chip[aria-pressed="true"] {
+    color: #fff;
+    background: var(--violet-deep);
+    border-color: var(--violet-deep);
+  }
+  .chip .n {
+    font-weight: 600;
+    color: var(--soft);
+    font-variant-numeric: tabular-nums;
+  }
+  .chip[aria-pressed="true"] .n { color: rgba(255, 255, 255, 0.72); }
+  .chip.sq { width: 2.25rem; padding: 0; justify-content: center; font-size: 0.95rem; line-height: 1; }
+  .reg-search {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.25rem;
+    padding: 0 0.7rem;
+    background: var(--plate);
+    border: 1px solid var(--hair-hard);
+    border-radius: var(--radius);
+  }
+  .reg-search:focus-within { border-color: var(--violet); }
+  .reg-search svg { flex: none; color: var(--soft); }
+  .reg-search input {
+    font-family: var(--mono);
+    font-size: var(--step-micro);
+    letter-spacing: 0.04em;
+    border: 0;
+    background: none;
+    color: var(--ink);
+    width: 12rem;
+    max-width: 40vw;
+    padding: 0.5rem 0;
+  }
+  .reg-search input:focus { outline: none; }
+  .reg-search input::placeholder { color: var(--soft); }
+  .reg-search kbd {
+    font-size: 0.6875rem;
+    color: var(--soft);
+    border: 1px solid var(--hair);
+    border-radius: 4px;
+    padding: 0.05rem 0.3rem;
+    background: var(--plate-2);
+  }
+  .reg-empty {
+    padding: 2.5rem 0;
+    font-family: var(--mono);
+    font-size: var(--step-small);
+    color: var(--soft);
+    text-align: center;
+  }
+
   .ledger { border-top: 1px solid var(--hair-hard); }
-  .entry { border-bottom: 1px solid var(--hair); }
+  .entry {
+    border-bottom: 1px solid var(--hair);
+    transition: opacity 240ms ease, transform 240ms ease, background 200ms ease;
+  }
+  .entry:hover { background: var(--violet-wash); }
+  .entry-row { transition: padding-left 200ms cubic-bezier(0.16, 1, 0.3, 1); }
+  .entry:hover .entry-row { padding-left: 0.35rem; }
+  .entry:hover .sign { transform: scale(1.35); }
+  .entry.is-out {
+    opacity: 0;
+    transform: translateY(-4px);
+    pointer-events: none;
+  }
+  .entry[hidden] { display: none; }
   .entry-row {
     display: grid;
     grid-template-columns: 1.5rem minmax(0, 1fr) auto;
@@ -499,6 +603,7 @@
     font-size: 1rem;
     line-height: 1.6;
     text-align: center;
+    transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
   }
   .sign.add { color: var(--violet); }
   .sign.fix { color: var(--warn); }
@@ -514,6 +619,7 @@
     white-space: nowrap;
   }
   .entry-meta .v { color: var(--ink); font-weight: 600; display: block; }
+  .entry-actions { display: flex; align-items: center; gap: 0.9rem; margin-top: 0.4rem; }
   .entry-toggle {
     display: inline-flex; align-items: center; gap: 0.4rem;
     margin-top: 0.4rem;
@@ -535,6 +641,25 @@
     transition: transform 200ms ease;
   }
   .entry-toggle[aria-expanded="true"]::after { transform: rotate(225deg) translateY(-2px); }
+  .entry-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-family: var(--mono);
+    font-size: var(--step-micro);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--soft);
+    background: none;
+    border: 0;
+    padding: 0.35rem 0;
+    cursor: pointer;
+    min-height: 2.75rem;
+    transition: color 140ms ease;
+  }
+  .entry-link:hover { color: var(--violet-deep); }
+  .entry-link[data-state="copied"] { color: #24804e; }
+  .entry-link svg { flex: none; width: 0.85rem; height: 0.85rem; }
   .evidence {
     display: grid;
     grid-template-rows: 0fr;
@@ -815,8 +940,25 @@
   html.js .hero-ribbon { opacity: 0; transition: opacity 900ms ease 120ms; }
   html.js .hero-ribbon.in { opacity: 1; }
 
+  /* a linked entry flares once so the eye lands where the URL pointed */
+  @keyframes entry-flare {
+    from { background: var(--violet-wash); }
+    to { background: transparent; }
+  }
+  html.js .entry.flare { animation: entry-flare 1600ms cubic-bezier(0.16, 1, 0.3, 1); }
+
+  /* ledger rows settle in as the register scrolls into view */
+  @keyframes row-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     html.js .mark-in, html.js .hero-ribbon { opacity: 1 !important; transform: none !important; transition: none !important; }
+    html.js .entry.flare { animation: none !important; }
+    .entry, .entry-row, .sign, .vline, .chip { transition: none !important; }
+    .entry:hover .entry-row { padding-left: 0; }
+    .entry:hover .sign { transform: none; }
     * { scroll-behavior: auto !important; }
   }
 
@@ -981,15 +1123,28 @@
         <p>Each capability is one attributed entry with its state and its evidence. Open an entry to see the terminal it came from.</p>
       </div>
 
+      <div class="reg-controls">
+        <div class="reg-filters" role="group" aria-label="Filter the register by state">
+          <button class="chip" type="button" data-filter="all" aria-pressed="true">All <span class="n" data-count="all"></span></button>
+          <button class="chip" type="button" data-filter="added" aria-pressed="false">Added <span class="n" data-count="added"></span></button>
+          <button class="chip" type="button" data-filter="removed" aria-pressed="false">Removed <span class="n" data-count="removed"></span></button>
+        </div>
+        <label class="reg-search" for="reg-q">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.6"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <input type="search" id="reg-q" placeholder="Filter entries" aria-label="Filter register entries by text">
+          <kbd aria-hidden="true">/</kbd>
+        </label>
+      </div>
+
       <div class="register">
         <aside class="rail mark-in" aria-label="Release lines and targets">
           <p class="rail-title">Release lines</p>
           <ul class="vlines">
-            <li class="vline now"><span class="tag"><span class="dot"></span>v0.9.x</span><span class="say">current line</span></li>
-            <li class="vline"><span class="tag">v0.8.x</span><span class="say">six release targets</span></li>
-            <li class="vline"><span class="tag">v0.7.x</span><span class="say">debugger over DAP</span></li>
-            <li class="vline"><span class="tag">v0.6.x</span><span class="say">subagent worktrees</span></li>
-            <li class="vline"><span class="tag">v0.5.x</span><span class="say">in-process core</span></li>
+            <li class="vline now" data-version="v0.9.x"><span class="tag"><span class="dot"></span>v0.9.x</span><span class="say">current line</span></li>
+            <li class="vline" data-version="v0.8.x"><span class="tag">v0.8.x</span><span class="say">six release targets</span></li>
+            <li class="vline" data-version="v0.7.x"><span class="tag">v0.7.x</span><span class="say">debugger over DAP</span></li>
+            <li class="vline" data-version="v0.6.x"><span class="tag">v0.6.x</span><span class="say">subagent worktrees</span></li>
+            <li class="vline" data-version="v0.5.x"><span class="tag">v0.5.x</span><span class="say">in-process core</span></li>
           </ul>
           <p class="rail-foot">
             <b>Targets</b>
@@ -1001,12 +1156,15 @@
         </aside>
 
         <div class="ledger mark-in">
-          <article class="entry" data-open="false">
+          <article class="entry" id="entry-1" data-open="false" data-state="added" data-version="v0.5.x">
             <div class="entry-row">
               <span class="sign add" aria-hidden="true">+</span>
               <div>
                 <p class="entry-text">The shell, search, glob and find run <span class="tok">in-process</span>, no fork for a single call.</p>
-                <button class="entry-toggle" type="button" aria-expanded="false" aria-controls="ev-1">Evidence</button>
+                <div class="entry-actions">
+                  <button class="entry-toggle" type="button" aria-expanded="false" aria-controls="ev-1">Evidence</button>
+                  <button class="entry-link" type="button" data-anchor="entry-1" aria-label="Copy a link to this register entry"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6.5 9.5l3-3M7 5l1-1a2.5 2.5 0 013.5 3.5l-1 1M9 11l-1 1A2.5 2.5 0 014.5 8.5l1-1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Link</button>
+                </div>
               </div>
               <p class="entry-meta"><span class="v">v0.5.x</span>added</p>
             </div>
@@ -1019,12 +1177,15 @@
             </div></div></div>
           </article>
 
-          <article class="entry" data-open="false">
+          <article class="entry" id="entry-2" data-open="false" data-state="added" data-version="v0.9.x">
             <div class="entry-row">
               <span class="sign add" aria-hidden="true">+</span>
               <div>
                 <p class="entry-text">Every write goes through a real <span class="tok">language server</span>, so a rename updates re-exports before the file moves.</p>
-                <button class="entry-toggle" type="button" aria-expanded="false" aria-controls="ev-2">Evidence</button>
+                <div class="entry-actions">
+                  <button class="entry-toggle" type="button" aria-expanded="false" aria-controls="ev-2">Evidence</button>
+                  <button class="entry-link" type="button" data-anchor="entry-2" aria-label="Copy a link to this register entry"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6.5 9.5l3-3M7 5l1-1a2.5 2.5 0 013.5 3.5l-1 1M9 11l-1 1A2.5 2.5 0 014.5 8.5l1-1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Link</button>
+                </div>
               </div>
               <p class="entry-meta"><span class="v">v0.9.x</span>added</p>
             </div>
@@ -1037,12 +1198,15 @@
             </div></div></div>
           </article>
 
-          <article class="entry" data-open="false">
+          <article class="entry" id="entry-3" data-open="false" data-state="added" data-version="v0.7.x">
             <div class="entry-row">
               <span class="sign add" aria-hidden="true">+</span>
               <div>
                 <p class="entry-text">A real <span class="tok">debugger</span> over DAP (lldb, dlv, debugpy) instead of print statements.</p>
-                <button class="entry-toggle" type="button" aria-expanded="false" aria-controls="ev-3">Evidence</button>
+                <div class="entry-actions">
+                  <button class="entry-toggle" type="button" aria-expanded="false" aria-controls="ev-3">Evidence</button>
+                  <button class="entry-link" type="button" data-anchor="entry-3" aria-label="Copy a link to this register entry"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6.5 9.5l3-3M7 5l1-1a2.5 2.5 0 013.5 3.5l-1 1M9 11l-1 1A2.5 2.5 0 014.5 8.5l1-1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Link</button>
+                </div>
               </div>
               <p class="entry-meta"><span class="v">v0.7.x</span>added</p>
             </div>
@@ -1055,12 +1219,15 @@
             </div></div></div>
           </article>
 
-          <article class="entry" data-open="false">
+          <article class="entry" id="entry-4" data-open="false" data-state="added" data-version="v0.6.x">
             <div class="entry-row">
               <span class="sign add" aria-hidden="true">+</span>
               <div>
                 <p class="entry-text">Subagents run in isolated <span class="tok">worktrees</span> and hand back schema-validated results.</p>
-                <button class="entry-toggle" type="button" aria-expanded="false" aria-controls="ev-4">Evidence</button>
+                <div class="entry-actions">
+                  <button class="entry-toggle" type="button" aria-expanded="false" aria-controls="ev-4">Evidence</button>
+                  <button class="entry-link" type="button" data-anchor="entry-4" aria-label="Copy a link to this register entry"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6.5 9.5l3-3M7 5l1-1a2.5 2.5 0 013.5 3.5l-1 1M9 11l-1 1A2.5 2.5 0 014.5 8.5l1-1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Link</button>
+                </div>
               </div>
               <p class="entry-meta"><span class="v">v0.6.x</span>added</p>
             </div>
@@ -1073,12 +1240,15 @@
             </div></div></div>
           </article>
 
-          <article class="entry" data-open="false">
+          <article class="entry" id="entry-5" data-open="false" data-state="added" data-version="v0.9.x">
             <div class="entry-row">
               <span class="sign add" aria-hidden="true">+</span>
               <div>
                 <p class="entry-text">Persistent <span class="tok">Python and JS cells</span> run live and can call back into the agent's tools.</p>
-                <button class="entry-toggle" type="button" aria-expanded="false" aria-controls="ev-5">Evidence</button>
+                <div class="entry-actions">
+                  <button class="entry-toggle" type="button" aria-expanded="false" aria-controls="ev-5">Evidence</button>
+                  <button class="entry-link" type="button" data-anchor="entry-5" aria-label="Copy a link to this register entry"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6.5 9.5l3-3M7 5l1-1a2.5 2.5 0 013.5 3.5l-1 1M9 11l-1 1A2.5 2.5 0 014.5 8.5l1-1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Link</button>
+                </div>
               </div>
               <p class="entry-meta"><span class="v">v0.9.x</span>added</p>
             </div>
@@ -1091,12 +1261,15 @@
             </div></div></div>
           </article>
 
-          <article class="entry" data-open="false">
+          <article class="entry" id="entry-6" data-open="false" data-state="removed" data-version="v0.5.x">
             <div class="entry-row">
               <span class="sign rm" aria-hidden="true">&minus;</span>
               <div>
                 <p class="entry-text">The external <span class="tok">find</span> fork was removed; search is wholly in-process.</p>
-                <button class="entry-toggle" type="button" aria-expanded="false" aria-controls="ev-6">Evidence</button>
+                <div class="entry-actions">
+                  <button class="entry-toggle" type="button" aria-expanded="false" aria-controls="ev-6">Evidence</button>
+                  <button class="entry-link" type="button" data-anchor="entry-6" aria-label="Copy a link to this register entry"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6.5 9.5l3-3M7 5l1-1a2.5 2.5 0 013.5 3.5l-1 1M9 11l-1 1A2.5 2.5 0 014.5 8.5l1-1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Link</button>
+                </div>
               </div>
               <p class="entry-meta"><span class="v">v0.5.x</span>removed</p>
             </div>
@@ -1109,6 +1282,7 @@
             </div></div></div>
           </article>
         </div>
+        <p class="reg-empty" id="reg-empty" hidden>No entries match this filter.</p>
       </div>
     </div>
   </section>
@@ -1319,6 +1493,24 @@
     var name = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || "";
     var auto = document.getElementById(/Win/i.test(name) || /Windows/i.test(ua) ? "tab-win" : "tab-posix");
     if (auto) select(auto, false);
+
+    /* Deep link: #install-windows / #install-macos picks the platform tab. */
+    var hashTab = { "install-windows": "tab-win", "install-macos": "tab-posix", "install-linux": "tab-posix" };
+    function applyHash() {
+      var id = (location.hash || "").slice(1);
+      var target = hashTab[id];
+      if (target) {
+        var tab = document.getElementById(target);
+        if (tab) select(tab, false);
+      }
+    }
+    window.addEventListener("hashchange", applyHash);
+    if (hashTab[(location.hash || "").slice(1)]) {
+      /* The installer plate is the deep-link target; scroll it into view. */
+      var plate = document.getElementById("install");
+      if (plate) plate.scrollIntoView({ block: "center", behavior: "smooth" });
+    }
+    applyHash();
   })();
 
   /* ── Copy: the clipboard gets the bare command ───────────────────── */
@@ -1367,17 +1559,167 @@
     });
   })();
 
-  /* ── Register entries: open to reveal the evidence ───────────────── */
+  /* ── Register: filter, search, deep-link and copy a permalink ────── */
   (function () {
-    document.querySelectorAll(".entry-toggle").forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        var entry = btn.closest(".entry");
-        var open = btn.getAttribute("aria-expanded") === "true";
-        btn.setAttribute("aria-expanded", open ? "false" : "true");
-        btn.textContent = open ? "Evidence" : "Close";
-        entry.dataset.open = open ? "false" : "true";
+    var ledger = document.querySelector(".ledger");
+    if (!ledger) return;
+    var entries = Array.prototype.slice.call(ledger.querySelectorAll(".entry"));
+    var chips = Array.prototype.slice.call(document.querySelectorAll(".chip[data-filter]"));
+    var search = document.getElementById("reg-q");
+    var empty = document.getElementById("reg-empty");
+    var status = document.getElementById("copy-status");
+    var state = "all";
+    var query = "";
+
+    /* Counts feed the chips so the register reports its own totals. */
+    var counts = { all: entries.length, added: 0, removed: 0 };
+    entries.forEach(function (e) {
+      var s = e.dataset.state;
+      if (s === "added" || s === "removed") counts[s]++;
+    });
+    document.querySelectorAll("[data-count]").forEach(function (el) {
+      var k = el.getAttribute("data-count");
+      if (counts[k] != null) el.textContent = counts[k];
+    });
+
+    function open(entry, on) {
+      var btn = entry.querySelector(".entry-toggle");
+      if (!btn) return;
+      btn.setAttribute("aria-expanded", on ? "true" : "false");
+      btn.textContent = on ? "Close" : "Evidence";
+      entry.dataset.open = on ? "true" : "false";
+    }
+
+    function matches(entry) {
+      if (state !== "all" && entry.dataset.state !== state) return false;
+      if (query) {
+        var hay = entry.textContent.toLowerCase();
+        if (hay.indexOf(query) === -1) return false;
+      }
+      return true;
+    }
+
+    function applyFilter() {
+      var shown = 0;
+      var lit = {};
+      entries.forEach(function (entry) {
+        var ok = matches(entry);
+        if (ok) { shown++; lit[entry.dataset.version] = true; }
+        entry.hidden = !ok;
+        entry.classList.toggle("is-out", !ok);
+      });
+      if (empty) empty.hidden = shown !== 0;
+      ledger.hidden = shown === 0;
+
+      /* The rail reports which release lines still carry a visible entry. */
+      var rail = document.querySelector(".rail");
+      if (rail) {
+        var filtering = state !== "all" || !!query;
+        rail.dataset.filtering = filtering ? "true" : "false";
+        rail.querySelectorAll(".vline").forEach(function (line) {
+          line.dataset.lit = lit[line.dataset.version] && filtering ? "true" : "false";
+        });
+      }
+    }
+
+    /* Deep link: #entry-2 opens and flares the entry it names. */
+    function revealFromHash(smooth) {
+      var id = decodeURIComponent((location.hash || "").slice(1));
+      var entry = id ? document.getElementById(id) : null;
+      if (!entry || !entry.classList.contains("entry")) return false;
+      state = "all";
+      query = "";
+      if (search) search.value = "";
+      chips.forEach(function (c) { c.setAttribute("aria-pressed", String(c.dataset.filter === "all")); });
+      applyFilter();
+      open(entry, true);
+      entry.classList.remove("flare");
+      void entry.offsetWidth; /* restart the flare */
+      entry.classList.add("flare");
+      if (smooth) entry.scrollIntoView({ block: "center", behavior: "smooth" });
+      return true;
+    }
+
+    chips.forEach(function (chip) {
+      chip.addEventListener("click", function () {
+        state = chip.dataset.filter;
+        chips.forEach(function (c) { c.setAttribute("aria-pressed", String(c === chip)); });
+        applyFilter();
       });
     });
+
+    if (search) {
+      search.addEventListener("input", function () {
+        query = search.value.trim().toLowerCase();
+        applyFilter();
+      });
+    }
+
+    ledger.querySelectorAll(".entry-toggle").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var entry = btn.closest(".entry");
+        open(entry, btn.getAttribute("aria-expanded") !== "true");
+      });
+    });
+
+    /* A permalink writes the entry id onto the URL and into the clipboard. */
+    ledger.querySelectorAll(".entry-link").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var id = btn.getAttribute("data-anchor");
+        var base = location.href.split("#")[0];
+        var url = base + "#" + id;
+        try { history.replaceState(null, "", "#" + id); } catch (e) { location.hash = id; }
+        function done(ok) {
+          btn.setAttribute("data-state", ok ? "copied" : "");
+          btn.lastChild.textContent = ok ? "Copied" : "Link";
+          if (status) status.textContent = ok ? "Link copied to this entry." : "Copy failed; the URL now points here.";
+          setTimeout(function () {
+            btn.removeAttribute("data-state");
+            btn.lastChild.textContent = "Link";
+            if (status) status.textContent = "";
+          }, 2400);
+        }
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(url).then(function () { done(true); }, function () { done(false); });
+        } else { done(false); }
+      });
+    });
+
+    /* Keyboard: "/" jumps to the filter, arrows step the register, Esc clears. */
+    document.addEventListener("keydown", function (e) {
+      var tag = (e.target && e.target.tagName) || "";
+      var typing = tag === "INPUT" || tag === "TEXTAREA" || (e.target && e.target.isContentEditable);
+      if (e.key === "/" && !typing) {
+        if (search) { e.preventDefault(); search.focus(); search.select(); }
+        return;
+      }
+      if (e.key === "Escape") {
+        if (typing && search && e.target === search && search.value) {
+          search.value = ""; query = ""; applyFilter(); return;
+        }
+        if (state !== "all" || query) {
+          state = "all"; query = "";
+          if (search) search.value = "";
+          chips.forEach(function (c) { c.setAttribute("aria-pressed", String(c.dataset.filter === "all")); });
+          applyFilter();
+        }
+        return;
+      }
+      if ((e.key === "ArrowDown" || e.key === "ArrowUp") && !typing) {
+        var vis = entries.filter(function (en) { return !en.hidden; });
+        if (!vis.length) return;
+        var active = document.activeElement;
+        var idx = vis.indexOf(active && active.closest ? active.closest(".entry") : null);
+        if (idx === -1) idx = e.key === "ArrowDown" ? -1 : 0;
+        var next = vis[(idx + (e.key === "ArrowDown" ? 1 : -1) + vis.length) % vis.length];
+        var focusable = next.querySelector(".entry-toggle");
+        if (focusable) { e.preventDefault(); focusable.focus(); }
+      }
+    });
+
+    window.addEventListener("hashchange", function () { revealFromHash(true); });
+    applyFilter();
+    revealFromHash(true);
   })();
 
   /* ── Worked stages: the ruler drives copy and exhibit ────────────── */
@@ -1403,6 +1745,42 @@
     }
     range.addEventListener("input", function () { apply(Number(range.value)); });
     apply(0);
+  })();
+
+  /* ── Instrument counts: tick up once, from a readable default ────── */
+  (function () {
+    var nums = Array.prototype.slice.call(document.querySelectorAll(".instrument .num"));
+    if (!nums.length) return;
+    var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduce || !("IntersectionObserver" in window)) return;
+
+    function run(el) {
+      var raw = el.textContent.trim();
+      var m = raw.match(/^([^0-9]*)(\d+)([^0-9]*)$/);
+      if (!m) return;
+      var prefix = m[1], target = parseInt(m[2], 10), suffix = m[3];
+      var width = m[2].length;
+      var start = null, dur = 900;
+      function frame(ts) {
+        if (start === null) start = ts;
+        var t = Math.min(1, (ts - start) / dur);
+        var eased = 1 - Math.pow(1 - t, 3);
+        var val = String(Math.round(target * eased));
+        while (val.length < width) val = "0" + val;
+        el.textContent = prefix + val + suffix;
+        if (t < 1) requestAnimationFrame(frame);
+        else el.textContent = prefix + String(target) + suffix;
+      }
+      el.textContent = prefix + "0" + suffix;
+      requestAnimationFrame(frame);
+    }
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { run(e.target); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.6 });
+    nums.forEach(function (el) { io.observe(el); });
   })();
 
   /* ── Close: run means install, land in the repo, and start ───────── */

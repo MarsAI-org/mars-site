@@ -82,6 +82,19 @@ components:
     textColor: "{colors.ink}"
     rounded: "{rounded.control}"
     padding: "0 0.6em"
+  chip-token:
+    backgroundColor: "{colors.primary-wash}"
+    textColor: "{colors.primary-deep}"
+    rounded: "{rounded.chip}"
+  chip-filter:
+    backgroundColor: "{colors.plate}"
+    textColor: "{colors.body}"
+    rounded: "{rounded.control}"
+    height: "2.25rem"
+  chip-filter-pressed:
+    backgroundColor: "{colors.primary-deep}"
+    textColor: "{colors.plate}"
+    rounded: "{rounded.control}"
   input-blank:
     backgroundColor: "{colors.ink}"
     textColor: "{colors.mint}"
@@ -223,6 +236,23 @@ keyline-hard; the close panel is a solid ink field with no border.
 
 ### Chips
 - **Token chip:** Violet Wash fill, Register Violet Deep mono text at 0.86em, 4px radius. Marks a literal — a flag, a subsystem name, an inline token.
+- **Filter chip:** a plate pill in mono uppercase with a tabular count. Pressed state fills with Register Violet Deep and white label; hover deepens the border to violet. The row reports the register's own totals (`all / added / removed`).
+
+### Register Controls & Interaction
+The register is interactive, not a poster: it filters, searches, deep-links and
+keys.
+- **Filter + search:** the chip row narrows the ledger by state, and the search
+  field narrows it by text; an empty state replaces the ledger when nothing
+  matches. While any filter is on, the version rail dims every release line that
+  no longer carries a visible entry and lights the ones that do.
+- **Deep links:** `#entry-N` opens that entry and flares its background once;
+  `#install-windows` / `#install-macos` select the install tab. Each entry carries
+  a `Link` control that writes its permalink to the URL and the clipboard.
+- **Keyboard:** `/` focuses the filter; `↑` / `↓` step the visible entries; `Esc`
+  clears the filter and query.
+- **Motion:** counts tick up once on entry, evidence reveals on a grid-row
+  transition, a hovered entry row washes and nudges its sign. Every gesture is
+  suppressed under `prefers-reduced-motion`.
 
 ### Plates / Containers
 - **Corner Style:** 8px for the install plate's controls, 14px for full plates.
@@ -242,9 +272,11 @@ keyline-hard; the close panel is a solid ink field with no border.
 ### Signature: The Signed Entry
 The register's ledger row: a large `+` / `~` / `−` state sign in the accent, the
 capability as one lead-size line with inline mono token chips, a right-aligned
-mono version-and-state column, and an `Evidence` toggle that opens a grid-row
-reveal holding a short note plus a dark terminal exhibit. Each entry is one line
-of truth with a state and its proof — the page's core device.
+mono version-and-state column, and an action line pairing an `Evidence` toggle
+with a `Link` permalink. `Evidence` opens a grid-row reveal holding a short note
+plus a dark terminal exhibit; `Link` copies the entry's deep link. Each entry is
+one line of truth with a state, its proof and its address — the page's core
+device.
 
 ## Do's and Don'ts
 
@@ -254,6 +286,7 @@ of truth with a state and its proof — the page's core device.
 - **Do** carry state with the signed-entry device: a colored sign, a version, a state word, an openable exhibit.
 - **Do** keep violet as a mark — state, token, link, action — and deepen it (`#4d43cf`) for small text.
 - **Do** give every interactive target a 44px (2.75rem) minimum height and a visible focus ring.
+- **Do** make the register addressable and reachable: deep-link each entry and each install tab, and keep `/`, arrow keys and `Esc` working.
 
 ### Don't:
 - **Don't** add an eyebrow or kicker label above a heading.
