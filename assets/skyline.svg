@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 170" width="640" height="170" role="img" aria-label="Halftone city skyline">
+  <defs>
+    <pattern id="halftone" width="10" height="10" patternUnits="userSpaceOnUse">
+      <circle cx="2.6" cy="2.6" r="1.7" fill="#5b4fd6"/>
+    </pattern>
+    <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5b4fd6" stop-opacity="0.95"/>
+      <stop offset="1" stop-color="#7fd8d0" stop-opacity="0.55"/>
+    </linearGradient>
+  </defs>
+  <!-- soft halftone field behind the buildings -->
+  <g opacity="0.28" fill="url(#halftone)">
+    <path d="M0 170 V120 h34 v-16 h10 v16 h30 V104 h26 v-10 h9 v10 h22 V120 h30 v-38 h8 v-12 l5-6 5 6 v12 h30 v26 h24 v-14 h30 v-22 h9 v10 h22 v34 h28 v-30 h30 v-8 h12 v8 h26 v46 h34 v-40 h30 v-12 h10 v12 h30 v22 h30 v-30 h30 v60 Z"/>
+  </g>
+  <!-- crisp foreground silhouette -->
+  <path fill="url(#fade)" opacity="0.9"
+    d="M0 170 V138 h52 v-20 h16 v20 h44 v-30 h14 v30 h40 v-12 h30 v12 h40 v-40 h20 v40 h36 v-24 h40 v-10 h16 v10 h34 v24 h40 v-34 h40 v-8 h16 v8 h30 v34 h50 v-28 h40 v-12 h14 v12 h32 v28 h52 v-36 h18 v36 h46 v-20 h36 v20 h44 v-30 h14 v30 h44 v32 Z"/>
+  <!-- windows: small squares on the foreground -->
+  <g fill="#ffffff" opacity="0.55">
+    <rect x="120" y="146" width="4" height="4"/><rect x="132" y="146" width="4" height="4"/>
+    <rect x="120" y="156" width="4" height="4"/><rect x="132" y="156" width="4" height="4"/>
+    <rect x="330" y="132" width="4" height="4"/><rect x="342" y="132" width="4" height="4"/>
+    <rect x="330" y="144" width="4" height="4"/><rect x="342" y="144" width="4" height="4"/>
+    <rect x="330" y="156" width="4" height="4"/><rect x="342" y="156" width="4" height="4"/>
+    <rect x="520" y="142" width="4" height="4"/><rect x="532" y="142" width="4" height="4"/>
+    <rect x="520" y="154" width="4" height="4"/><rect x="532" y="154" width="4" height="4"/>
+  </g>
+</svg>

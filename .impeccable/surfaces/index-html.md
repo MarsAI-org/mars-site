@@ -34,29 +34,29 @@ Version numbers must not lead the page.
 
 ## Direction contract
 
-THESIS: The page is `mars(1)` — the product's own man page, printed on reference
-stock. It refuses both the dark terminal-and-neon hero and the equal-card grid,
-and it makes the manual the marketing.
+THESIS: The page is a **public register for a released instrument** — Mars'
+changelog read as a civic bureau's prospectus. It refuses the dark
+terminal-and-neon hero and the equal-card SaaS grid; the ledger *is* the
+marketing, and every capability is one attributed entry with a state.
 
-OWN-WORLD: Uncoated stock `#f2efe7` with ink `#131110`; rubber-stamp red
-`#bf2f1c` as the single accent, carried by rules, markers and the stamp; hairline
-rules `#c9c3b6`. Archivo variable: compressed caps for display and section
-markers, normal width for reading. Man-page grammar only — a bold left section
-ladder with a vertical rule, indented bodies, literal tokens in bold, monospace
-only for code. No cards, no shadows, no rounded corners, no glow.
+OWN-WORLD: Airy late-modern paper — ground `#F7F7FA`, white plates, ink `#1B1547`,
+body `#4B5165`, hairline `#E6E7EE`, one violet accent `#685CE7` and a
+mint→violet→indigo ribbon. Hanken Grotesk for display (500) and reading (400);
+Spline Sans Mono for version/ref literals only. Entrance-marked keylines, docket
+stamps, an engraved dot matrix, a soft single shadow, 8px control radius.
 
-STORY: This is a serious native tool that documents itself precisely and is
-confident enough to sign its own sheet. The visitor reads a specification, trusts
-it, and presses the stamp to copy the command.
+STORY: This is a serious native tool that keeps a public, honest account of what
+it does. The visitor reads a disciplined register, trusts the specifics, and
+takes the command from the register's own action.
 
-FIRST VIEWPORT: A drawn title block: MARS in compressed caps with the section
-suffix `(1)`, a ruled meta column (issue, licence, targets, core) and a red
-round approval stamp. Under it, NAME on one line with the definition, then
-SYNOPSIS holding the live installer at full width — tabs, command, stamp-shaped
-COPY — plus the path, privilege and script note. Sheet colophon at the foot of
-the page.
+FIRST VIEWPORT: A prospectus title block on the left — "Every release, one line
+of truth." in large grotesque with a violet second clause, the definition set
+below — and the live installer plate as the register's closing action at the
+right; under it the ledger ribbon, the halftone skyline, and the version rail.
+The register of entries follows, then parameters, flags, providers, examples,
+and a colophon.
 
-FORM: Chosen world, assigned by the roll; seed: 482115d03558fcc2
+FORM: Chosen world, assigned by the roll; seed: 76eafef4e6b3deca
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the
 finish review, the verdict, DESIGN.md, and every shipping raster carrying its
