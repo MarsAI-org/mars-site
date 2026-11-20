@@ -1,0 +1,38 @@
+name: Mars PR Auto-Reviewer
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  auto-review:
+    name: Autonomous Code & Security Review
+    if: "!startsWith(github.head_ref, 'mars-bot/')"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Run Mars PR Reviewer
+        env:
+          MARS_ROUTER_URL: ${{ secrets.MARS_ROUTER_URL || 'http://localhost:20128/v1' }}
+          MARS_ROUTER_API_KEY: ${{ secrets.MARS_ROUTER_API_KEY || 'default-secret' }}
+          MARS_MODEL: ${{ vars.MARS_MODEL || 'gpt-4o' }}
+          GITHUB_TOKEN: ${{ secrets.MARS_BOT_TOKEN || secrets.GITHUB_TOKEN }}
+          REPO_TYPE: "mars-site"
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          node .github/scripts/mars-pr-reviewer.mjs

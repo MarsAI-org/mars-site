@@ -71,22 +71,28 @@ Constraints:
 
 - Name: Mars. Wordmark set as "Mars".
 - Logo: the pixel-art Mars planet provided by the user (orange planet, darker
-  craters, two square eyes, two feet) on a near-black ground. The supplied PNG is
-  the identity reference.
-- The visual world is open for exploration; the logo and the name are fixed.
+  craters, two square eyes, two feet). The supplied PNG is the identity reference.
 - Upstream credits (oh-my-pi, Pi, their authors, MIT) must remain visible.
+- A visual world is already shipped in `index.html` and documented in
+  `DESIGN.md` (the "Public Register": light ground, violet accent, Hanken
+  Grotesk + Spline Sans Mono). The surface brief, design token system, and
+  implementation are aligned. The logo and name are fixed.
 
 ## Evidence on Hand
 
 - `mars-site/assets/mars-logo.png` — supplied pixel-art logo (1254×1254 RGB).
-- `mars-site/assets/mars-logo.svg`, favicons, `og-image.png` — existing brand files.
+- `mars-site/assets/mars-logo.svg`, `mars-mark.*`, favicons, `og-image.png` —
+  existing brand files.
 - `mars-agent/README.md` — the canonical feature and install copy.
 - Real TUI captures available from `mars-agent/assets/`: `lspv.webp`, `task.webp`,
   `review.webp`, `ttsr.webp`, `python.webp`, `arxiv.webp`. They are real product
-  screenshots and may be used as proof, subject to file size.
+  screenshots and may be used as proof, subject to file size. The shipped page
+  already carries them as `assets/proof-*.webp` (with sidecar provenance JSON).
 - No customer logos, testimonials, or benchmark results exist. Do not invent any.
-- `assets/paper-grain.webp` — procedurally generated paper grain tile (180×180),
-  the page's only texture. No photographic hero exists.
+- Self-hosted display/mono fonts live in `assets/fonts/`.
+- `assets/paper-grain.webp` — a procedural grain tile retained from an earlier
+  visual world; the current shipped `index.html` does not reference it. No
+  photographic hero exists.
 
 ## Product Principles
 
