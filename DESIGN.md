@@ -90,7 +90,7 @@ components:
     backgroundColor: "{colors.plate}"
     textColor: "{colors.body}"
     rounded: "{rounded.control}"
-    height: "2.25rem"
+    height: "2.75rem"
   chip-filter-pressed:
     backgroundColor: "{colors.primary-deep}"
     textColor: "{colors.plate}"
@@ -248,8 +248,9 @@ keys.
 - **Deep links:** `#entry-N` opens that entry and flares its background once;
   `#install-windows` / `#install-macos` select the install tab. Each entry carries
   a `Link` control that writes its permalink to the URL and the clipboard.
-- **Keyboard:** `/` focuses the filter; `↑` / `↓` step the visible entries; `Esc`
-  clears the filter and query.
+- **Keyboard:** `/` focuses the filter; `↑` / `↓` step the visible entries while
+  focus is inside the register, so page scrolling is never hijacked; `Esc` clears
+  the filter and query.
 - **Motion:** counts tick up once on entry, evidence reveals on a grid-row
   transition, a hovered entry row washes and nudges its sign. Every gesture is
   suppressed under `prefers-reduced-motion`.

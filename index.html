@@ -85,7 +85,6 @@
     --warn-wash: #fbf1e3;
     --rule: #d9dae4;
     --measure: 68ch;
-    --thema: inherit;
 
     --shell: 78rem;
     --margin: clamp(1.25rem, 4.5vw, 3.75rem);
@@ -405,7 +404,7 @@
     color: var(--soft);
   }
   .install-note b { color: var(--ink); font-weight: 600; }
-  .install-note a { display: inline-flex; align-items: center; min-height: 2.5rem; color: var(--violet-deep); }
+  .install-note a { display: inline-flex; align-items: center; min-height: 2.75rem; color: var(--violet-deep); }
   .status {
     min-height: 1.5em;
     margin-top: 0.6rem;
@@ -513,7 +512,7 @@
     border: 1px solid var(--hair-hard);
     border-radius: var(--radius);
     padding: 0 0.7rem;
-    min-height: 2.25rem;
+    min-height: 2.75rem;
     display: inline-flex;
     align-items: center;
     gap: 0.45rem;
@@ -531,14 +530,14 @@
     color: var(--soft);
     font-variant-numeric: tabular-nums;
   }
-  .chip[aria-pressed="true"] .n { color: rgba(255, 255, 255, 0.72); }
-  .chip.sq { width: 2.25rem; padding: 0; justify-content: center; font-size: 0.95rem; line-height: 1; }
+  .chip[aria-pressed="true"] .n { color: rgba(255, 255, 255, 0.82); }
+  .chip.sq { width: 2.75rem; padding: 0; justify-content: center; font-size: 0.95rem; line-height: 1; }
   .reg-search {
     margin-left: auto;
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    min-height: 2.25rem;
+    min-height: 2.75rem;
     padding: 0 0.7rem;
     background: var(--plate);
     border: 1px solid var(--hair-hard);
@@ -766,7 +765,7 @@
     font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--soft);
+    color: var(--body);
     background: var(--plate-2);
     border: 1px solid var(--hair-hard);
     border-radius: var(--radius);
@@ -960,16 +959,11 @@
   }
   html.js .entry.flare { animation: entry-flare 1600ms cubic-bezier(0.16, 1, 0.3, 1); }
 
-  /* ledger rows settle in as the register scrolls into view */
-  @keyframes row-in {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: none; }
-  }
-
   @media (prefers-reduced-motion: reduce) {
     html.js .mark-in, html.js .hero-ribbon { opacity: 1 !important; transform: none !important; transition: none !important; }
     html.js .entry.flare { animation: none !important; }
     .entry, .entry-row, .sign, .vline, .chip { transition: none !important; }
+    .evidence, .flag-why, .close-sentence .blank { transition: none !important; }
     .entry:hover .entry-row { padding-left: 0; }
     .entry:hover .sign { transform: none; }
     * { scroll-behavior: auto !important; }
@@ -1147,6 +1141,7 @@
           <input type="search" id="reg-q" placeholder="Filter entries" aria-label="Filter register entries by text">
           <kbd aria-hidden="true">/</kbd>
         </label>
+        <p class="visually-hidden" id="reg-status" role="status"></p>
       </div>
 
       <div class="register">
@@ -1435,6 +1430,9 @@
 <script>
   document.documentElement.classList.add("js");
 
+  /* Every scripted scroll and reveal honours the motion preference. */
+  var prefersReducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
   /* ── The repo blank rewrites the command that is copied ──────────── */
   (function () {
     var input = document.getElementById("repo");
@@ -1528,7 +1526,7 @@
     if (hashTab[(location.hash || "").slice(1)]) {
       /* The installer plate is the deep-link target; scroll it into view. */
       var plate = document.getElementById("install");
-      if (plate) plate.scrollIntoView({ block: "center", behavior: "smooth" });
+      if (plate) plate.scrollIntoView({ block: "center", behavior: prefersReducedMotion ? "auto" : "smooth" });
     }
     applyHash();
   })();
@@ -1587,6 +1585,7 @@
     var chips = Array.prototype.slice.call(document.querySelectorAll(".chip[data-filter]"));
     var search = document.getElementById("reg-q");
     var empty = document.getElementById("reg-empty");
+    var regStatus = document.getElementById("reg-status");
     var status = document.getElementById("copy-status");
     var state = "all";
     var query = "";
@@ -1631,6 +1630,17 @@
       if (empty) empty.hidden = shown !== 0;
       ledger.hidden = shown === 0;
 
+      /* Filtering is silent for a screen reader unless the result count is
+         announced; only speak while a filter or query is actually on. */
+      if (regStatus) {
+        var filtered = state !== "all" || !!query;
+        regStatus.textContent = !filtered
+          ? ""
+          : shown === 0
+            ? "No entries match this filter."
+            : shown + (shown === 1 ? " entry shown." : " entries shown.");
+      }
+
       /* The rail reports which release lines still carry a visible entry. */
       var rail = document.querySelector(".rail");
       if (rail) {
@@ -1656,7 +1666,7 @@
       entry.classList.remove("flare");
       void entry.offsetWidth; /* restart the flare */
       entry.classList.add("flare");
-      if (smooth) entry.scrollIntoView({ block: "center", behavior: "smooth" });
+      if (smooth) entry.scrollIntoView({ block: "center", behavior: prefersReducedMotion ? "auto" : "smooth" });
       return true;
     }
 
@@ -1709,7 +1719,7 @@
     document.addEventListener("keydown", function (e) {
       var tag = (e.target && e.target.tagName) || "";
       var typing = tag === "INPUT" || tag === "TEXTAREA" || (e.target && e.target.isContentEditable);
-      if (e.key === "/" && !typing) {
+      if (e.key === "/" && !typing && !e.metaKey && !e.ctrlKey && !e.altKey) {
         if (search) { e.preventDefault(); search.focus(); search.select(); }
         return;
       }
@@ -1725,7 +1735,8 @@
         }
         return;
       }
-      if ((e.key === "ArrowDown" || e.key === "ArrowUp") && !typing) {
+      var inRegister = !!(e.target && e.target.closest && e.target.closest("#register"));
+      if ((e.key === "ArrowDown" || e.key === "ArrowUp") && !typing && inRegister) {
         var vis = entries.filter(function (en) { return !en.hidden; });
         if (!vis.length) return;
         var active = document.activeElement;
@@ -1815,7 +1826,7 @@
       if (window.marsRender) window.marsRender();
       var posixTab = document.getElementById("tab-posix");
       if (posixTab) posixTab.click();
-      document.getElementById("install").scrollIntoView({ block: "center", behavior: "smooth" });
+      document.getElementById("install").scrollIntoView({ block: "center", behavior: prefersReducedMotion ? "auto" : "smooth" });
       var panel = document.getElementById("panel-posix");
       var copyBtn = panel && panel.querySelector(".copy");
       if (copyBtn) {
