@@ -24,9 +24,10 @@ jobs:
       - name: Run POSIX installer
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          INPUT_TAG: ${{ inputs.tag }}
         run: |
           chmod +x install
-          ./install --binary --ref "${{ inputs.tag }}"
+          ./install --binary --ref "$INPUT_TAG"
           ~/.local/bin/mars --version
           ~/.local/bin/mars --help
 
@@ -37,8 +38,11 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - name: Run Windows installer
         shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          INPUT_TAG: ${{ inputs.tag }}
         run: |
-          & .\install.ps1 -Binary -Ref "${{ inputs.tag }}"
+          & .\install.ps1 -Binary -Ref $env:INPUT_TAG
           $InstallDir = "$env:LOCALAPPDATA\mars"
           & "$InstallDir\mars.exe" --version
           & "$InstallDir\mars.exe" --help

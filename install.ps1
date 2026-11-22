@@ -1,4 +1,4 @@
-# Mars Coding Agent Installer for Windows
+﻿# Mars Coding Agent Installer for Windows
 # Usage: irm https://getmars.eu.cc/install.ps1 | iex
 #
 # Or with options:
@@ -312,17 +312,34 @@ function Install-ViaBun {
     Write-Host "Run 'mars' to get started!"
 }
 
+function Assert-SafeRef {
+    param([string]$Value)
+    if ($Value -and ($Value -match '(^-|\.\.|[\s\?\*\#\;`\$\\])')) {
+        throw "Invalid ref: $Value"
+    }
+}
+
+function Get-GitHubHeaders {
+    $headers = @{ "User-Agent" = "Mars-Installer" }
+    if ($env:GITHUB_TOKEN) {
+        $headers["Authorization"] = "token $($env:GITHUB_TOKEN)"
+    }
+    return $headers
+}
+
 function Install-Binary {
+    $headers = Get-GitHubHeaders
     if ($Ref) {
+        Assert-SafeRef $Ref
         Write-Host "Fetching release $Ref..."
         try {
-            $Release = Invoke-RestMethod -Uri "https://api.github.com/repos/$Repo/releases/tags/$Ref" -TimeoutSec 60
+            $Release = Invoke-RestMethod -Uri "https://api.github.com/repos/$Repo/releases/tags/$Ref" -Headers $headers -TimeoutSec 60
         } catch {
             throw "Release tag not found: $Ref`nFor branch/commit installs, use -Source with -Ref."
         }
     } else {
         Write-Host "Fetching latest release..."
-        $Release = Invoke-RestMethod -Uri "https://api.github.com/repos/$Repo/releases/latest" -TimeoutSec 60
+        $Release = Invoke-RestMethod -Uri "https://api.github.com/repos/$Repo/releases/latest" -Headers $headers -TimeoutSec 60
     }
 
     $Latest = $Release.tag_name
@@ -338,17 +355,17 @@ function Install-Binary {
     $ChecksumUrl = "https://github.com/$Repo/releases/download/$Latest/SHA256SUMS.txt"
     Write-Host "Downloading $BinaryName..."
     $OutPath = Join-Path $InstallDir "mars.exe"
-    # Stage the download beside the destination and swap it in only after the
-    # checksum passes. Invoke-WebRequest writes straight to -OutFile, so a
-    # transfer cut short — or a checksum mismatch, which then deleted the file —
-    # left a truncated mars.exe where a working one used to be. The rename also
-    # replaces a running mars.exe, which an in-place write cannot.
-    $StagedPath = "$OutPath.download"
+    # Stage the download beside the destination using a `.exe` suffix so Windows
+    # PowerShell can execute the smoke test directly via CreateProcess (non-PATHEXT
+    # suffixes like `.download` fail or open via ShellExecuteEx). Swap into place
+    # only after checksum verification and `--version` succeed.
+    $StagedPath = Join-Path $InstallDir "mars.$PID.download.exe"
+    $BackupPath = Join-Path $InstallDir "mars.$PID.old.exe"
     try {
         # Invoke-WebRequest renders a transfer progress bar by default; whether
         # that is useful is the host's call, since a non-interactive host sets
         # $ProgressPreference = 'SilentlyContinue' itself.
-        Invoke-WebRequest -Uri $BinaryUrl -OutFile $StagedPath -TimeoutSec 900
+        Invoke-WebRequest -Uri $BinaryUrl -Headers $headers -OutFile $StagedPath -TimeoutSec 900
         $DownloadedInfo = Get-Item -LiteralPath $StagedPath
         Write-Host ("Downloaded {0} ({1:N0} bytes)" -f $BinaryName, $DownloadedInfo.Length)
 
@@ -364,8 +381,8 @@ function Install-Binary {
         $ExpectedSha = $null
         $VerifyProblem = $null
         try {
-            $ChecksumsText = Invoke-RestMethod -Uri $ChecksumUrl -TimeoutSec 30
-            $Match = $ChecksumsText -split "`r?`n" | Where-Object { $_ -match "\s+([\\/].*[\\/])?$([regex]::Escape($BinaryName))$" } | Select-Object -First 1
+            $ChecksumsText = Invoke-RestMethod -Uri $ChecksumUrl -Headers $headers -TimeoutSec 30
+            $Match = $ChecksumsText -split "`r?`n" | Where-Object { $_ -match "\s+\*?([\\/].*[\\/])?$([regex]::Escape($BinaryName))$" } | Select-Object -First 1
             if ($Match) {
                 $ExpectedSha = ($Match -split "\s+")[0].Trim().ToLowerInvariant()
             } else {
@@ -396,7 +413,21 @@ function Install-Binary {
             throw "mars.exe downloaded and verified, but cannot start:`n$SmokeOutput`nThe staged download was discarded; $OutPath was left untouched."
         }
 
-        Move-Item -LiteralPath $StagedPath -Destination $OutPath -Force
+        # On Windows, overwriting a running .exe fails with sharing violation,
+        # whereas renaming the running image aside and moving the new .exe into
+        # place succeeds. Clean up any stale backup on best effort.
+        if (Test-Path -LiteralPath $OutPath) {
+            Move-Item -LiteralPath $OutPath -Destination $BackupPath -Force
+        }
+        try {
+            Move-Item -LiteralPath $StagedPath -Destination $OutPath -Force
+        } catch {
+            if ((Test-Path -LiteralPath $BackupPath) -and -not (Test-Path -LiteralPath $OutPath)) {
+                Move-Item -LiteralPath $BackupPath -Destination $OutPath -Force -ErrorAction SilentlyContinue
+            }
+            throw
+        }
+        Remove-Item -Force -LiteralPath $BackupPath -ErrorAction SilentlyContinue
     } finally {
         if (Test-Path -LiteralPath $StagedPath) {
             Remove-Item -Force -LiteralPath $StagedPath -ErrorAction SilentlyContinue
@@ -406,12 +437,25 @@ function Install-Binary {
     Write-Host ""
     Write-Host "[OK] Installed mars to $OutPath" -ForegroundColor Green
 
-    # Add to PATH if not already there
+    # Add to PATH if not already there (exact segment match, avoiding empty segments)
     $UserPath = [Environment]::GetEnvironmentVariable("Path", "User")
-    $needsRestart = $UserPath -notlike "*$InstallDir*"
+    $NormalizedInstallDir = $InstallDir.TrimEnd('\', '/').ToLowerInvariant()
+    $PathEntries = @()
+    if ($UserPath) {
+        $PathEntries = $UserPath -split ';' | Where-Object { $_ -and $_.Trim() -ne "" }
+    }
+    $AlreadyInPath = $false
+    foreach ($entry in $PathEntries) {
+        if ($entry.Trim().TrimEnd('\', '/').ToLowerInvariant() -eq $NormalizedInstallDir) {
+            $AlreadyInPath = $true
+            break
+        }
+    }
+    $needsRestart = -not $AlreadyInPath
     if ($needsRestart) {
         Write-Host "Adding $InstallDir to PATH..."
-        [Environment]::SetEnvironmentVariable("Path", "$UserPath;$InstallDir", "User")
+        $NewPath = if ($PathEntries.Count -gt 0) { ($PathEntries + $InstallDir) -join ';' } else { $InstallDir }
+        [Environment]::SetEnvironmentVariable("Path", $NewPath, "User")
     }
 
     Configure-BashShell
@@ -424,6 +468,9 @@ function Install-Binary {
 }
 
 # Main logic
+if ($Ref) {
+    Assert-SafeRef $Ref
+}
 if ($Ref -and -not $Source -and -not $Binary) {
     $Source = $true
 }
@@ -437,11 +484,6 @@ if ($Source) {
 } elseif ($Binary) {
     Install-Binary
 } else {
-    # Default: use bun if available, otherwise binary
-    if (Test-BunInstalled) {
-        Assert-BunVersion $MinimumBunVersion
-        Install-ViaBun
-    } else {
-        Install-Binary
-    }
+    # Default: prefer prebuilt binary on supported Windows architectures (matching POSIX installer)
+    Install-Binary
 }

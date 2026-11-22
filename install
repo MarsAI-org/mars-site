@@ -61,9 +61,22 @@ while [ $# -gt 0 ]; do
     esac
 done
 
-# If a ref is provided, default to source install
-if [ -n "$REF" ] && [ -z "$MODE" ]; then
-    MODE="source"
+# Validate --ref / -r values so malformed refs cannot manipulate GitHub API URL paths.
+validate_ref() {
+    case "$1" in
+        ''|-*|*..*|*[[:space:]]*|*[\?\*\#\;\`\$\\]*)
+            echo "Invalid ref: $1"
+            exit 1
+            ;;
+    esac
+}
+
+# If a ref is provided, validate it and default to source install
+if [ -n "$REF" ]; then
+    validate_ref "$REF"
+    if [ -z "$MODE" ]; then
+        MODE="source"
+    fi
 fi
 
 # Check if bun is available
@@ -124,8 +137,13 @@ version_ge() {
 
     # Missing components count as 0, so "1.4" is 1.4.0. The old derivation read the
     # patch out of the minor when the version had only two components, which made
-    # "1.4" compare as 1.4.4 (version_ge 1.4.0 1.4 was false).
+    # "1.4" compare as 1.4.4 (version_ge 1.4.0 1.4 was false). Disable globbing
+    # around unquoted splitting so malformed version strings cannot expand filenames.
     saved_ifs="$IFS"
+    case "$-" in
+        *f*) had_noglob=1 ;;
+        *)   had_noglob=0; set -f ;;
+    esac
     IFS=.
     set -- $current
     current_major="${1:-0}"
@@ -136,6 +154,9 @@ version_ge() {
     minimum_minor="${2:-0}"
     minimum_patch="${3:-0}"
     IFS="$saved_ifs"
+    if [ "$had_noglob" -eq 0 ]; then
+        set +f
+    fi
 
     # A version string that is not three integers (a -canary tag that survived
     # the trim, a vendor suffix) compares as older than the minimum instead of
@@ -216,7 +237,7 @@ install_via_bun() {
         fi
 
         TMP_DIR="$(mktemp -d)"
-        trap 'rm -rf "$TMP_DIR"' EXIT
+        trap 'rm -rf "$TMP_DIR"' EXIT HUP INT TERM
 
         if git clone --depth 1 --branch "$REF" "https://github.com/${REPO}.git" "$TMP_DIR" >/dev/null 2>&1; then
             :
@@ -293,7 +314,7 @@ install_binary() {
             RELEASE_JSON=$(curl -fsSL -H "User-Agent: Mars-Installer" --connect-timeout 10 --max-time 60 "https://api.github.com/repos/${REPO}/releases/tags/${REF}" || true)
         fi
         if [ -n "$RELEASE_JSON" ]; then
-            LATEST=$(echo "$RELEASE_JSON" | grep '"tag_name"' | sed -E 's/.*"tag_name"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/')
+            LATEST=$(echo "$RELEASE_JSON" | grep '"tag_name"' | head -n 1 | sed -E 's/.*"tag_name"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/')
         else
             echo "Release tag not found: $REF"
             echo "For branch/commit installs, use --source with --ref."
@@ -306,7 +327,7 @@ install_binary() {
         else
             RELEASE_JSON=$(curl -fsSL -H "User-Agent: Mars-Installer" --connect-timeout 10 --max-time 60 "https://api.github.com/repos/${REPO}/releases/latest" || true)
         fi
-        LATEST=$(echo "$RELEASE_JSON" | grep '"tag_name"' | sed -E 's/.*"tag_name"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/')
+        LATEST=$(echo "$RELEASE_JSON" | grep '"tag_name"' | head -n 1 | sed -E 's/.*"tag_name"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/')
     fi
 
     if [ -z "$LATEST" ]; then
@@ -324,13 +345,12 @@ install_binary() {
     # Download binary and SHA256SUMS.txt for checksum verification
     BINARY_URL="https://github.com/${REPO}/releases/download/${LATEST}/${BINARY}"
     CHECKSUM_URL="https://github.com/${REPO}/releases/download/${LATEST}/SHA256SUMS.txt"
-    # Stage the download beside the destination and only rename it into place once
-    # it verifies and starts. curl truncates its output file as soon as the body
-    # arrives, so writing straight to ${INSTALL_DIR}/mars destroyed a working
-    # install whenever a transfer was cut short (--speed-limit exists because that
-    # happens) or a checksum differed. The final rename also replaces a binary
-    # that is currently running, which a direct write cannot do (ETXTBSY on Linux).
-    STAGED="${INSTALL_DIR}/.mars-download.$$"
+    # Stage the download beside the destination using mktemp and only rename it
+    # into place once it verifies and starts. curl truncates its output file as
+    # soon as the body arrives, so writing straight to ${INSTALL_DIR}/mars
+    # destroyed a working install whenever a transfer was cut short or a checksum
+    # differed. The final rename also replaces a running binary cleanly.
+    STAGED="$(mktemp "${INSTALL_DIR}/.mars-download.XXXXXX")"
     trap 'rm -f "$STAGED"' EXIT HUP INT TERM
     if [ -t 2 ]; then
         # Interactive terminal: show a progress meter.
@@ -358,14 +378,26 @@ install_binary() {
     CHECKSUMS_DATA=$(curl -fsSL --connect-timeout 10 --max-time 30 "$CHECKSUM_URL" || true)
     EXPECTED_SHA=""
     if [ -n "$CHECKSUMS_DATA" ]; then
-        EXPECTED_SHA=$(echo "$CHECKSUMS_DATA" | grep "[ /]${BINARY}$" | head -n 1 | awk '{print $1}')
+        # Strip CR (CRLF files) and match both text ("  name") and binary (" *name")
+        # or path-prefixed (" ./name", " dir/name") sha256sum output formats.
+        EXPECTED_SHA=$(printf '%s\n' "$CHECKSUMS_DATA" | tr -d '\r' | awk -v bin="$BINARY" '
+            NF >= 2 {
+                name = $2
+                sub(/^\*/, "", name)
+                sub(/^.*\//, "", name)
+                if (name == bin) {
+                    print tolower($1)
+                    exit
+                }
+            }
+        ')
     fi
 
     ACTUAL_SHA=""
     if command -v sha256sum >/dev/null 2>&1; then
-        ACTUAL_SHA=$(sha256sum "$STAGED" | awk '{print $1}')
+        ACTUAL_SHA=$(sha256sum "$STAGED" | awk '{print tolower($1)}')
     elif command -v shasum >/dev/null 2>&1; then
-        ACTUAL_SHA=$(shasum -a 256 "$STAGED" | awk '{print $1}')
+        ACTUAL_SHA=$(shasum -a 256 "$STAGED" | awk '{print tolower($1)}')
     fi
 
     # Fail closed. SHA256SUMS.txt ships in the same release as the binary, so it
@@ -409,18 +441,18 @@ install_binary() {
     # binary that cannot run.
     if ! SMOKE_OUTPUT="$("$STAGED" --version 2>&1)"; then
         echo ""
-        echo "✗ mars was downloaded but cannot start (staged at $STAGED):"
+        echo "✗ mars was downloaded and verified, but cannot start:"
         echo "$SMOKE_OUTPUT" | sed 's/^/    /'
         if [ "$PLATFORM" = "linux-musl" ]; then
             echo ""
-            echo "The musl build links libstdc++/libgcc dynamically. Install them, then re-run 'mars':"
+            echo "The musl build links libstdc++/libgcc dynamically. Install them, then re-run this installer:"
             if command -v apk >/dev/null 2>&1; then
                 echo "    apk add libstdc++ libgcc"
             else
                 echo "    (install the libstdc++ and libgcc runtime packages for your distro)"
             fi
         fi
-        echo "${INSTALL_DIR}/mars was left untouched."
+        echo "The staged download was discarded; ${INSTALL_DIR}/mars was left untouched."
         exit 1
     fi
 

@@ -25,7 +25,7 @@ const LLM_URL = (
   ""
 ).replace(/\/+$/, "");
 
-const LLM_KEY = process.env.MARS_LLM_API_KEY || process.env.OPENAI_API_KEY || "mars-bot-secret";
+const LLM_KEY = process.env.MARS_LLM_API_KEY || process.env.OPENAI_API_KEY || "";
 const MODEL = process.env.MARS_MODEL || process.env.LLM_MODEL || "gpt-4o";
 const GITHUB_TOKEN = process.env.MARS_BOT_TOKEN || process.env.GITHUB_TOKEN;
 const MAX_TURNS = parseInt(process.env.MAX_TURNS || "20", 10);
@@ -39,14 +39,40 @@ if (!LLM_URL) {
   // Any OpenAI-compatible endpoint works; there is no bundled default.
   throw new Error("MARS_LLM_URL (or OPENAI_BASE_URL / API_BASE) must be set");
 }
+if (!LLM_KEY) {
+  throw new Error("MARS_LLM_API_KEY (or OPENAI_API_KEY) must be set");
+}
+
+const SECRET_ENV_KEYS = new Set([
+  "MARS_BOT_TOKEN",
+  "GITHUB_TOKEN",
+  "GH_TOKEN",
+  "MARS_LLM_API_KEY",
+  "MARS_LLM_URL",
+  "OPENAI_API_KEY",
+  "OPENAI_BASE_URL",
+  "API_BASE",
+  "NPM_TOKEN",
+  "NODE_AUTH_TOKEN",
+]);
+
+function sanitizedToolEnv() {
+  const clean = {};
+  for (const [k, v] of Object.entries(process.env)) {
+    if (SECRET_ENV_KEYS.has(k)) continue;
+    clean[k] = v;
+  }
+  return clean;
+}
 
 // ---------------------------------------------------------------------------
 // Helper: Child Process Exec
 // ---------------------------------------------------------------------------
-function run(cmd, cwd = process.cwd(), ignoreError = false) {
+function run(cmd, cwd = process.cwd(), ignoreError = false, env = process.env) {
   try {
     return execSync(cmd, {
       cwd,
+      env,
       encoding: "utf8",
       stdio: ["pipe", "pipe", "pipe"],
       maxBuffer: 10 * 1024 * 1024,
@@ -194,10 +220,13 @@ function verifyMarsSite() {
   const refs = [...html.matchAll(/(?:src|href)="([^"]+)"/g)].map(match => match[1]);
   const missing = [];
   for (const ref of refs) {
-    // Remote, in-page, and root-absolute references (the site deploys at the
-    // domain root) are not resolvable from the checkout.
-    if (/^(https?:|mailto:|data:|#)/.test(ref) || ref.startsWith("/")) continue;
-    const target = path.resolve(root, ref.split("#")[0].split("?")[0]);
+    // Remote and in-page references are not local files on disk.
+    if (/^(https?:|mailto:|data:|#)/.test(ref)) continue;
+    const cleanRef = ref.split("#")[0].split("?")[0];
+    // Root-absolute references (e.g. /favicon.ico, /assets/...) resolve from site root.
+    const target = cleanRef.startsWith("/")
+      ? path.resolve(root, cleanRef.slice(1))
+      : path.resolve(root, cleanRef);
     if (!target.startsWith(root + path.sep)) continue;
     if (!fs.existsSync(target)) missing.push(ref);
   }
@@ -333,9 +362,22 @@ const TOOLS = [
 // ---------------------------------------------------------------------------
 // Tool Execution Handler
 // ---------------------------------------------------------------------------
+function resolveThroughExistingAncestor(targetPath) {
+  let cursor = targetPath;
+  const suffix = [];
+  while (!fs.existsSync(cursor)) {
+    const parent = path.dirname(cursor);
+    if (parent === cursor) break;
+    suffix.unshift(path.basename(cursor));
+    cursor = parent;
+  }
+  const realBase = fs.existsSync(cursor) ? fs.realpathSync(cursor) : cursor;
+  return suffix.length > 0 ? path.join(realBase, ...suffix) : realBase;
+}
+
 function assertSafePath(targetPath) {
-  const root = path.resolve(process.cwd());
-  const resolved = path.resolve(root, targetPath || ".");
+  const root = fs.realpathSync(path.resolve(process.cwd()));
+  const resolved = resolveThroughExistingAncestor(path.resolve(root, targetPath || "."));
   if (!resolved.startsWith(root + path.sep) && resolved !== root) {
     throw new Error(`Access denied: path '${targetPath}' resolves outside workspace root`);
   }
@@ -349,7 +391,7 @@ function assertSafePath(targetPath) {
  * this site documents) would hand the bot its own release path on the next run.
  * Those files stay the human's to change.
  */
-const PROTECTED_WRITE_RE = /(^|[\\/])(?:\.git|\.github)([\\/]|$)|(^|[\\/])install(?:\.ps1)?$|(^|[\\/])\.bot-/i;
+const PROTECTED_WRITE_RE = /(^|[\\/])(?:\.git|\.github)([\\/]|$)|(^|[\\/])install(?:\.sh|\.ps1)?$|(^|[\\/])\.bot-/i;
 
 function assertWritablePath(targetPath) {
   const resolved = assertSafePath(targetPath);
@@ -382,6 +424,25 @@ function assertCommandAllowed(command) {
   }
 }
 
+function collectFullReviewDiff() {
+  const trackedDiff = run("git diff", process.cwd(), true);
+  const untracked = runFile("git", ["ls-files", "--others", "--exclude-standard"], { ignoreError: true });
+  const parts = [];
+  if (trackedDiff) parts.push(trackedDiff);
+  if (untracked) {
+    for (const rel of untracked.split("\n").map((s) => s.trim()).filter(Boolean)) {
+      try {
+        const full = assertSafePath(rel);
+        const content = fs.readFileSync(full, "utf8").slice(0, 4000);
+        parts.push(`--- /dev/null\n+++ b/${rel}\n${content}`);
+      } catch {
+        parts.push(`--- /dev/null\n+++ b/${rel}\n[unreadable or binary file]`);
+      }
+    }
+  }
+  return parts.join("\n\n").trim();
+}
+
 function handleToolCall(name, args) {
   try {
     switch (name) {
@@ -408,7 +469,8 @@ function handleToolCall(name, args) {
         if (!fileContent.includes(args.oldString)) {
           return { error: `oldString not found in ${args.path}. Ensure exact match.` };
         }
-        const updated = fileContent.replace(args.oldString, args.newString);
+        // Callback avoids interpreting `$&`, `$$`, `$'` replacement patterns in newString.
+        const updated = fileContent.replace(args.oldString, () => args.newString);
         fs.writeFileSync(filePath, updated, "utf8");
         return { success: true, path: args.path };
       }
@@ -423,11 +485,11 @@ function handleToolCall(name, args) {
       }
       case "execute_command": {
         assertCommandAllowed(args.command);
-        const output = run(args.command, process.cwd(), true);
+        const output = run(args.command, process.cwd(), true, sanitizedToolEnv());
         return { output: output.slice(0, 8000) };
       }
       case "self_review_diff": {
-        const diff = run("git diff", process.cwd(), true);
+        const diff = collectFullReviewDiff();
         return {
           diff: diff ? diff.slice(0, 12000) : "No changes currently made in git.",
           instruction: "Examine this diff carefully. Check for bugs, syntax errors, security flaws, leftover debug logs, or missed repo rules.",
@@ -464,6 +526,7 @@ async function callChatCompletion(messages, tools) {
       Authorization: `Bearer ${LLM_KEY}`,
     },
     body: JSON.stringify(body),
+    signal: AbortSignal.timeout(120_000),
   });
 
   if (!response.ok) {
@@ -637,7 +700,7 @@ ${repoGuidance}`,
         if (fnName === "submit_task" && result.completed) {
           const verification = runVerification();
           verificationRecord = verification;
-          const currentDiff = run("git diff", process.cwd(), true);
+          const currentDiff = collectFullReviewDiff();
 
           if (!verification.passed) {
             console.log(`\n❌ Autonomous Check Failed on: ${verification.command}`);
@@ -656,8 +719,9 @@ ${repoGuidance}`,
             const selfReviewVerdict = await performAutonomousSelfReview(currentDiff, task.prompt);
             console.log("Self-Review Verdict:", selfReviewVerdict.slice(0, 200));
 
-            if (selfReviewVerdict.startsWith("CRITIQUE_NEEDED:")) {
-              console.log("\n⚠️ Self-Review detected flaws in its own diff! Triggering self-correction...");
+            // Fail closed: require explicit SELF_REVIEW_PASSED prefix.
+            if (!selfReviewVerdict.trim().startsWith("SELF_REVIEW_PASSED:")) {
+              console.log("\n⚠️ Self-Review did not pass! Triggering self-correction...");
               messages.push({
                 role: "tool",
                 tool_call_id: call.id,
@@ -730,9 +794,20 @@ ${repoGuidance}`,
     return;
   }
 
+  // Reject any changes to protected paths (even if introduced via execute_command).
+  const changedPaths = gitStatus
+    .split("\n")
+    .filter(Boolean)
+    .map((line) => line.slice(3).trim().replace(/^.* -> /, ""));
+  const forbiddenTouched = changedPaths.filter((p) => PROTECTED_WRITE_RE.test(p));
+  if (forbiddenTouched.length > 0) {
+    throw new Error(`Refusing to commit modifications to protected paths: ${forbiddenTouched.join(", ")}`);
+  }
+
   const commitMsg =
     sanitizeCommitMessage(finalResult.commitMessage) ||
     `fix: automated autonomous repair (${task.issueNumber ? `#${task.issueNumber}` : "self-governed"})`;
+  const prTitle = commitMsg.split("\n")[0].trim();
   const branchName = `mars-bot/${Date.now()}-${task.issueNumber || "auto"}`;
 
   console.log(`Committing verified changes to: ${branchName}`);
@@ -743,7 +818,14 @@ ${repoGuidance}`,
 
   if (GITHUB_TOKEN) {
     console.log("Pushing branch to remote...");
-    runFile("git", ["push", "origin", branchName]);
+    const basicAuth = Buffer.from(`x-access-token:${GITHUB_TOKEN}`).toString("base64");
+    runFile("git", [
+      "-c",
+      `http.https://github.com/.extraheader=AUTHORIZATION: basic ${basicAuth}`,
+      "push",
+      "origin",
+      branchName,
+    ]);
 
     // Report the check that actually ran, and what it actually said.
     const verificationLine = `- \`${verificationRecord.command}\`: **${verificationRecord.passed ? "passed" : "failed"}** (${verificationRecord.note})`;
@@ -760,7 +842,7 @@ ${task.issueNumber ? `Closes #${task.issueNumber}` : ""}
 *Committed by Mars Bot after the check above passed*`;
 
     if (!task.isPr) {
-      const prUrl = createPullRequest(branchName, commitMsg, prBody);
+      const prUrl = createPullRequest(branchName, prTitle, prBody);
       if (task.issueNumber) {
         postGitHubComment(
           task.issueNumber,
