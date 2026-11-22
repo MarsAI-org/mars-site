@@ -313,51 +313,60 @@ function Install-Binary {
     $ChecksumUrl = "https://github.com/$Repo/releases/download/$Latest/SHA256SUMS.txt"
     Write-Host "Downloading $BinaryName..."
     $OutPath = Join-Path $InstallDir "mars.exe"
-    if ($ProgressPreference -eq 'SilentlyContinue') {
-        # Non-interactive host: download without a progress bar.
-        Invoke-WebRequest -Uri $BinaryUrl -OutFile $OutPath -TimeoutSec 900
-    } else {
-        # Interactive host: Invoke-WebRequest renders a transfer progress bar by
-        # default; leave it on so the download shows activity.
-        Invoke-WebRequest -Uri $BinaryUrl -OutFile $OutPath -TimeoutSec 900
-    }
-    $DownloadedInfo = Get-Item -LiteralPath $OutPath
-    Write-Host ("Downloaded {0} ({1:N0} bytes)" -f $BinaryName, $DownloadedInfo.Length)
-
-    Write-Host "Verifying checksum..."
-    # Fail closed. SHA256SUMS.txt ships in the same release as the binary, so it
-    # proves the download was not corrupted or swapped in transit — skipping it
-    # silently removes even that. This block must not run inside one big `try`:
-    # the checksum-mismatch `throw` below used to be caught by the same `catch`
-    # that reports a fetch failure, so a corrupted binary only produced a
-    # warning and stayed installed.
-    $AllowUnverified = $env:MARS_ALLOW_UNVERIFIED -eq "1"
-    $ExpectedSha = $null
-    $VerifyProblem = $null
+    # Stage the download beside the destination and swap it in only after the
+    # checksum passes. Invoke-WebRequest writes straight to -OutFile, so a
+    # transfer cut short — or a checksum mismatch, which then deleted the file —
+    # left a truncated mars.exe where a working one used to be. The rename also
+    # replaces a running mars.exe, which an in-place write cannot.
+    $StagedPath = "$OutPath.download"
     try {
-        $ChecksumsText = Invoke-RestMethod -Uri $ChecksumUrl -TimeoutSec 30
-        $Match = $ChecksumsText -split "`r?`n" | Where-Object { $_ -match "\s+([\\/].*[\\/])?$([regex]::Escape($BinaryName))$" } | Select-Object -First 1
-        if ($Match) {
-            $ExpectedSha = ($Match -split "\s+")[0].Trim().ToLowerInvariant()
-        } else {
-            $VerifyProblem = "binary $BinaryName is not listed in SHA256SUMS.txt"
-        }
-    } catch {
-        $VerifyProblem = "could not fetch SHA256SUMS.txt: $_"
-    }
+        # Invoke-WebRequest renders a transfer progress bar by default; whether
+        # that is useful is the host's call, since a non-interactive host sets
+        # $ProgressPreference = 'SilentlyContinue' itself.
+        Invoke-WebRequest -Uri $BinaryUrl -OutFile $StagedPath -TimeoutSec 900
+        $DownloadedInfo = Get-Item -LiteralPath $StagedPath
+        Write-Host ("Downloaded {0} ({1:N0} bytes)" -f $BinaryName, $DownloadedInfo.Length)
 
-    if (-not $VerifyProblem) {
-        $ActualSha = (Get-FileHash -Path $OutPath -Algorithm SHA256).Hash.ToLowerInvariant()
-        if ($ExpectedSha -ne $ActualSha) {
-            Remove-Item -Force $OutPath -ErrorAction SilentlyContinue
-            throw "Checksum verification failed for $BinaryName!`nExpected: $ExpectedSha`nActual:   $ActualSha"
+        Write-Host "Verifying checksum..."
+        # Fail closed. SHA256SUMS.txt ships in the same release as the binary, so it
+        # proves the download was not corrupted or swapped in transit — skipping it
+        # silently removes even that. This never sits inside a `catch`: the
+        # checksum-mismatch `throw` below used to be caught by the same `catch`
+        # that reports a fetch failure, so a corrupted binary only produced a
+        # warning and stayed installed. The surrounding `try` has a `finally` for
+        # staged-file cleanup only, so every failure here still propagates.
+        $AllowUnverified = $env:MARS_ALLOW_UNVERIFIED -eq "1"
+        $ExpectedSha = $null
+        $VerifyProblem = $null
+        try {
+            $ChecksumsText = Invoke-RestMethod -Uri $ChecksumUrl -TimeoutSec 30
+            $Match = $ChecksumsText -split "`r?`n" | Where-Object { $_ -match "\s+([\\/].*[\\/])?$([regex]::Escape($BinaryName))$" } | Select-Object -First 1
+            if ($Match) {
+                $ExpectedSha = ($Match -split "\s+")[0].Trim().ToLowerInvariant()
+            } else {
+                $VerifyProblem = "binary $BinaryName is not listed in SHA256SUMS.txt"
+            }
+        } catch {
+            $VerifyProblem = "could not fetch SHA256SUMS.txt: $_"
         }
-        Write-Host "[OK] Checksum verified ($ExpectedSha)" -ForegroundColor Green
-    } elseif ($AllowUnverified) {
-        Write-Host "[WARN] $VerifyProblem; continuing because MARS_ALLOW_UNVERIFIED=1." -ForegroundColor Yellow
-    } else {
-        Remove-Item -Force $OutPath -ErrorAction SilentlyContinue
-        throw "$VerifyProblem. Refusing to install an unverified binary. Set MARS_ALLOW_UNVERIFIED=1 to override."
+
+        if (-not $VerifyProblem) {
+            $ActualSha = (Get-FileHash -Path $StagedPath -Algorithm SHA256).Hash.ToLowerInvariant()
+            if ($ExpectedSha -ne $ActualSha) {
+                throw "Checksum verification failed for $BinaryName!`nExpected: $ExpectedSha`nActual:   $ActualSha`nThe staged download was discarded; $OutPath was left untouched."
+            }
+            Write-Host "[OK] Checksum verified ($ExpectedSha)" -ForegroundColor Green
+        } elseif ($AllowUnverified) {
+            Write-Host "[WARN] $VerifyProblem; continuing because MARS_ALLOW_UNVERIFIED=1." -ForegroundColor Yellow
+        } else {
+            throw "$VerifyProblem. Refusing to install an unverified binary. Set MARS_ALLOW_UNVERIFIED=1 to override.`nThe staged download was discarded; $OutPath was left untouched."
+        }
+
+        Move-Item -LiteralPath $StagedPath -Destination $OutPath -Force
+    } finally {
+        if (Test-Path -LiteralPath $StagedPath) {
+            Remove-Item -Force -LiteralPath $StagedPath -ErrorAction SilentlyContinue
+        }
     }
 
     Write-Host ""

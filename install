@@ -262,9 +262,9 @@ install_binary() {
     if [ -n "$REF" ]; then
         echo "Fetching release $REF..."
         if [ -n "$AUTH_HEADER" ]; then
-            RELEASE_JSON=$(curl -fsSL -H "User-Agent: Mars-Installer" -H "$AUTH_HEADER" --connect-timeout 10 --max-time 60 "https://api.github.com/repos/${REPO}/releases/tags/${REF}")
+            RELEASE_JSON=$(curl -fsSL -H "User-Agent: Mars-Installer" -H "$AUTH_HEADER" --connect-timeout 10 --max-time 60 "https://api.github.com/repos/${REPO}/releases/tags/${REF}" || true)
         else
-            RELEASE_JSON=$(curl -fsSL -H "User-Agent: Mars-Installer" --connect-timeout 10 --max-time 60 "https://api.github.com/repos/${REPO}/releases/tags/${REF}")
+            RELEASE_JSON=$(curl -fsSL -H "User-Agent: Mars-Installer" --connect-timeout 10 --max-time 60 "https://api.github.com/repos/${REPO}/releases/tags/${REF}" || true)
         fi
         if [ -n "$RELEASE_JSON" ]; then
             LATEST=$(echo "$RELEASE_JSON" | grep '"tag_name"' | sed -E 's/.*"tag_name"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/')
@@ -276,15 +276,20 @@ install_binary() {
     else
         echo "Fetching latest release..."
         if [ -n "$AUTH_HEADER" ]; then
-            RELEASE_JSON=$(curl -fsSL -H "User-Agent: Mars-Installer" -H "$AUTH_HEADER" --connect-timeout 10 --max-time 60 "https://api.github.com/repos/${REPO}/releases/latest")
+            RELEASE_JSON=$(curl -fsSL -H "User-Agent: Mars-Installer" -H "$AUTH_HEADER" --connect-timeout 10 --max-time 60 "https://api.github.com/repos/${REPO}/releases/latest" || true)
         else
-            RELEASE_JSON=$(curl -fsSL -H "User-Agent: Mars-Installer" --connect-timeout 10 --max-time 60 "https://api.github.com/repos/${REPO}/releases/latest")
+            RELEASE_JSON=$(curl -fsSL -H "User-Agent: Mars-Installer" --connect-timeout 10 --max-time 60 "https://api.github.com/repos/${REPO}/releases/latest" || true)
         fi
         LATEST=$(echo "$RELEASE_JSON" | grep '"tag_name"' | sed -E 's/.*"tag_name"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/')
     fi
 
     if [ -z "$LATEST" ]; then
-        echo "Failed to fetch release tag"
+        if [ -n "$REF" ]; then
+            echo "Release tag not found: $REF"
+        else
+            echo "Failed to fetch the latest release tag (network error or GitHub API rate limit)."
+        fi
+        echo "For branch/commit installs, use --source with --ref."
         exit 1
     fi
     echo "Using version: $LATEST"
@@ -293,21 +298,34 @@ install_binary() {
     # Download binary and SHA256SUMS.txt for checksum verification
     BINARY_URL="https://github.com/${REPO}/releases/download/${LATEST}/${BINARY}"
     CHECKSUM_URL="https://github.com/${REPO}/releases/download/${LATEST}/SHA256SUMS.txt"
+    # Stage the download beside the destination and only rename it into place once
+    # it verifies and starts. curl truncates its output file as soon as the body
+    # arrives, so writing straight to ${INSTALL_DIR}/mars destroyed a working
+    # install whenever a transfer was cut short (--speed-limit exists because that
+    # happens) or a checksum differed. The final rename also replaces a binary
+    # that is currently running, which a direct write cannot do (ETXTBSY on Linux).
+    STAGED="${INSTALL_DIR}/.mars-download.$$"
+    trap 'rm -f "$STAGED"' EXIT HUP INT TERM
     if [ -t 2 ]; then
         # Interactive terminal: show a progress meter.
         echo "Downloading ${BINARY}..."
-        if curl -fL --connect-timeout 10 --speed-limit 1024 --speed-time 30 --progress-bar "$BINARY_URL" -o "${INSTALL_DIR}/mars"; then
-            # Progress meter writes to stderr; close it out with a summary line.
-            DOWNLOADED_SIZE=$(wc -c < "${INSTALL_DIR}/mars" 2>/dev/null | tr -d ' ')
-            case "$DOWNLOADED_SIZE" in
-                ''|*[!0-9]*) ;;
-                *) echo "Downloaded ${BINARY} ($(numfmt_bytes "$DOWNLOADED_SIZE"))" ;;
-            esac
+        if ! curl -fL --connect-timeout 10 --speed-limit 1024 --speed-time 30 --progress-bar "$BINARY_URL" -o "$STAGED"; then
+            echo "Download failed for ${BINARY}; ${INSTALL_DIR}/mars was left untouched."
+            exit 1
         fi
+        # Progress meter writes to stderr; close it out with a summary line.
+        DOWNLOADED_SIZE=$(wc -c < "$STAGED" 2>/dev/null | tr -d ' ')
+        case "$DOWNLOADED_SIZE" in
+            ''|*[!0-9]*) ;;
+            *) echo "Downloaded ${BINARY} ($(numfmt_bytes "$DOWNLOADED_SIZE"))" ;;
+        esac
     else
         # Piped (curl | sh): keep stderr quiet, but still report stall-safe progress.
         echo "Downloading ${BINARY}..."
-        curl -fsSL --connect-timeout 10 --speed-limit 1024 --speed-time 30 "$BINARY_URL" -o "${INSTALL_DIR}/mars"
+        if ! curl -fsSL --connect-timeout 10 --speed-limit 1024 --speed-time 30 "$BINARY_URL" -o "$STAGED"; then
+            echo "Download failed for ${BINARY}; ${INSTALL_DIR}/mars was left untouched."
+            exit 1
+        fi
     fi
 
     echo "Verifying checksum..."
@@ -319,9 +337,9 @@ install_binary() {
 
     ACTUAL_SHA=""
     if command -v sha256sum >/dev/null 2>&1; then
-        ACTUAL_SHA=$(sha256sum "${INSTALL_DIR}/mars" | awk '{print $1}')
+        ACTUAL_SHA=$(sha256sum "$STAGED" | awk '{print $1}')
     elif command -v shasum >/dev/null 2>&1; then
-        ACTUAL_SHA=$(shasum -a 256 "${INSTALL_DIR}/mars" | awk '{print $1}')
+        ACTUAL_SHA=$(shasum -a 256 "$STAGED" | awk '{print $1}')
     fi
 
     # Fail closed. SHA256SUMS.txt ships in the same release as the binary, so it
@@ -339,7 +357,7 @@ install_binary() {
         echo "Checksum verification failed for ${BINARY}!"
         echo "Expected: $EXPECTED_SHA"
         echo "Actual:   $ACTUAL_SHA"
-        rm -f "${INSTALL_DIR}/mars"
+        echo "The staged download was discarded; ${INSTALL_DIR}/mars was left untouched."
         exit 1
     fi
 
@@ -349,23 +367,23 @@ install_binary() {
         else
             echo "Error: ${VERIFY_PROBLEM}."
             echo "Refusing to install an unverified binary. Set MARS_ALLOW_UNVERIFIED=1 to override."
-            rm -f "${INSTALL_DIR}/mars"
+            echo "The staged download was discarded; ${INSTALL_DIR}/mars was left untouched."
             exit 1
         fi
     else
         echo "✓ Checksum verified ($EXPECTED_SHA)"
     fi
 
-    chmod +x "${INSTALL_DIR}/mars"
+    chmod +x "$STAGED"
 
     # Verify the freshly installed binary can actually start before reporting
     # success. Bun's musl-target binaries link libstdc++/libgcc dynamically,
     # which stock Alpine/musl systems do not ship, so the download succeeds while
     # the binary exits 127 with relocation errors. Never claim success for a
     # binary that cannot run.
-    if ! SMOKE_OUTPUT="$("${INSTALL_DIR}/mars" --version 2>&1)"; then
+    if ! SMOKE_OUTPUT="$("$STAGED" --version 2>&1)"; then
         echo ""
-        echo "✗ mars was downloaded to ${INSTALL_DIR}/mars but cannot start:"
+        echo "✗ mars was downloaded but cannot start (staged at $STAGED):"
         echo "$SMOKE_OUTPUT" | sed 's/^/    /'
         if [ "$PLATFORM" = "linux-musl" ]; then
             echo ""
@@ -376,8 +394,14 @@ install_binary() {
                 echo "    (install the libstdc++ and libgcc runtime packages for your distro)"
             fi
         fi
+        echo "${INSTALL_DIR}/mars was left untouched."
         exit 1
     fi
+
+    # Everything passed: swap the staged download in. A rename is atomic within
+    # the directory, so a reader (or a running 'mars') sees either the old binary
+    # or the new one, never a half-written file.
+    mv -f "$STAGED" "${INSTALL_DIR}/mars"
 
     echo ""
     echo "✓ Installed mars to ${INSTALL_DIR}/mars"
