@@ -45,19 +45,20 @@ finishes:
 `index.html` is a single self-contained page with an inline `<style>` block and
 no build step. Brand assets live in `assets/` and are also served from the site
 root (`/favicon.ico`, `/favicon.svg`, `/favicon-32x32.png`). Type is
-self-hosted from `assets/fonts/` (Archivo variable, 100–900 weight and 62–125%
-width, under the SIL Open Font License, see `assets/fonts/OFL.txt`), so the page
-makes no third-party requests. The Pages workflow in
-`.github/workflows/pages.yml` copies `index.html`, the installers, `CNAME`,
-`LICENSE`, and both asset directories into the `_site` publishing directory.
+self-hosted from `assets/fonts/` (Hanken Grotesk and Spline Sans Mono under the
+SIL Open Font License 1.1, see `assets/fonts/OFL.txt`), so the page makes no
+third-party requests. The Pages workflow in `.github/workflows/pages.yml` stages
+`index.html`, the installers, `CNAME`, `LICENSE`, root favicons, and `assets/`
+(excluding provenance sidecar JSON files) into `_site`.
 
-The page is laid out as the product's own man page, printed on uncoated
-reference stock: a section ladder down the left rail, hairline rules, and a
-rubber stamp as the only decorative mark. The paper grain is a procedurally
-generated tile (`assets/paper-grain.webp`, 180px) rather than a photograph.
-Proof images under `assets/proof-*.webp` are real TUI captures from
-`mars-agent/assets/`. `assets/og-image.png` is rendered from `.og-card.html`,
-which is a build-time helper and not published.
+The page is laid out as an **Editorial Instrument** sheet anchored to the
+pixel-art Mars mark: warm alabaster ground (`#faf8f5`), crisp white plates,
+hairline dividers, obsidian ink (`#161419`), and Mars terracotta orange
+(`#d64a27` / `#b43618`) as the sole accent. It ships a 5-method install
+workbench (`macOS & Linux`, `Windows`, `Bun`, `Nix`, `mise`), zoomable real TUI
+captures under `assets/proof-*.webp` (from `mars-agent/assets/`), a searchable
+capability ledger, and live CLI flag composition. `assets/og-image.png` is
+rendered from `.og-card.html`, which is a build-time helper and not published.
 
 `DESIGN.md` records the page's design system; `PRODUCT.md` records the product
 truth it must not contradict. `.impeccable/review/` holds the last screenshot
@@ -67,4 +68,4 @@ pass and is git-ignored.
 
 Mars is a fork of oh-my-pi by can1357, which is a fork of Pi by Mario Zechner. Both are MIT licensed.
 
-Archivo is by Omnibus-Type, distributed under the SIL Open Font License 1.1.
+Hanken Grotesk (Omnibus-Type) and Spline Sans Mono (Sorkin Type) are distributed under the SIL Open Font License 1.1.

@@ -4,35 +4,32 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mars — a coding agent with the IDE wired in</title>
-<meta name="description" content="Mars is a coding agent with the IDE wired in. Language servers on every write, real debuggers, a native Rust core. One binary for macOS, Linux and Windows.">
+<meta name="description" content="Mars is a coding agent with the IDE wired in. Language servers on every write, real debuggers, and an in-process Rust core. One binary for macOS, Linux and Windows.">
 <meta name="color-scheme" content="light">
-<meta name="theme-color" content="#f7f7fa">
+<meta name="theme-color" content="#faf8f5">
 <link rel="canonical" href="https://getmars.eu.cc/">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
 <link rel="apple-touch-icon" href="/assets/mars-mark-256.png">
 <meta property="og:title" content="Mars — a coding agent with the IDE wired in">
-<meta property="og:description" content="Language servers on every write, real debuggers, and a native Rust core. One binary for macOS, Linux and Windows.">
+<meta property="og:description" content="Language servers on every write, real debuggers, and an in-process Rust core. One binary for macOS, Linux and Windows.">
 <meta property="og:image" content="https://getmars.eu.cc/assets/og-image.png">
-<meta property="og:image:alt" content="Mars public register: every release, one line of truth.">
+<meta property="og:image:alt" content="Mars coding agent CLI: in-process Rust core, real LSP, real debugger, one native binary.">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:url" content="https://getmars.eu.cc/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Mars — a coding agent with the IDE wired in">
-<meta name="twitter:description" content="Language servers on every write, real debuggers, and a native Rust core. One binary for macOS, Linux and Windows.">
+<meta name="twitter:description" content="Language servers on every write, real debuggers, and an in-process Rust core. One binary for macOS, Linux and Windows.">
 <meta name="twitter:image" content="https://getmars.eu.cc/assets/og-image.png">
-<meta name="twitter:image:alt" content="Mars public register: every release, one line of truth.">
+<meta name="twitter:image:alt" content="Mars coding agent CLI: in-process Rust core, real LSP, real debugger, one native binary.">
 <link rel="preload" href="assets/fonts/hanken-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/spline-sans-mono-latin.woff2" as="font" type="font/woff2" crossorigin>
 
 <style>
-  /* ── Type ─────────────────────────────────────────────────────────────
-     Hanken Grotesk carries the register's voice: a humane late-modern
-     grotesque for display and reading. Spline Sans Mono is reserved for
-     the register's machine literals — versions, refs, commands, paths. */
+  /* ── Self-hosted Typography ────────────────────────────────────────── */
   @font-face {
     font-family: "Hanken Grotesk";
     font-style: normal;
@@ -67,27 +64,39 @@
   }
 
   :root {
-    /* ── Materials ── */
-    --ground: #f7f7fa;
+    /* ── Mars Editorial Palette (derived directly from mars-mark.svg) ── */
+    --ground: #faf8f5;
     --plate: #ffffff;
-    --plate-2: #f2f2f7;
-    --ink: #1b1547;
-    --body: #4b5165;
-    --soft: #6c7186;
-    --violet: #685ce7;
-    --violet-deep: #4d43cf;
-    --violet-wash: #eceafd;
-    --hair: #e6e7ee;
-    --hair-hard: #d3d4e0;
-    --mint: #7fd8d0;
-    --indigo: #5b4fd6;
-    --warn: #b26a14;
-    --warn-wash: #fbf1e3;
-    --rule: #d9dae4;
-    --measure: 68ch;
+    --plate-2: #f2eee8;
+    --plate-3: #eae4dc;
+    --ink: #161419;
+    --body: #4a4440;
+    --soft: #6b625c;
 
+    --mars: #d64a27;
+    --mars-deep: #b43618;
+    --mars-crater: #9b3220;
+    --mars-wash: #fdf0eb;
+    --mars-border: #efc6b7;
+
+    --hair: #e8e2d9;
+    --hair-hard: #d4cbc0;
+
+    --obsidian: #161419;
+    --obsidian-2: #211e26;
+    --ember: #ff825c;
+    --ember-hover: #ffa082;
+    --on-dark: #f5f2ee;
+    --on-dark-muted: #c2bab2;
+
+    --ok: #1f7a4c;
+    --warn: #9a580e;
+    --err: #b83227;
+
+    /* ── Scale & Layout ── */
     --shell: 78rem;
-    --margin: clamp(1.25rem, 4.5vw, 3.75rem);
+    --margin: clamp(1.25rem, 4.2vw, 3.5rem);
+    --radius-sm: 4px;
     --radius: 8px;
     --radius-lg: 14px;
 
@@ -96,19 +105,22 @@
 
     --step-micro: 0.75rem;
     --step-small: 0.875rem;
-    --step-body: clamp(1rem, 0.96rem + 0.2vw, 1.0938rem);
-    --step-lead: clamp(1.125rem, 1.05rem + 0.4vw, 1.375rem);
-    --step-head: clamp(1.5rem, 1.1rem + 1.8vw, 2.25rem);
-    --step-display: clamp(2.75rem, 1.2rem + 6.6vw, 6rem);
+    --step-body: clamp(1rem, 0.96rem + 0.18vw, 1.0625rem);
+    --step-lead: clamp(1.125rem, 1.05rem + 0.36vw, 1.3125rem);
+    --step-head: clamp(1.6rem, 1.15rem + 1.8vw, 2.35rem);
+    --step-display: clamp(2.65rem, 1.25rem + 5.6vw, 5.15rem);
 
-    --shadow-plate: 0 1px 2px rgba(18, 16, 34, 0.05), 0 12px 32px -18px rgba(18, 16, 34, 0.22);
-    --shadow-lift: 0 2px 4px rgba(18, 16, 34, 0.06), 0 24px 60px -28px rgba(18, 16, 34, 0.32);
+    --shadow-plate: 0 1px 2px rgba(22, 20, 25, 0.05), 0 14px 32px -20px rgba(22, 20, 25, 0.18);
+    --shadow-lift: 0 2px 6px rgba(22, 20, 25, 0.06), 0 26px 56px -28px rgba(22, 20, 25, 0.24);
   }
 
   *, *::before, *::after { box-sizing: border-box; }
   [hidden] { display: none !important; }
 
-  html { -webkit-text-size-adjust: 100%; }
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
   body {
     margin: 0;
     background: var(--ground);
@@ -127,15 +139,15 @@
   h1, h2, h3, h4, h5, p, ol, ul, figure, dl, dd { margin: 0; }
   img { display: block; max-width: 100%; height: auto; }
   b, strong { font-weight: 700; }
-  a { color: var(--violet-deep); text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
-  a:hover { color: var(--violet); }
+  a { color: var(--mars-deep); text-decoration-thickness: 1px; text-underline-offset: 0.22em; }
+  a:hover { color: var(--mars-crater); }
 
   code, kbd, .mono { font-family: var(--mono); font-feature-settings: "ss01" 1; }
 
-  ::selection { background: var(--violet); color: #fff; }
+  ::selection { background: var(--mars); color: #fff; }
 
   :focus-visible {
-    outline: 2px solid var(--violet);
+    outline: 2px solid var(--mars-deep);
     outline-offset: 2px;
     border-radius: 3px;
   }
@@ -146,111 +158,138 @@
   }
 
   .skip {
-    position: absolute; left: 1rem; top: -4rem; z-index: 40;
+    position: absolute; left: 1rem; top: -4rem; z-index: 60;
     background: var(--ink); color: #fff;
     padding: 0.7rem 1rem; border-radius: var(--radius);
     font-weight: 600; font-size: var(--step-small);
+    text-decoration: none;
   }
   .skip:focus { top: 1rem; }
   .skip:hover { color: #fff; }
 
-  /* ── The register's shared grammar ─────────────────────────────────── */
-  .kicker {
-    font-family: var(--mono);
-    font-size: var(--step-micro);
-    font-weight: 600;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--violet-deep);
+  /* ── Masthead & Spec Ribbon ────────────────────────────────────────── */
+  .masthead {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background: rgba(250, 248, 245, 0.92);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--hair);
   }
-  .rule { border: 0; border-top: 1px solid var(--hair); margin: 0; }
-
-  /* ── Ribbon: the single gradient gesture of the world ──────────────── */
-  .ribbon { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-
-  /* ── Masthead ──────────────────────────────────────────────────────── */
-  .masthead { padding-top: clamp(1.1rem, 2.4vw, 1.75rem); }
   .bar {
     display: flex;
     align-items: center;
-    gap: 1.1rem;
+    gap: 1rem;
     flex-wrap: wrap;
+    padding-block: 0.75rem;
   }
   .brand {
     display: inline-flex;
     align-items: center;
-    gap: 0.7rem;
+    gap: 0.75rem;
     color: var(--ink);
     text-decoration: none;
   }
   .brand:hover { color: var(--ink); }
-  .brand-mark { width: 2.15rem; height: 2.15rem; border-radius: 7px; flex: none; }
+  .brand-mark {
+    width: 2.1rem;
+    height: 2.1rem;
+    flex: none;
+    image-rendering: pixelated;
+  }
   .brand-name {
     font-weight: 700;
-    font-size: 1.4rem;
-    letter-spacing: -0.01em;
+    font-size: 1.32rem;
+    letter-spacing: -0.02em;
     line-height: 1;
   }
   .brand-descr {
     display: block;
     font-family: var(--mono);
-    font-size: 0.6875rem;
-    letter-spacing: 0.18em;
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
     color: var(--soft);
-    margin-top: 0.28rem;
+    margin-top: 0.25rem;
   }
   .nav {
     margin-left: auto;
     display: flex;
     align-items: center;
-    gap: clamp(0.4rem, 1.6vw, 1.5rem);
+    gap: clamp(0.35rem, 1.5vw, 1.4rem);
     flex-wrap: wrap;
     font-size: var(--step-small);
     font-weight: 500;
   }
-  .nav a { color: var(--body); text-decoration: none; padding: 0.55rem 0.2rem; min-height: 2.75rem; display: inline-flex; align-items: center; }
-  .nav a:hover { color: var(--violet-deep); }
+  .nav a {
+    color: var(--body);
+    text-decoration: none;
+    padding: 0.45rem 0.25rem;
+    min-height: 2.75rem;
+    display: inline-flex;
+    align-items: center;
+    transition: color 140ms ease;
+  }
+  .nav a:hover { color: var(--mars-deep); }
   .nav .get {
-    background: var(--violet-deep);
+    background: var(--mars-deep);
     color: #fff;
+    font-family: var(--mono);
+    font-size: var(--step-micro);
     font-weight: 600;
-    padding: 0 1.1rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0 1.05rem;
     min-height: 2.75rem;
     border-radius: var(--radius);
     box-shadow: var(--shadow-plate);
+    transition: background 140ms ease, transform 140ms ease;
   }
   .nav .get:hover { background: var(--ink); color: #fff; }
+  .nav .get:active { transform: translateY(1px); }
 
-  /* the register line: a hairline of instrument facts */
+  .specbar {
+    border-bottom: 1px solid var(--hair-hard);
+    background: var(--ground);
+  }
   .regline {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.4rem 1.4rem;
-    margin-top: clamp(0.9rem, 2vw, 1.4rem);
-    padding: 0.6rem 0;
-    border-top: 1px solid var(--hair-hard);
-    border-bottom: 1px solid var(--hair);
+    align-items: center;
+    gap: 0.35rem 1.5rem;
+    padding-block: 0.6rem;
     font-family: var(--mono);
     font-size: var(--step-micro);
-    letter-spacing: 0.08em;
+    letter-spacing: 0.07em;
     text-transform: uppercase;
     color: var(--soft);
   }
-  .regline b { color: var(--violet); font-weight: 600; }
+  .regline b { color: var(--ink); font-weight: 600; }
+  .regline .dot-live {
+    display: inline-block;
+    width: 0.48rem;
+    height: 0.48rem;
+    border-radius: 2px;
+    background: var(--mars);
+    margin-right: 0.45rem;
+    vertical-align: 0.06em;
+  }
 
-  /* ── Hero prospectus ───────────────────────────────────────────────── */
+  /* ── Hero Editorial Prospectus ─────────────────────────────────────── */
   .hero {
     position: relative;
     overflow: hidden;
-    padding: clamp(2rem, 5.5vw, 4.75rem) 0 clamp(2.25rem, 6vw, 5rem);
+    padding: clamp(2.4rem, 5.8vw, 4.75rem) 0 clamp(2.75rem, 6.2vw, 5.25rem);
+    border-bottom: 1px solid var(--hair);
   }
-  .hero-ribbon {
+  .hero-orbit {
     position: absolute;
-    top: -14%;
-    right: -6%;
-    width: min(70%, 62rem);
-    height: 150%;
+    top: -12%;
+    right: -8%;
+    width: min(58rem, 78vw);
+    height: 132%;
     pointer-events: none;
     z-index: 0;
   }
@@ -258,54 +297,55 @@
     position: relative;
     z-index: 1;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.02fr);
-    gap: clamp(1.75rem, 4vw, 3.5rem);
+    grid-template-columns: minmax(0, 1.02fr) minmax(0, 1.08fr);
+    gap: clamp(2rem, 4.5vw, 3.75rem);
     align-items: start;
   }
-  .prospectus { max-width: 34rem; }
+  .prospectus { max-width: 35rem; }
   h1.prospectus-h {
     font-size: var(--step-display);
-    font-weight: 500;
-    line-height: 0.98;
-    letter-spacing: -0.03em;
+    font-weight: 600;
+    line-height: 0.96;
+    letter-spacing: -0.036em;
     color: var(--ink);
   }
-  h1.prospectus-h .v { color: var(--violet); }
+  h1.prospectus-h .accent { color: var(--mars); }
   .prospectus-lead {
-    margin-top: clamp(1rem, 2.4vw, 1.5rem);
+    margin-top: clamp(1.1rem, 2.5vw, 1.65rem);
     font-size: var(--step-lead);
-    line-height: 1.42;
+    line-height: 1.46;
     color: var(--body);
-    max-width: 30rem;
+    max-width: 32rem;
   }
   .prospectus-lead b { color: var(--ink); font-weight: 600; }
+
   .hero-facts {
     list-style: none;
-    padding: 0;
+    padding: 1.15rem 0 0;
     margin: clamp(1.4rem, 3vw, 2rem) 0 0;
+    border-top: 1px solid var(--hair-hard);
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.6rem 1.5rem;
-    max-width: 24rem;
+    gap: 0.7rem 1.5rem;
+    max-width: 28rem;
     font-size: var(--step-small);
     color: var(--body);
   }
-  .hero-facts li { padding-left: 1.1rem; position: relative; }
+  .hero-facts li { padding-left: 1.05rem; position: relative; }
   .hero-facts li::before {
     content: "";
-    position: absolute; left: 0; top: 0.62em;
-    width: 0.45rem; height: 0.45rem; border-radius: 2px;
-    background: var(--violet);
+    position: absolute;
+    left: 0;
+    top: 0.58em;
+    width: 0.42rem;
+    height: 0.42rem;
+    border-radius: 1px;
+    background: var(--mars);
   }
   .hero-facts b { color: var(--ink); font-weight: 700; }
 
-  .hero-side { display: flex; flex-direction: column; gap: 0.9rem; }
-  .hero-syntax { font-family: var(--mono); font-size: var(--step-small); color: var(--body); }
-  .hero-syntax b { color: var(--ink); }
-  .skyline { margin: clamp(0.5rem, 1.5vw, 1rem) 0 0; }
-  .skyline img { width: 100%; height: auto; }
-
-  /* ── The install plate: the register's own action ──────────────────── */
+  /* ── Install Workbench (5-method plate) ────────────────────────────── */
+  .hero-side { display: flex; flex-direction: column; gap: 0.85rem; }
   .install {
     position: relative;
     background: var(--plate);
@@ -314,53 +354,83 @@
     box-shadow: var(--shadow-lift);
     overflow: hidden;
   }
-  .install-head {
+  .install-top {
     display: flex;
-    align-items: stretch;
+    align-items: center;
     justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.55rem 1rem;
     border-bottom: 1px solid var(--hair);
+    background: var(--plate);
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--soft);
   }
-  .os { display: flex; flex-wrap: wrap; }
+  .install-top .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--mars-deep);
+    font-weight: 600;
+  }
+  .install-top .badge::before {
+    content: "";
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: var(--mars);
+  }
+  .os {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    border-bottom: 1px solid var(--hair);
+    background: var(--ground);
+  }
+  .os::-webkit-scrollbar { display: none; }
   .os button {
+    flex: 1 0 auto;
     font-family: var(--mono);
     font-size: var(--step-micro);
     font-weight: 600;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--soft);
     background: transparent;
     border: 0;
     border-right: 1px solid var(--hair);
-    padding: 0 1rem;
-    min-height: 2.9rem;
+    padding: 0 0.85rem;
+    min-height: 2.85rem;
+    white-space: nowrap;
     cursor: pointer;
-    transition: color 140ms, background 140ms;
+    transition: color 140ms ease, background 140ms ease;
   }
+  .os button:last-child { border-right: 0; }
   .os button:hover { color: var(--ink); background: var(--plate-2); }
   .os button[aria-selected="true"] {
-    color: var(--violet-deep);
-    background: var(--violet-wash);
-    box-shadow: inset 0 -2px 0 var(--violet);
-  }
-  .install-file {
-    align-self: center;
-    padding: 0 1rem;
-    font-family: var(--mono);
-    font-size: var(--step-micro);
-    letter-spacing: 0.06em;
-    color: var(--soft);
+    color: var(--mars-deep);
+    background: var(--plate);
+    box-shadow: inset 0 -2px 0 var(--mars);
   }
   .cmd {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    padding: 0.85rem 0.75rem 0.85rem 1.1rem;
+    padding: 1rem 0.8rem 1rem 1.15rem;
     font-family: var(--mono);
-    font-size: clamp(0.875rem, 0.82rem + 0.3vw, 1.0625rem);
-    line-height: 1.3;
+    line-height: 1.35;
     background: var(--plate-2);
   }
-  .cmd .sigil { color: var(--violet); font-weight: 700; flex: none; }
+  .cmd .sigil {
+    color: var(--mars-deep);
+    font-weight: 700;
+    font-size: 0.95rem;
+    flex: none;
+    user-select: none;
+  }
   .cmd code {
     flex: 1 1 auto;
     min-width: 0;
@@ -369,7 +439,8 @@
     scrollbar-width: thin;
     color: var(--ink);
     font-weight: 500;
-    font-size: clamp(0.8125rem, 0.78rem + 0.25vw, 0.9375rem);
+    font-size: clamp(0.8125rem, 0.76rem + 0.24vw, 0.9375rem);
+    padding-block: 0.15rem;
   }
   .copy {
     flex: none;
@@ -379,73 +450,394 @@
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: #fff;
-    background: var(--violet-deep);
+    background: var(--mars-deep);
     border: 0;
     border-radius: var(--radius);
     padding: 0 1.05rem;
     min-height: 2.75rem;
     cursor: pointer;
-    transition: background 140ms, transform 140ms;
+    transition: background 140ms ease, transform 140ms ease;
   }
   .copy:hover { background: var(--ink); }
   .copy:active { transform: translateY(1px); }
-  .copy[data-state="copied"] { background: #24804e; }
-  .copy[data-state="failed"] { background: #b23b3b; }
+  .copy[data-state="copied"] { background: var(--ok); }
+  .copy[data-state="failed"] { background: var(--err); }
+
   .install-note {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.4rem 1.3rem;
+    gap: 0.35rem 1.15rem;
     align-items: center;
-    padding: 0.75rem 1.1rem;
+    justify-content: space-between;
+    padding: 0.75rem 1.15rem;
     border-top: 1px solid var(--hair);
+    background: var(--plate);
     font-family: var(--mono);
     font-size: var(--step-micro);
-    letter-spacing: 0.03em;
+    letter-spacing: 0.02em;
     color: var(--soft);
   }
   .install-note b { color: var(--ink); font-weight: 600; }
-  .install-note a { display: inline-flex; align-items: center; min-height: 2.75rem; color: var(--violet-deep); }
-  .status {
-    min-height: 1.5em;
-    margin-top: 0.6rem;
-    font-family: var(--mono);
-    font-size: var(--step-small);
-    color: var(--violet-deep);
+  .install-note a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    color: var(--mars-deep);
     font-weight: 600;
   }
+  .status {
+    min-height: 1.45em;
+    font-family: var(--mono);
+    font-size: var(--step-small);
+    color: var(--mars-deep);
+    font-weight: 600;
+  }
+  .hero-syntax {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 0.8rem 1.05rem;
+    background: var(--plate);
+    border: 1px solid var(--hair);
+    border-radius: var(--radius);
+    font-family: var(--mono);
+    font-size: var(--step-micro);
+    color: var(--body);
+  }
+  .hero-syntax b { color: var(--ink); font-weight: 700; }
+  .hero-syntax code { color: var(--mars-deep); font-weight: 600; }
+  .hero-syntax .sub { color: var(--soft); }
 
-  /* ── Section header: a citizen-facing register title, no eyebrow ───── */
-  .section { padding-block: clamp(2.5rem, 6vw, 5rem); }
+  /* ── Sections ──────────────────────────────────────────────────────── */
+  .section {
+    padding-block: clamp(2.75rem, 6.2vw, 5.25rem);
+    scroll-margin-top: 5rem;
+  }
+  #install { scroll-margin-top: 6.5rem; }
   .section + .section { border-top: 1px solid var(--hair); }
   .sec-head {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
-    gap: 1.5rem;
+    gap: 1.25rem 2rem;
     flex-wrap: wrap;
-    margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+    margin-bottom: clamp(1.6rem, 3.2vw, 2.6rem);
   }
   .sec-head h2 {
     font-size: var(--step-head);
     font-weight: 600;
-    letter-spacing: -0.02em;
-    line-height: 1.1;
-    max-width: 22ch;
+    letter-spacing: -0.025em;
+    line-height: 1.08;
+    max-width: 24ch;
   }
-  .sec-head p { color: var(--body); max-width: 34ch; font-size: var(--step-small); }
+  .sec-head p {
+    color: var(--body);
+    max-width: 40ch;
+    font-size: var(--step-small);
+    line-height: 1.55;
+  }
 
-  /* ── The register: version rail + signed entries ───────────────────── */
+  /* ── Worked Stages Showcase (Primary TUI Proof) ────────────────────── */
+  .worked-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.35fr);
+    gap: clamp(1.5rem, 3.5vw, 3rem);
+    align-items: start;
+  }
+  .stage-list {
+    list-style: none;
+    padding: 0;
+    border-top: 1px solid var(--hair-hard);
+  }
+  .stage-btn {
+    width: 100%;
+    text-align: left;
+    display: grid;
+    grid-template-columns: 2.1rem minmax(0, 1fr);
+    gap: 0.75rem;
+    align-items: baseline;
+    padding: 1rem 0.85rem;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--hair);
+    cursor: pointer;
+    transition: background 150ms ease, border-color 150ms ease;
+  }
+  .stage-btn:hover { background: var(--plate-2); }
+  .stage-btn[aria-selected="true"] {
+    background: var(--mars-wash);
+    border-bottom-color: var(--mars-border);
+    box-shadow: inset 3px 0 0 var(--mars);
+  }
+  .stage-num {
+    font-family: var(--mono);
+    font-size: var(--step-micro);
+    font-weight: 700;
+    color: var(--soft);
+  }
+  .stage-btn[aria-selected="true"] .stage-num { color: var(--mars-deep); }
+  .stage-title {
+    display: block;
+    font-family: var(--sans);
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .stage-desc {
+    display: block;
+    margin-top: 0.28rem;
+    font-family: var(--sans);
+    font-size: var(--step-small);
+    line-height: 1.48;
+    color: var(--body);
+  }
+  .ruler-wrap { margin-top: 1.15rem; }
+  .ruler {
+    width: 100%;
+    appearance: none;
+    background: transparent;
+    height: 2.75rem;
+    cursor: ew-resize;
+    margin: 0;
+  }
+  .ruler::-webkit-slider-runnable-track {
+    height: 1.25rem;
+    background:
+      repeating-linear-gradient(90deg, var(--hair-hard) 0 1px, transparent 1px 11.111%),
+      linear-gradient(180deg, transparent 48%, var(--hair-hard) 48% 52%, transparent 52%);
+  }
+  .ruler::-moz-range-track {
+    height: 1.25rem;
+    background:
+      repeating-linear-gradient(90deg, var(--hair-hard) 0 1px, transparent 1px 11.111%),
+      linear-gradient(180deg, transparent 48%, var(--hair-hard) 48% 52%, transparent 52%);
+  }
+  .ruler::-webkit-slider-thumb {
+    appearance: none;
+    width: 1rem; height: 1.85rem;
+    background: var(--mars);
+    border-radius: 4px;
+    border: 2px solid var(--plate);
+    box-shadow: var(--shadow-plate);
+    margin-top: -0.3rem;
+  }
+  .ruler::-moz-range-thumb {
+    width: 1rem; height: 1.85rem;
+    background: var(--mars);
+    border-radius: 4px;
+    border: 2px solid var(--plate);
+    box-shadow: var(--shadow-plate);
+  }
+  .stops {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: var(--step-micro);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--soft);
+  }
+  .stops span[data-on="true"] { color: var(--mars-deep); font-weight: 700; }
+
+  .terminal-frame {
+    background: var(--obsidian);
+    border: 1px solid var(--hair-hard);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-lift);
+  }
+  .terminal-chrome {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.65rem 1rem;
+    background: var(--obsidian-2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--on-dark-muted);
+  }
+  .terminal-dots {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .terminal-dots i {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.18);
+    display: block;
+  }
+  .terminal-dots i:first-child { background: var(--ember); }
+  .zoom-btn {
+    font-family: var(--mono);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ember);
+    background: rgba(255, 130, 92, 0.12);
+    border: 1px solid rgba(255, 130, 92, 0.28);
+    border-radius: var(--radius-sm);
+    padding: 0.3rem 0.6rem;
+    min-height: 2.25rem;
+    cursor: pointer;
+    transition: background 140ms ease, color 140ms ease;
+  }
+  .zoom-btn:hover { background: var(--ember); color: var(--obsidian); }
+  .terminal-viewport {
+    position: relative;
+    background: #0d0c10;
+    cursor: zoom-in;
+  }
+  .terminal-viewport img { width: 100%; height: auto; display: block; }
+  .terminal-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.7rem 1rem;
+    background: var(--plate);
+    border-top: 1px solid var(--hair);
+    font-family: var(--mono);
+    font-size: var(--step-micro);
+    color: var(--soft);
+  }
+  .terminal-foot b { color: var(--ink); font-weight: 600; }
+
+  /* ── Instrument Summary ────────────────────────────────────────────── */
+  .instrument {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border: 1px solid var(--hair-hard);
+    border-radius: var(--radius-lg);
+    background: var(--plate);
+    box-shadow: var(--shadow-plate);
+    overflow: hidden;
+  }
+  .instrument > div {
+    padding: 1.55rem 1.5rem 1.65rem;
+    border-right: 1px solid var(--hair);
+  }
+  .instrument > div:last-child { border-right: 0; }
+  .instrument .num {
+    display: block;
+    font-size: clamp(2.25rem, 1.6rem + 2.4vw, 3.35rem);
+    font-weight: 600;
+    letter-spacing: -0.035em;
+    line-height: 1;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .instrument .unit {
+    display: block;
+    margin-top: 0.55rem;
+    font-family: var(--mono);
+    font-size: var(--step-micro);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--mars-deep);
+  }
+  .instrument .gloss {
+    display: block;
+    margin-top: 0.55rem;
+    font-size: var(--step-small);
+    line-height: 1.48;
+    color: var(--body);
+  }
+
+  /* ── Capability Register (Interactive Ledger) ──────────────────────── */
+  .reg-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem 1.25rem;
+    flex-wrap: wrap;
+    padding: 0.9rem 0;
+    border-top: 1px solid var(--hair-hard);
+  }
+  .reg-filters {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+  }
+  .chip {
+    font-family: var(--mono);
+    font-size: var(--step-micro);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--body);
+    background: var(--plate);
+    border: 1px solid var(--hair-hard);
+    border-radius: var(--radius);
+    padding: 0 0.8rem;
+    min-height: 2.75rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    cursor: pointer;
+    transition: color 150ms ease, border-color 150ms ease, background 150ms ease;
+  }
+  .chip:hover { color: var(--mars-deep); border-color: var(--mars); }
+  .chip[aria-pressed="true"] {
+    color: #fff;
+    background: var(--mars-deep);
+    border-color: var(--mars-deep);
+  }
+  .chip .n { font-weight: 600; color: var(--soft); font-variant-numeric: tabular-nums; }
+  .chip[aria-pressed="true"] .n { color: rgba(255, 255, 255, 0.85); }
+
+  .reg-search {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0 0.75rem;
+    background: var(--plate);
+    border: 1px solid var(--hair-hard);
+    border-radius: var(--radius);
+  }
+  .reg-search:focus-within { border-color: var(--mars-deep); }
+  .reg-search svg { flex: none; color: var(--soft); }
+  .reg-search input {
+    font-family: var(--mono);
+    font-size: var(--step-micro);
+    letter-spacing: 0.03em;
+    border: 0;
+    background: none;
+    color: var(--ink);
+    width: 12.5rem;
+    max-width: 44vw;
+    padding: 0.5rem 0;
+  }
+  .reg-search input:focus { outline: none; }
+  .reg-search input::placeholder { color: var(--soft); }
+  .reg-search kbd {
+    font-size: 0.6875rem;
+    color: var(--soft);
+    border: 1px solid var(--hair-hard);
+    border-radius: var(--radius-sm);
+    padding: 0.05rem 0.35rem;
+    background: var(--plate-2);
+  }
+
   .register {
     display: grid;
-    grid-template-columns: 15rem minmax(0, 1fr);
+    grid-template-columns: 15.5rem minmax(0, 1fr);
     gap: clamp(1.75rem, 4vw, 3.5rem);
     align-items: start;
   }
-  .rail { position: sticky; top: 1.25rem; }
+  .rail { position: sticky; top: 5.25rem; }
   .rail-title {
     font-family: var(--mono);
     font-size: var(--step-micro);
-    letter-spacing: 0.16em;
+    font-weight: 600;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--soft);
     padding-bottom: 0.7rem;
@@ -455,160 +847,90 @@
   .vline {
     display: grid;
     grid-template-columns: auto 1fr;
-    gap: 0.6rem;
-    padding: 0.7rem 0;
+    gap: 0.55rem;
+    padding: 0.72rem 0;
     border-bottom: 1px solid var(--hair);
     font-size: var(--step-small);
+    transition: opacity 220ms ease;
   }
   .vline .tag {
     font-family: var(--mono);
     font-weight: 600;
     color: var(--ink);
-    font-size: 0.8125rem;
+    font-size: 0.78rem;
   }
-  .vline .say { color: var(--body); }
-  .vline.now .tag { color: var(--violet-deep); }
-  .vline.now .say { color: var(--ink); font-weight: 500; }
-  .vline { transition: opacity 240ms ease; }
-  /* While a filter is on, the rail dims the lines that fell out of view. */
-  .rail[data-filtering="true"] .vline:not([data-lit="true"]) { opacity: 0.38; }
-  .rail .vline[data-lit="true"] .tag { color: var(--violet-deep); }
+  .vline .say { color: var(--body); font-size: 0.8125rem; }
+  .rail[data-filtering="true"] .vline:not([data-lit="true"]) { opacity: 0.35; }
+  .rail .vline[data-lit="true"] .tag { color: var(--mars-deep); }
   .vline .dot {
-    display: inline-block; width: 0.5rem; height: 0.5rem; border-radius: 50%;
-    background: var(--violet); margin-right: 0.4rem; vertical-align: 0.05em;
+    display: inline-block;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 1px;
+    background: var(--mars);
+    margin-right: 0.4rem;
+    vertical-align: 0.06em;
   }
   .rail-foot {
-    margin-top: 1.3rem;
+    margin-top: 1.25rem;
     font-family: var(--mono);
     font-size: var(--step-micro);
-    letter-spacing: 0.04em;
-    line-height: 1.9;
+    letter-spacing: 0.03em;
+    line-height: 1.85;
     color: var(--soft);
   }
-  .rail-foot b { color: var(--ink); font-weight: 600; display: block; margin-bottom: 0.15rem; letter-spacing: 0.1em; text-transform: uppercase; }
-
-  /* ── Register controls: filter the ledger, key the register ────────── */
-  .reg-controls {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem 1.25rem;
-    flex-wrap: wrap;
-    padding: 0.85rem 0;
-    border-top: 1px solid var(--hair-hard);
-  }
-  .reg-filters {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    flex-wrap: wrap;
-  }
-  .chip {
-    font-family: var(--mono);
-    font-size: var(--step-micro);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--body);
-    background: var(--plate);
-    border: 1px solid var(--hair-hard);
-    border-radius: var(--radius);
-    padding: 0 0.7rem;
-    min-height: 2.75rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    cursor: pointer;
-    transition: color 160ms ease, border-color 160ms ease, background 160ms ease;
-  }
-  .chip:hover { color: var(--violet-deep); border-color: var(--violet); }
-  .chip[aria-pressed="true"] {
-    color: #fff;
-    background: var(--violet-deep);
-    border-color: var(--violet-deep);
-  }
-  .chip .n {
-    font-weight: 600;
-    color: var(--soft);
-    font-variant-numeric: tabular-nums;
-  }
-  .chip[aria-pressed="true"] .n { color: rgba(255, 255, 255, 0.82); }
-  .chip.sq { width: 2.75rem; padding: 0; justify-content: center; font-size: 0.95rem; line-height: 1; }
-  .reg-search {
-    margin-left: auto;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    min-height: 2.75rem;
-    padding: 0 0.7rem;
-    background: var(--plate);
-    border: 1px solid var(--hair-hard);
-    border-radius: var(--radius);
-  }
-  .reg-search:focus-within { border-color: var(--violet); }
-  .reg-search svg { flex: none; color: var(--soft); }
-  .reg-search input {
-    font-family: var(--mono);
-    font-size: var(--step-micro);
-    letter-spacing: 0.04em;
-    border: 0;
-    background: none;
+  .rail-foot b {
     color: var(--ink);
-    width: 12rem;
-    max-width: 40vw;
-    padding: 0.5rem 0;
-  }
-  .reg-search input:focus { outline: none; }
-  .reg-search input::placeholder { color: var(--soft); }
-  .reg-search kbd {
-    font-size: 0.6875rem;
-    color: var(--soft);
-    border: 1px solid var(--hair);
-    border-radius: 4px;
-    padding: 0.05rem 0.3rem;
-    background: var(--plate-2);
-  }
-  .reg-empty {
-    padding: 2.5rem 0;
-    font-family: var(--mono);
-    font-size: var(--step-small);
-    color: var(--soft);
-    text-align: center;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0.12rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
   }
 
   .ledger { border-top: 1px solid var(--hair-hard); }
   .entry {
     border-bottom: 1px solid var(--hair);
-    transition: opacity 240ms ease, transform 240ms ease, background 200ms ease;
+    transition: opacity 220ms ease, transform 220ms ease, background 180ms ease;
   }
-  .entry:hover { background: var(--violet-wash); }
-  .entry-row { transition: padding-left 200ms cubic-bezier(0.16, 1, 0.3, 1); }
-  .entry:hover .entry-row { padding-left: 0.35rem; }
-  .entry:hover .sign { transform: scale(1.35); }
-  .entry.is-out {
-    opacity: 0;
-    transform: translateY(-4px);
-    pointer-events: none;
-  }
-  .entry[hidden] { display: none; }
+  .entry:hover { background: var(--mars-wash); }
   .entry-row {
     display: grid;
     grid-template-columns: 1.5rem minmax(0, 1fr) auto;
     gap: 0.9rem;
     align-items: baseline;
-    padding: 1.05rem 0;
+    padding: 1.1rem 0.4rem;
+    transition: padding-left 200ms cubic-bezier(0.16, 1, 0.3, 1);
   }
+  .entry:hover .entry-row { padding-left: 0.75rem; }
   .sign {
     font-family: var(--mono);
     font-weight: 700;
-    font-size: 1rem;
-    line-height: 1.6;
+    font-size: 1.05rem;
+    line-height: 1.5;
     text-align: center;
     transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .sign.add { color: var(--violet); }
-  .sign.fix { color: var(--warn); }
+  .entry:hover .sign { transform: scale(1.25); }
+  .sign.add { color: var(--mars); }
   .sign.rm { color: var(--soft); }
-  .entry-text { font-size: var(--step-lead); line-height: 1.36; color: var(--ink); font-weight: 500; max-width: 40ch; }
-  .entry-text .tok { font-family: var(--mono); font-size: 0.86em; color: var(--violet-deep); background: var(--violet-wash); padding: 0.05em 0.35em; border-radius: 4px; font-weight: 600; }
+  .entry-text {
+    font-size: var(--step-lead);
+    line-height: 1.38;
+    color: var(--ink);
+    font-weight: 500;
+    max-width: 42ch;
+  }
+  .entry-text .tok {
+    font-family: var(--mono);
+    font-size: 0.84em;
+    color: var(--mars-deep);
+    background: var(--mars-wash);
+    border: 1px solid var(--mars-border);
+    padding: 0.04em 0.38em;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+  }
   .entry-meta {
     font-family: var(--mono);
     font-size: var(--step-micro);
@@ -618,22 +940,22 @@
     white-space: nowrap;
   }
   .entry-meta .v { color: var(--ink); font-weight: 600; display: block; }
-  .entry-actions { display: flex; align-items: center; gap: 0.9rem; margin-top: 0.4rem; }
+  .entry-actions { display: flex; align-items: center; gap: 1rem; margin-top: 0.35rem; }
   .entry-toggle {
     display: inline-flex; align-items: center; gap: 0.4rem;
-    margin-top: 0.4rem;
     font-family: var(--mono);
     font-size: var(--step-micro);
+    font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--violet-deep);
+    color: var(--mars-deep);
     background: none; border: 0; padding: 0.35rem 0; cursor: pointer;
     min-height: 2.75rem;
   }
-  .entry-toggle:hover { color: var(--violet); }
+  .entry-toggle:hover { color: var(--mars-crater); }
   .entry-toggle::after {
     content: "";
-    width: 0.45rem; height: 0.45rem;
+    width: 0.42rem; height: 0.42rem;
     border-right: 1.5px solid currentColor;
     border-bottom: 1.5px solid currentColor;
     transform: rotate(45deg) translateY(-1px);
@@ -656,9 +978,10 @@
     min-height: 2.75rem;
     transition: color 140ms ease;
   }
-  .entry-link:hover { color: var(--violet-deep); }
-  .entry-link[data-state="copied"] { color: #24804e; }
+  .entry-link:hover { color: var(--mars-deep); }
+  .entry-link[data-state="copied"] { color: var(--ok); }
   .entry-link svg { flex: none; width: 0.85rem; height: 0.85rem; }
+
   .evidence {
     display: grid;
     grid-template-rows: 0fr;
@@ -668,20 +991,20 @@
   .entry[data-open="true"] .evidence { grid-template-rows: 1fr; }
   .evidence-inner {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 16.5rem;
-    gap: 1.25rem;
-    padding: 0 0 1.4rem 2.4rem;
+    grid-template-columns: minmax(0, 1fr) 17.5rem;
+    gap: 1.35rem;
+    padding: 0.1rem 0.4rem 1.45rem 2.8rem;
     align-items: start;
   }
-  .evidence p { color: var(--body); font-size: var(--step-small); max-width: 46ch; }
+  .evidence p { color: var(--body); font-size: var(--step-small); max-width: 48ch; line-height: 1.6; }
   .exhibit {
     border-radius: var(--radius);
     overflow: hidden;
     border: 1px solid var(--hair-hard);
-    background: #0e0f1a;
+    background: var(--obsidian);
     box-shadow: var(--shadow-plate);
   }
-  .exhibit img { width: 100%; }
+  .exhibit img { width: 100%; cursor: zoom-in; }
   .exhibit figcaption {
     font-family: var(--mono);
     font-size: 0.6875rem;
@@ -691,72 +1014,73 @@
     border-top: 1px solid var(--hair);
     background: var(--plate);
   }
+  .reg-empty {
+    padding: 2.5rem 0;
+    font-family: var(--mono);
+    font-size: var(--step-small);
+    color: var(--soft);
+    text-align: center;
+  }
 
-  /* ── Instrument summary: an engraved register row, not equal cards ─── */
-  .instrument {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    border: 1px solid var(--hair-hard);
-    border-radius: var(--radius-lg);
+  /* ── Flags: Operating Switches + Live Command Preview ──────────────── */
+  .flag-preview {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding: 0.85rem 1.1rem;
+    margin-bottom: 1.25rem;
     background: var(--plate);
-    box-shadow: var(--shadow-plate);
-    overflow: hidden;
+    border: 1px solid var(--hair-hard);
+    border-radius: var(--radius);
+    font-family: var(--mono);
+    font-size: var(--step-small);
   }
-  .instrument > div {
-    padding: 1.4rem 1.4rem 1.5rem;
-    border-right: 1px solid var(--hair);
-  }
-  .instrument > div:last-child { border-right: 0; }
-  .instrument .num {
-    display: block;
-    font-size: clamp(2.25rem, 1.6rem + 2.4vw, 3.25rem);
-    font-weight: 600;
-    letter-spacing: -0.03em;
-    line-height: 1;
-    color: var(--ink);
-  }
-  .instrument .unit {
-    display: block;
-    margin-top: 0.5rem;
+  .flag-preview code { color: var(--ink); font-weight: 500; word-break: break-word; }
+  .flag-preview .sigil { color: var(--mars-deep); font-weight: 700; margin-right: 0.5rem; }
+  .flag-preview .flag-reset {
     font-family: var(--mono);
     font-size: var(--step-micro);
-    letter-spacing: 0.12em;
+    font-weight: 600;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--violet-deep);
+    color: var(--soft);
+    background: var(--plate-2);
+    border: 1px solid var(--hair-hard);
+    border-radius: var(--radius-sm);
+    padding: 0.35rem 0.7rem;
+    min-height: 2.35rem;
+    cursor: pointer;
   }
-  .instrument .gloss {
-    display: block;
-    margin-top: 0.6rem;
-    font-size: var(--step-small);
-    line-height: 1.45;
-    color: var(--body);
-  }
+  .flag-preview .flag-reset:hover { color: var(--mars-deep); border-color: var(--mars); }
 
-  /* ── Flags: the register's operating switches ──────────────────────── */
   .flags { border-top: 1px solid var(--hair-hard); }
   .flag {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
-    gap: 0.5rem 1.5rem;
-    align-items: start;
+    gap: 0.55rem 1.5rem;
+    align-items: center;
     padding: 1.15rem 0;
     border-bottom: 1px solid var(--hair);
   }
-  .flag-text { font-size: var(--step-lead); font-weight: 500; line-height: 1.35; color: var(--ink); }
+  .flag-text { font-size: var(--step-lead); font-weight: 500; line-height: 1.38; color: var(--ink); }
   .flag-text .tok {
     font-family: var(--mono);
     font-size: 0.82em;
     font-weight: 600;
-    color: var(--violet-deep);
-    background: var(--violet-wash);
-    padding: 0.06em 0.4em;
-    border-radius: 4px;
+    color: var(--mars-deep);
+    background: var(--mars-wash);
+    border: 1px solid var(--mars-border);
+    padding: 0.05em 0.42em;
+    border-radius: var(--radius-sm);
     margin-right: 0.6em;
   }
   .switch {
     display: inline-flex;
     align-items: center;
-    gap: 0.55rem;
+    justify-content: space-between;
+    gap: 0.6rem;
     min-width: 7.5rem;
     min-height: 2.75rem;
     padding: 0 0.85rem;
@@ -765,24 +1089,31 @@
     font-weight: 600;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--body);
+    color: var(--soft);
     background: var(--plate-2);
     border: 1px solid var(--hair-hard);
     border-radius: var(--radius);
     cursor: pointer;
-    transition: color 140ms, border-color 140ms, background 140ms;
+    transition: color 140ms ease, border-color 140ms ease, background 140ms ease;
   }
   .switch::before {
     content: "";
-    width: 0.65rem; height: 0.65rem;
+    width: 0.6rem; height: 0.6rem;
     border-radius: 50%;
     background: var(--hair-hard);
     flex: none;
-    transition: background 140ms, box-shadow 140ms;
+    transition: background 140ms ease, box-shadow 140ms ease;
   }
-  .switch:hover { color: var(--ink); border-color: var(--violet); }
-  .switch[aria-checked="true"] { color: var(--violet-deep); border-color: var(--violet); background: var(--violet-wash); }
-  .switch[aria-checked="true"]::before { background: var(--violet); box-shadow: 0 0 0 3px var(--violet-wash); }
+  .switch:hover { color: var(--ink); border-color: var(--mars); }
+  .switch[aria-checked="true"] {
+    color: var(--mars-deep);
+    border-color: var(--mars);
+    background: var(--mars-wash);
+  }
+  .switch[aria-checked="true"]::before {
+    background: var(--mars);
+    box-shadow: 0 0 0 3px rgba(214, 74, 39, 0.16);
+  }
   .flag-why {
     grid-column: 1 / -1;
     display: grid;
@@ -793,173 +1124,189 @@
     overflow: hidden;
     font-size: var(--step-small);
     color: var(--body);
-    max-width: 62ch;
+    max-width: 64ch;
+    line-height: 1.55;
   }
   .flag[data-on="true"] .flag-why { grid-template-rows: 1fr; }
   .flag-why b { color: var(--ink); font-weight: 600; }
 
-  /* ── Providers: the catalog as a civic index ───────────────────────── */
+  /* ── Providers Index ───────────────────────────────────────────────── */
   .index-cols {
     columns: 4;
-    column-gap: 2rem;
+    column-gap: 2.25rem;
     list-style: none;
-    padding: 0;
+    padding: 1.4rem 1.6rem;
+    background: var(--plate);
+    border: 1px solid var(--hair-hard);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-plate);
     font-family: var(--mono);
     font-size: var(--step-small);
-    line-height: 2;
-    color: var(--body);
+    line-height: 2.1;
+    color: var(--ink);
   }
   .index-cols li { break-inside: avoid; }
-  .index-cols li::before { content: "§  "; color: var(--hair-hard); }
+  .index-cols li::before { content: "§  "; color: var(--mars); font-weight: 700; }
 
-  /* ── Examples: worked stages with a measuring ruler ────────────────── */
-  .worked { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.4rem; max-width: 47rem; }
-  .worked .prospectus-lead { max-width: 40rem; }
-  .ruler-wrap { }
-  .ruler {
-    width: 100%;
-    appearance: none;
-    background: transparent;
-    height: 3rem;
-    cursor: ew-resize;
-    margin: 0;
-  }
-  .ruler::-webkit-slider-runnable-track {
-    height: 1.5rem;
-    background:
-      repeating-linear-gradient(90deg, var(--hair-hard) 0 1px, transparent 1px 8.333%),
-      linear-gradient(180deg, transparent 49%, var(--hair) 49% 51%, transparent 51%);
-  }
-  .ruler::-moz-range-track {
-    height: 1.5rem;
-    background:
-      repeating-linear-gradient(90deg, var(--hair-hard) 0 1px, transparent 1px 8.333%),
-      linear-gradient(180deg, transparent 49%, var(--hair) 49% 51%, transparent 51%);
-  }
-  .ruler::-webkit-slider-thumb {
-    appearance: none;
-    width: 1.1rem; height: 2rem;
-    background: var(--violet);
-    border-radius: 5px;
-    border: 2px solid var(--plate);
-    box-shadow: var(--shadow-plate);
-    margin-top: -0.25rem;
-  }
-  .ruler::-moz-range-thumb {
-    width: 1.1rem; height: 2rem;
-    background: var(--violet);
-    border-radius: 5px;
-    border: 2px solid var(--plate);
-    box-shadow: var(--shadow-plate);
-  }
-  .stops { display: flex; justify-content: space-between; font-family: var(--mono); font-size: var(--step-micro); letter-spacing: 0.06em; text-transform: uppercase; color: var(--soft); }
-  .stops span { flex: 1; text-align: left; }
-  .stops span:last-child { text-align: right; }
-  .stops span[data-on="true"] { color: var(--violet-deep); font-weight: 700; }
-
-  /* ── Close + colophon ──────────────────────────────────────────────── */
+  /* ── Close Panel & Colophon ────────────────────────────────────────── */
   .close {
-    background: var(--ink);
-    color: #e9e8f7;
+    background: var(--obsidian);
+    color: var(--on-dark);
     border-radius: var(--radius-lg);
-    padding: clamp(2rem, 5vw, 3.5rem);
-    margin-block: clamp(2.5rem, 6vw, 4.5rem) 0;
+    padding: clamp(2.1rem, 5vw, 3.65rem);
     position: relative;
     overflow: hidden;
   }
+  .close::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--mars) 0%, var(--ember) 48%, transparent 100%);
+  }
   .close-sentence {
-    margin-top: 0;
-    font-size: clamp(1.4rem, 1rem + 2.2vw, 2.35rem);
+    font-size: clamp(1.45rem, 1rem + 2.1vw, 2.35rem);
     font-weight: 500;
-    line-height: 1.28;
-    letter-spacing: -0.02em;
-    max-width: 24ch;
+    line-height: 1.3;
+    letter-spacing: -0.025em;
+    max-width: 26ch;
     color: #fff;
   }
   .close-sentence .blank {
     font-family: var(--mono);
     font-size: 0.72em;
-    color: var(--mint);
-    background: rgba(127, 216, 208, 0.12);
+    color: var(--ember);
+    background: rgba(255, 130, 92, 0.12);
     border: 0;
-    border-bottom: 2px solid var(--mint);
-    padding: 0.1em 0.5em;
+    border-bottom: 2px solid var(--ember);
+    padding: 0.12em 0.5em;
     border-radius: 4px 4px 0 0;
-    width: 8ch;
-    min-width: 6ch;
-    transition: width 160ms;
+    width: 9ch;
+    min-width: 7ch;
+    transition: width 160ms ease;
   }
-  .close-sentence .blank:focus { outline-color: var(--mint); width: 16ch; }
-  .close-sentence .blank::placeholder { color: #c9c7e6; }
+  .close-sentence .blank:focus { outline-color: var(--ember); width: 17ch; }
+  .close-sentence .blank::placeholder { color: var(--on-dark-muted); }
   .close-install {
     font: inherit;
     font-weight: 600;
-    color: var(--ink);
-    background: var(--mint);
+    color: var(--obsidian);
+    background: var(--ember);
     border: 0;
     border-radius: var(--radius);
-    padding: 0.05em 0.6em;
+    padding: 0.05em 0.62em;
     cursor: pointer;
+    transition: background 140ms ease;
   }
-  .close-install:hover { background: #9ee6df; }
-  .close-note { margin-top: 1.25rem; color: #cfcee6; font-size: var(--step-small); max-width: 52ch; }
-  .close-note a { color: var(--mint); }
+  .close-install:hover { background: var(--ember-hover); }
+  .close-note {
+    margin-top: 1.25rem;
+    color: var(--on-dark-muted);
+    font-size: var(--step-small);
+    max-width: 56ch;
+  }
+  .close-note a { color: var(--ember); }
   .close-note b { color: #fff; }
   .colophon {
     display: grid;
     grid-template-columns: minmax(0, 2fr) auto auto;
-    gap: 1.5rem 2.5rem;
+    gap: 1.5rem 2.75rem;
     align-items: end;
     margin-top: clamp(2rem, 5vw, 3rem);
     padding-top: 1.5rem;
-    border-top: 1px solid rgba(233, 232, 247, 0.16);
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
     font-size: var(--step-small);
   }
-  .colophon .credit { color: #cfcee6; max-width: 60ch; }
+  .colophon .credit { color: var(--on-dark-muted); max-width: 60ch; }
   .colophon .credit a { color: #fff; }
-  .colophon nav { display: flex; flex-direction: column; gap: 0.5rem; }
-  .colophon nav a { color: var(--mint); text-decoration: none; padding: 0.15rem 0; }
+  .colophon nav { display: flex; flex-direction: column; gap: 0.45rem; }
+  .colophon nav a { color: var(--ember); text-decoration: none; padding: 0.15rem 0; }
   .colophon nav a:hover { text-decoration: underline; }
-  .colophon .stampcol { font-family: var(--mono); font-size: var(--step-micro); letter-spacing: 0.1em; text-transform: uppercase; color: #b0aecb; text-align: right; }
-  .page-foot { padding-block: 1.5rem 2.5rem; }
-
-  /* ── Motion: one authored entrance, revealed from a visible default ── */
-  .mark-in {
-    opacity: 1;
-    transform: none;
+  .colophon .stampcol {
+    font-family: var(--mono);
+    font-size: var(--step-micro);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--on-dark-muted);
+    text-align: right;
   }
+
+  /* ── Lightbox Dialog for Full-Res Terminal Captures ────────────────── */
+  dialog.lightbox {
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: var(--radius-lg);
+    background: var(--obsidian);
+    color: var(--on-dark);
+    max-width: min(92vw, 68rem);
+    width: fit-content;
+    box-shadow: 0 32px 90px rgba(0, 0, 0, 0.55);
+  }
+  dialog.lightbox::backdrop {
+    background: rgba(22, 20, 25, 0.78);
+    backdrop-filter: blur(4px);
+  }
+  .lightbox-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.7rem 1rem;
+    background: var(--obsidian-2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    font-family: var(--mono);
+    font-size: var(--step-micro);
+    color: var(--on-dark-muted);
+  }
+  .lightbox-close {
+    font-family: var(--mono);
+    font-size: var(--step-micro);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #fff;
+    background: var(--mars-deep);
+    border: 0;
+    border-radius: var(--radius-sm);
+    padding: 0.35rem 0.75rem;
+    min-height: 2.4rem;
+    cursor: pointer;
+  }
+  .lightbox-close:hover { background: var(--mars); }
+  .lightbox-body { padding: 0.75rem; background: #0d0c10; }
+  .lightbox-body img { max-height: 78vh; width: auto; margin-inline: auto; }
+
+  /* ── Entrance & Motion ─────────────────────────────────────────────── */
+  .mark-in { opacity: 1; transform: none; }
   html.js .mark-in {
     opacity: 0;
-    transform: translateY(14px);
-    transition: opacity 620ms cubic-bezier(0.16, 1, 0.3, 1), transform 620ms cubic-bezier(0.16, 1, 0.3, 1);
+    transform: translateY(12px);
+    transition: opacity 560ms cubic-bezier(0.16, 1, 0.3, 1), transform 560ms cubic-bezier(0.16, 1, 0.3, 1);
   }
   html.js .mark-in.in { opacity: 1; transform: none; }
 
-  /* the ribbon draws itself in, once */
-  html.js .hero-ribbon { opacity: 0; transition: opacity 900ms ease 120ms; }
-  html.js .hero-ribbon.in { opacity: 1; }
-
-  /* a linked entry flares once so the eye lands where the URL pointed */
   @keyframes entry-flare {
-    from { background: var(--violet-wash); }
+    from { background: var(--mars-wash); }
     to { background: transparent; }
   }
-  html.js .entry.flare { animation: entry-flare 1600ms cubic-bezier(0.16, 1, 0.3, 1); }
+  html.js .entry.flare { animation: entry-flare 1500ms cubic-bezier(0.16, 1, 0.3, 1); }
 
   @media (prefers-reduced-motion: reduce) {
-    html.js .mark-in, html.js .hero-ribbon { opacity: 1 !important; transform: none !important; transition: none !important; }
+    html { scroll-behavior: auto; }
+    html.js .mark-in { opacity: 1 !important; transform: none !important; transition: none !important; }
     html.js .entry.flare { animation: none !important; }
-    .entry, .entry-row, .sign, .vline, .chip { transition: none !important; }
+    .entry, .entry-row, .sign, .vline, .chip, .stage-btn { transition: none !important; }
     .evidence, .flag-why, .close-sentence .blank { transition: none !important; }
-    .entry:hover .entry-row { padding-left: 0; }
+    .entry:hover .entry-row { padding-left: 0.4rem; }
     .entry:hover .sign { transform: none; }
-    * { scroll-behavior: auto !important; }
   }
 
   /* ── Responsive ────────────────────────────────────────────────────── */
-  @media (max-width: 62rem) {
+  @media (max-width: 64rem) {
     .hero-grid { grid-template-columns: minmax(0, 1fr); gap: 2.25rem; }
-    .hero-ribbon { width: 88%; right: -22%; opacity: 0.9; }
+    .worked-grid { grid-template-columns: minmax(0, 1fr); }
     .register { grid-template-columns: minmax(0, 1fr); gap: 2rem; }
     .rail { position: static; }
     .vlines { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 1.5rem; }
@@ -970,21 +1317,31 @@
     .index-cols { columns: 3; }
   }
   @media (max-width: 44rem) {
-    .evidence-inner { grid-template-columns: minmax(0, 1fr); padding-left: 0; }
+    .masthead { position: static; backdrop-filter: none; -webkit-backdrop-filter: none; background: var(--ground); }
+    .bar { justify-content: space-between; gap: 0.65rem; padding-block: 0.7rem; }
+    .nav { margin-left: 0; width: 100%; justify-content: space-between; gap: 0.25rem 0.65rem; border-top: 1px solid var(--hair); padding-top: 0.45rem; }
+    .nav .get { padding: 0 0.85rem; min-height: 2.5rem; }
+    .os { flex-wrap: wrap; overflow-x: visible; }
+    .os button { flex: 1 1 auto; padding: 0 0.65rem; min-height: 2.6rem; border-bottom: 1px solid var(--hair); }
+    .evidence-inner { grid-template-columns: minmax(0, 1fr); padding-left: 0.4rem; }
     .entry-row { grid-template-columns: 1.25rem minmax(0, 1fr); }
-    .entry-meta { grid-column: 2; text-align: left; margin-top: 0.35rem; }
+    .entry-meta { grid-column: 2; text-align: left; margin-top: 0.3rem; }
+    .flag { grid-template-columns: minmax(0, 1fr); gap: 0.75rem; }
+    .switch { justify-self: start; }
     .colophon { grid-template-columns: minmax(0, 1fr); align-items: start; }
     .colophon .stampcol { text-align: left; }
     .index-cols { columns: 2; }
     .vlines { grid-template-columns: minmax(0, 1fr); }
+    .reg-search { margin-left: 0; width: 100%; }
+    .reg-search input { width: 100%; max-width: none; }
   }
   @media (max-width: 30rem) {
+    .hero-facts { grid-template-columns: minmax(0, 1fr); }
     .instrument { grid-template-columns: minmax(0, 1fr); }
-    .instrument > div { border-right: 0; }
-    .instrument > div { border-bottom: 1px solid var(--hair); }
+    .instrument > div { border-right: 0; border-bottom: 1px solid var(--hair); }
     .instrument > div:last-child { border-bottom: 0; }
     .index-cols { columns: 1; }
-    .nav { gap: 0.3rem; }
+    .nav { gap: 0.25rem; }
   }
 </style>
 </head>
@@ -992,94 +1349,87 @@
 <body>
 <a class="skip" href="#main">Skip to content</a>
 
-<div class="shell masthead">
-  <div class="bar">
-    <a class="brand" href="#main" aria-label="Mars, public register — top">
+<header class="masthead">
+  <div class="shell bar">
+    <a class="brand" href="#main" aria-label="Mars — back to top">
       <img class="brand-mark" src="assets/mars-mark.svg" alt="" width="34" height="34">
       <span>
         <span class="brand-name">Mars</span>
-        <span class="brand-descr">Public Register</span>
+        <span class="brand-descr">Coding Agent CLI</span>
       </span>
     </a>
     <nav class="nav" aria-label="Primary">
-      <a href="#register">Register</a>
-      <a href="#instrument">Instrument</a>
-      <a href="#switches">Switches</a>
+      <a href="#worked">Walkthrough</a>
+      <a href="#register">Capabilities</a>
+      <a href="#switches">Flags</a>
       <a href="#providers">Providers</a>
-      <a href="https://github.com/MarsAI-org/mars-agent" target="_blank" rel="noopener">Source</a>
-      <a class="get" href="#install">Install &rsaquo;</a>
+      <a href="https://github.com/MarsAI-org/mars-agent" target="_blank" rel="noopener">GitHub</a>
+      <a class="get" href="#install">Install</a>
     </nav>
   </div>
-  <p class="regline">
-    <span>Register of a decided instrument</span>
-    <span>Licence <b>MIT</b></span>
-    <span>Targets <b>macOS · Linux · Windows</b></span>
-    <span>Core <b>Rust, in&#8209;process</b></span>
-  </p>
+</header>
+
+<div class="specbar">
+  <div class="shell">
+    <p class="regline">
+      <span><span class="dot-live" aria-hidden="true"></span>In&#8209;process Rust core</span>
+      <span>Targets <b>macOS · Linux · Windows</b></span>
+      <span>Distribution <b>One native binary · No WSL</b></span>
+      <span>Licence <b>MIT</b></span>
+    </p>
+  </div>
 </div>
 
 <main id="main">
 
-  <!-- ── Hero prospectus ─────────────────────────────────────────────── -->
+  <!-- ── Hero Prospectus & 5-Method Install Workbench ────────────────── -->
   <section class="hero">
-    <svg class="hero-ribbon mark-in" viewBox="0 0 900 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-      <defs>
-        <linearGradient id="rib-a" x1="0" y1="0" x2="0.8" y2="1">
-          <stop offset="0" stop-color="#7fd8d0"/>
-          <stop offset="0.45" stop-color="#9a8ff0"/>
-          <stop offset="1" stop-color="#685ce7"/>
-        </linearGradient>
-        <linearGradient id="rib-b" x1="0" y1="0" x2="0.6" y2="1">
-          <stop offset="0" stop-color="#b7b0f6"/>
-          <stop offset="1" stop-color="#5b4fd6"/>
-        </linearGradient>
-        <filter id="ribsoft" x="-25%" y="-25%" width="150%" height="150%">
-          <feGaussianBlur stdDeviation="2.2"/>
-        </filter>
-      </defs>
-      <g filter="url(#ribsoft)" opacity="0.55">
-        <path fill="url(#rib-a)"
-          d="M980 30 C760 150 840 300 690 380 C540 460 610 590 450 660 C330 712 380 820 300 900 L980 900 Z"/>
+    <svg class="hero-orbit" viewBox="0 0 900 760" fill="none" aria-hidden="true">
+      <g stroke="#d4cbc0" stroke-width="1" opacity="0.65">
+        <circle cx="660" cy="360" r="170"/>
+        <circle cx="660" cy="360" r="275"/>
+        <circle cx="660" cy="360" r="385"/>
+        <line x1="200" y1="360" x2="900" y2="360"/>
+        <line x1="660" y1="0" x2="660" y2="760"/>
       </g>
-      <g opacity="0.5">
-        <path fill="url(#rib-b)"
-          d="M980 260 C820 330 880 450 730 530 C580 610 650 730 500 800 C420 838 460 880 420 900 L980 900 Z"/>
-      </g>
-      <g opacity="0.82">
-        <path fill="none" stroke="url(#rib-a)" stroke-width="26" stroke-linecap="round"
-          d="M980 190 C820 280 860 380 720 460 C600 528 660 640 520 720 C440 768 470 830 400 900"/>
-      </g>
+      <circle cx="660" cy="360" r="275" stroke="#d64a27" stroke-width="1.4" stroke-dasharray="6 9" opacity="0.45"/>
+      <circle cx="465" cy="166" r="5" fill="#d64a27" opacity="0.7"/>
+      <circle cx="842" cy="245" r="3.5" fill="#9b3220" opacity="0.55"/>
     </svg>
+
     <div class="shell">
       <div class="hero-grid">
         <div class="prospectus mark-in">
           <h1 class="prospectus-h">
-            Every release,
-            <span class="v">one line of truth.</span>
+            A coding agent with the IDE <span class="accent">wired in.</span>
           </h1>
           <p class="prospectus-lead">
-            Most agents shell out to <b>rg</b>, <b>grep</b> and <b>bash</b>.
-            Mars links those tools into the process, routes edits through real
-            language servers, and attaches a real debugger. One binary,
-            no WSL bridge.
+            Most agents shell out to <b>rg</b>, <b>glob</b> and <b>bash</b>.
+            Mars links them into the process as a native Rust core, routes every
+            write through real language servers, and attaches a real debugger over DAP.
           </p>
           <ul class="hero-facts">
             <li><b>75</b> providers, nine roles</li>
             <li><b>34</b> built-in tools</li>
             <li><b>~300k</b> lines of Rust core</li>
-            <li><b>MIT</b>, a fork of oh-my-pi</li>
+            <li><b>MIT</b>, fork of oh-my-pi</li>
           </ul>
         </div>
 
         <div class="hero-side mark-in">
           <div class="install" id="install">
-            <div class="install-head">
-              <div class="os" role="tablist" aria-label="Install command for your platform">
-                <button type="button" role="tab" id="tab-posix" aria-controls="panel-posix" aria-selected="true">macOS &amp; Linux</button>
-                <button type="button" role="tab" id="tab-win" aria-controls="panel-win" aria-selected="false">Windows</button>
-              </div>
-              <span class="install-file" id="install-file">install.sh</span>
+            <div class="install-top">
+              <span class="badge">One-command install</span>
+              <span id="install-file">install</span>
             </div>
+            <div class="os" role="tablist" aria-label="Install method">
+              <button type="button" role="tab" id="tab-posix" aria-controls="panel-posix" aria-selected="true">macOS &amp; Linux</button>
+              <button type="button" role="tab" id="tab-win" aria-controls="panel-win" aria-selected="false">Windows</button>
+              <button type="button" role="tab" id="tab-bun" aria-controls="panel-bun" aria-selected="false">Bun</button>
+              <button type="button" role="tab" id="tab-nix" aria-controls="panel-nix" aria-selected="false">Nix</button>
+              <button type="button" role="tab" id="tab-mise" aria-controls="panel-mise" aria-selected="false">mise</button>
+            </div>
+
             <div class="cmd" role="tabpanel" id="panel-posix" aria-labelledby="tab-posix">
               <span class="sigil" aria-hidden="true">$</span>
               <code id="cmd-posix">curl -fsSL https://getmars.eu.cc/install | sh</code>
@@ -1090,255 +1440,358 @@
               <code id="cmd-win">irm https://getmars.eu.cc/install.ps1 | iex</code>
               <button class="copy" type="button" aria-describedby="copy-status" aria-label="Copy the Windows install command">Copy</button>
             </div>
+            <div class="cmd" role="tabpanel" id="panel-bun" aria-labelledby="tab-bun" hidden>
+              <span class="sigil" aria-hidden="true">$</span>
+              <code id="cmd-bun">bun install -g @marsai-org/coding-agent</code>
+              <button class="copy" type="button" aria-describedby="copy-status" aria-label="Copy the Bun install command">Copy</button>
+            </div>
+            <div class="cmd" role="tabpanel" id="panel-nix" aria-labelledby="tab-nix" hidden>
+              <span class="sigil" aria-hidden="true">$</span>
+              <code id="cmd-nix">nix profile install github:MarsAI-org/mars-agent</code>
+              <button class="copy" type="button" aria-describedby="copy-status" aria-label="Copy the Nix install command">Copy</button>
+            </div>
+            <div class="cmd" role="tabpanel" id="panel-mise" aria-labelledby="tab-mise" hidden>
+              <span class="sigil" aria-hidden="true">$</span>
+              <code id="cmd-mise">mise use -g github:MarsAI-org/mars-agent</code>
+              <button class="copy" type="button" aria-describedby="copy-status" aria-label="Copy the mise install command">Copy</button>
+            </div>
+
             <p class="install-note">
-              <span>Installs to <b id="note-path">~/.local/bin</b> · <span id="note-priv">no sudo</span></span>
-              <span>Checksum verified on release</span>
-              <a id="script-link" href="https://github.com/MarsAI-org/mars-site/blob/main/install" target="_blank" rel="noopener">Read the script</a>
+              <span><b id="note-path">~/.local/bin</b> · <span id="note-priv">no sudo</span> · <span id="note-verify">SHA-256 verified</span></span>
+              <a id="script-link" href="https://github.com/MarsAI-org/mars-site/blob/main/install" target="_blank" rel="noopener">Read script</a>
             </p>
           </div>
-          <p class="status" id="copy-status" role="status"></p>
-          <p class="hero-syntax">
-            <b>mars</b> [<code>--model</code> <i>name</i>] [<code>--cwd</code> <i>dir</i>] [<i>message</i>] · also via npm, Bun, Nix and mise.
-          </p>
 
-          <figure class="skyline" aria-hidden="true">
-            <img src="assets/skyline.svg" alt="" width="640" height="150">
-          </figure>
+          <p class="status" id="copy-status" role="status"></p>
+
+          <p class="hero-syntax">
+            <span><b>mars</b> [<code>--model</code> <i>name</i>] [<code>--cwd</code> <i>dir</i>] [<i>message</i>]</span>
+            <span class="sub">Alpine/musl runtime: <code>apk add libstdc++ libgcc</code></span>
+          </p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ── The register ────────────────────────────────────────────────── -->
+  <!-- ── Worked Stages: Real TUI Walkthrough ─────────────────────────── -->
+  <section class="section" id="worked">
+    <div class="shell">
+      <div class="sec-head">
+        <h2>One task, four real terminal stages</h2>
+        <p>Step through actual Mars TUI captures — explore, refactor with LSP, review, and run live Python cells. Click any capture to inspect at full resolution.</p>
+      </div>
+
+      <div class="worked-grid mark-in">
+        <div>
+          <ul class="stage-list" role="tablist" aria-label="Walkthrough stages">
+            <li>
+              <button class="stage-btn" type="button" role="tab" data-stage="0" aria-selected="true">
+                <span class="stage-num">01</span>
+                <span>
+                  <span class="stage-title">Explore in parallel</span>
+                  <span class="stage-desc">Subagents fan out across isolated worktrees with in-process ripgrep, glob and find — no external binary forks.</span>
+                </span>
+              </button>
+            </li>
+            <li>
+              <button class="stage-btn" type="button" role="tab" data-stage="1" aria-selected="false">
+                <span class="stage-num">02</span>
+                <span>
+                  <span class="stage-title">Refactor via language servers</span>
+                  <span class="stage-desc">Writes run through live LSP diagnostics, and renames call workspace/willRenameFiles so re-exports follow before files move.</span>
+                </span>
+              </button>
+            </li>
+            <li>
+              <button class="stage-btn" type="button" role="tab" data-stage="2" aria-selected="false">
+                <span class="stage-num">03</span>
+                <span>
+                  <span class="stage-title">Verify with ranked review</span>
+                  <span class="stage-desc">/review audits changes with P0–P3 findings and a clear verdict, backed by real DAP debugging (lldb, dlv, debugpy).</span>
+                </span>
+              </button>
+            </li>
+            <li>
+              <button class="stage-btn" type="button" role="tab" data-stage="3" aria-selected="false">
+                <span class="stage-num">04</span>
+                <span>
+                  <span class="stage-title">Evaluate in persistent cells</span>
+                  <span class="stage-desc">Live Python and JavaScript cells keep state across turns and call back into agent tools for data analysis and charts.</span>
+                </span>
+              </button>
+            </li>
+          </ul>
+
+          <div class="ruler-wrap">
+            <input class="ruler" type="range" id="ex-range" min="0" max="3" step="1" value="0"
+                   aria-label="Stage one to four: explore, refactor, review, evaluate" aria-valuetext="Explore">
+            <div class="stops" id="ex-stops" aria-hidden="true">
+              <span data-on="true">Explore</span><span>Refactor</span><span>Review</span><span>Evaluate</span>
+            </div>
+          </div>
+        </div>
+
+        <figure class="terminal-frame">
+          <div class="terminal-chrome">
+            <span class="terminal-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span id="stage-chrome-label">task · parallel explore agents</span>
+            <button type="button" class="zoom-btn" id="stage-zoom-btn" aria-label="Inspect current terminal capture at full size">Zoom</button>
+          </div>
+          <div class="terminal-viewport" id="stage-viewport">
+            <img src="assets/proof-task.webp" alt="The Mars terminal fanning out three explore agents over one packages directory." width="760" height="430" loading="eager" decoding="async" data-step="0" data-caption="task · parallel explore agents">
+            <img src="assets/proof-lspv.webp" alt="TypeScript and Biome language servers both active in the Mars terminal." width="760" height="430" loading="lazy" decoding="async" data-step="1" data-caption="lsp · TypeScript and Biome servers on one write" hidden>
+            <img src="assets/proof-review.webp" alt="A reviewer subagent working through a ranked P0-P3 code review in the Mars terminal." width="760" height="430" loading="lazy" decoding="async" data-step="2" data-caption="review · ranked findings, P0 first" hidden>
+            <img src="assets/proof-python.webp" alt="A chart rendered from a persistent Python cell inside the Mars terminal." width="760" height="430" loading="lazy" decoding="async" data-step="3" data-caption="python · persistent live evaluation cell" hidden>
+          </div>
+          <figcaption class="terminal-foot">
+            <span id="ex-copy"><b>Stage 01</b> — Parallel explore subagents over a live workspace.</span>
+            <span>Real TUI capture</span>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Instrument Summary ──────────────────────────────────────────── -->
+  <section class="section" id="instrument">
+    <div class="shell">
+      <div class="sec-head">
+        <h2>The instrument, in numbers</h2>
+        <p>Verified counts taken directly from the repository — no synthetic benchmarks, no invented metrics.</p>
+      </div>
+      <div class="instrument mark-in">
+        <div><span class="num">75</span><span class="unit">Providers</span><span class="gloss">Bundled catalog routed across nine model roles.</span></div>
+        <div><span class="num">34</span><span class="unit">Built-in tools</span><span class="gloss">31 selectable, three internal — zero shell forks.</span></div>
+        <div><span class="num">300k</span><span class="unit">Lines of Rust</span><span class="gloss">Twelve in-process crates (~69k more vendored).</span></div>
+        <div><span class="num">6</span><span class="unit">Release targets</span><span class="gloss">linux, darwin &amp; win32 on x64 and arm64.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Capability Register ─────────────────────────────────────────── -->
   <section class="section" id="register">
     <div class="shell">
       <div class="sec-head">
-        <h2>The register of the instrument</h2>
-        <p>Each capability is one attributed entry with its state and its evidence. Open an entry to see the terminal it came from.</p>
+        <h2>Capabilities &amp; architecture ledger</h2>
+        <p>Filter by state or press <code>/</code> to search. Expand any entry to inspect its mechanism and real terminal evidence.</p>
       </div>
 
       <div class="reg-controls">
-        <div class="reg-filters" role="group" aria-label="Filter the register by state">
+        <div class="reg-filters" role="group" aria-label="Filter capabilities by state">
           <button class="chip" type="button" data-filter="all" aria-pressed="true">All <span class="n" data-count="all"></span></button>
-          <button class="chip" type="button" data-filter="added" aria-pressed="false">Added <span class="n" data-count="added"></span></button>
-          <button class="chip" type="button" data-filter="removed" aria-pressed="false">Removed <span class="n" data-count="removed"></span></button>
+          <button class="chip" type="button" data-filter="added" aria-pressed="false">Built-in <span class="n" data-count="added"></span></button>
+          <button class="chip" type="button" data-filter="removed" aria-pressed="false">Eliminated <span class="n" data-count="removed"></span></button>
         </div>
         <label class="reg-search" for="reg-q">
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.6"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-          <input type="search" id="reg-q" placeholder="Filter entries" aria-label="Filter register entries by text">
+          <input type="search" id="reg-q" placeholder="Filter ledger" aria-label="Filter capability entries by text">
           <kbd aria-hidden="true">/</kbd>
         </label>
         <p class="visually-hidden" id="reg-status" role="status"></p>
       </div>
 
       <div class="register">
-        <aside class="rail mark-in" aria-label="Release lines and targets">
-          <p class="rail-title">Release lines</p>
+        <aside class="rail mark-in" aria-label="Architecture tracks and targets">
+          <p class="rail-title">Subsystems</p>
           <ul class="vlines">
-            <li class="vline now" data-version="v0.3.x"><span class="tag"><span class="dot"></span>v0.3.x</span><span class="say">current line</span></li>
-            <li class="vline" data-version="v0.2.x"><span class="tag">v0.2.x</span><span class="say">custom endpoints</span></li>
-            <li class="vline" data-version="v0.1.x"><span class="tag">v0.1.x</span><span class="say">in-process core</span></li>
+            <li class="vline" data-track="core"><span class="tag"><span class="dot"></span>core</span><span class="say">Rust in-process tools</span></li>
+            <li class="vline" data-track="ide"><span class="tag"><span class="dot"></span>ide</span><span class="say">LSP &amp; DAP wiring</span></li>
+            <li class="vline" data-track="agents"><span class="tag"><span class="dot"></span>agents</span><span class="say">Worktrees &amp; review</span></li>
+            <li class="vline" data-track="runtime"><span class="tag"><span class="dot"></span>runtime</span><span class="say">Cells, reader &amp; memory</span></li>
           </ul>
           <p class="rail-foot">
             <b>Targets</b>
-            linux · darwin · win32<br>
-            x64 · arm64
-            <b style="margin-top:0.9rem">Licence</b>
-            MIT · fork of oh-my-pi
+            linux-x64 · linux-arm64<br>
+            darwin-x64 · darwin-arm64<br>
+            win32-x64 · win32-arm64
+            <b style="margin-top:0.9rem">Integrity</b>
+            Fail-closed SHA-256 sums
           </p>
         </aside>
 
-        <div class="ledger mark-in">
-          <article class="entry" id="entry-1" data-open="false" data-state="added" data-version="v0.1.x">
-            <div class="entry-row">
-              <span class="sign add" aria-hidden="true">+</span>
-              <div>
-                <p class="entry-text">The shell, search, glob and find run <span class="tok">in-process</span>, no fork for a single call.</p>
-                <div class="entry-actions">
-                  <button class="entry-toggle" type="button" aria-expanded="false" aria-controls="ev-1">Evidence</button>
-                  <button class="entry-link" type="button" data-anchor="entry-1" aria-label="Copy a link to this register entry"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6.5 9.5l3-3M7 5l1-1a2.5 2.5 0 013.5 3.5l-1 1M9 11l-1 1A2.5 2.5 0 014.5 8.5l1-1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Link</button>
+        <div>
+          <div class="ledger mark-in">
+            <article class="entry" id="entry-1" data-open="false" data-state="added" data-track="core">
+              <div class="entry-row">
+                <span class="sign add" aria-hidden="true">+</span>
+                <div>
+                  <p class="entry-text">Shell, ripgrep, glob and find execute <span class="tok">in-process</span> — zero subprocess fork per tool call.</p>
+                  <div class="entry-actions">
+                    <button class="entry-toggle" type="button" aria-expanded="false" aria-controls="ev-1">Evidence</button>
+                    <button class="entry-link" type="button" data-anchor="entry-1" aria-label="Copy permalink to this entry"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6.5 9.5l3-3M7 5l1-1a2.5 2.5 0 013.5 3.5l-1 1M9 11l-1 1A2.5 2.5 0 014.5 8.5l1-1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Link</button>
+                  </div>
                 </div>
+                <p class="entry-meta"><span class="v">core</span>built-in</p>
               </div>
-              <p class="entry-meta"><span class="v">v0.1.x</span>added</p>
-            </div>
-            <div class="evidence" id="ev-1"><div><div class="evidence-inner">
-              <p>Where the external binaries are missing the agent is blind, and where they exist every call is a fork. Mars links the real implementations, ripgrep, glob, find and a bash with sessions, into one binary alongside thirty-four built-in tools.</p>
-              <figure class="exhibit">
-                <img src="assets/proof-task.webp" alt="The Mars terminal fanning out three explore agents over one packages directory." width="380" height="215" loading="lazy" decoding="async">
-                <figcaption>task · parallel explore agents</figcaption>
-              </figure>
-            </div></div></div>
-          </article>
+              <div class="evidence" id="ev-1"><div><div class="evidence-inner">
+                <p>Where external binaries are missing, typical agents fail; where they exist, every call forks a process. Mars compiles ripgrep, glob, find, coreutils and session-aware bash directly into one binary across macOS, Linux and Windows.</p>
+                <figure class="exhibit">
+                  <img src="assets/proof-task.webp" alt="Mars terminal fanning out three explore agents over one packages directory." width="380" height="215" loading="lazy" decoding="async" data-zoomable="true" data-caption="task · parallel explore agents">
+                  <figcaption>task · parallel explore agents</figcaption>
+                </figure>
+              </div></div></div>
+            </article>
 
-          <article class="entry" id="entry-2" data-open="false" data-state="added" data-version="v0.3.x">
-            <div class="entry-row">
-              <span class="sign add" aria-hidden="true">+</span>
-              <div>
-                <p class="entry-text">Every write goes through a real <span class="tok">language server</span>, so a rename updates re-exports before the file moves.</p>
-                <div class="entry-actions">
-                  <button class="entry-toggle" type="button" aria-expanded="false" aria-controls="ev-2">Evidence</button>
-                  <button class="entry-link" type="button" data-anchor="entry-2" aria-label="Copy a link to this register entry"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6.5 9.5l3-3M7 5l1-1a2.5 2.5 0 013.5 3.5l-1 1M9 11l-1 1A2.5 2.5 0 014.5 8.5l1-1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Link</button>
+            <article class="entry" id="entry-2" data-open="false" data-state="added" data-track="ide">
+              <div class="entry-row">
+                <span class="sign add" aria-hidden="true">+</span>
+                <div>
+                  <p class="entry-text">Every write runs through a real <span class="tok">language server</span>, updating re-exports before files move.</p>
+                  <div class="entry-actions">
+                    <button class="entry-toggle" type="button" aria-expanded="false" aria-controls="ev-2">Evidence</button>
+                    <button class="entry-link" type="button" data-anchor="entry-2" aria-label="Copy permalink to this entry"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6.5 9.5l3-3M7 5l1-1a2.5 2.5 0 013.5 3.5l-1 1M9 11l-1 1A2.5 2.5 0 014.5 8.5l1-1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Link</button>
+                  </div>
                 </div>
+                <p class="entry-meta"><span class="v">ide</span>built-in</p>
               </div>
-              <p class="entry-meta"><span class="v">v0.3.x</span>added</p>
-            </div>
-            <div class="evidence" id="ev-2"><div><div class="evidence-inner">
-              <p>A rename calls <b>workspace/willRenameFiles</b>, so barrel files and re-exports follow before the move. TypeScript and Biome servers attach on the same write. Turn it off with <b>--no-lsp</b> on the switches below.</p>
-              <figure class="exhibit">
-                <img src="assets/proof-lspv.webp" alt="A TypeScript and a Biome language server both active in the Mars terminal." width="380" height="215" loading="lazy" decoding="async">
-                <figcaption>lsp · two servers on one write</figcaption>
-              </figure>
-            </div></div></div>
-          </article>
+              <div class="evidence" id="ev-2"><div><div class="evidence-inner">
+                <p>Renames trigger <b>workspace/willRenameFiles</b> so imports and barrel files update cleanly before the move. Multiple language servers (such as TypeScript and Biome) attach on the same write, with ACP support for Zed.</p>
+                <figure class="exhibit">
+                  <img src="assets/proof-lspv.webp" alt="TypeScript and Biome language servers active in Mars." width="380" height="215" loading="lazy" decoding="async" data-zoomable="true" data-caption="lsp · two servers on one write">
+                  <figcaption>lsp · two servers on one write</figcaption>
+                </figure>
+              </div></div></div>
+            </article>
 
-          <article class="entry" id="entry-3" data-open="false" data-state="added" data-version="v0.3.x">
-            <div class="entry-row">
-              <span class="sign add" aria-hidden="true">+</span>
-              <div>
-                <p class="entry-text">A real <span class="tok">debugger</span> over DAP (lldb, dlv, debugpy) instead of print statements.</p>
-                <div class="entry-actions">
-                  <button class="entry-toggle" type="button" aria-expanded="false" aria-controls="ev-3">Evidence</button>
-                  <button class="entry-link" type="button" data-anchor="entry-3" aria-label="Copy a link to this register entry"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6.5 9.5l3-3M7 5l1-1a2.5 2.5 0 013.5 3.5l-1 1M9 11l-1 1A2.5 2.5 0 014.5 8.5l1-1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Link</button>
+            <article class="entry" id="entry-3" data-open="false" data-state="added" data-track="ide">
+              <div class="entry-row">
+                <span class="sign add" aria-hidden="true">+</span>
+                <div>
+                  <p class="entry-text">Real <span class="tok">DAP debugger</span> support (<span class="tok">lldb</span>, <span class="tok">dlv</span>, <span class="tok">debugpy</span>) instead of guesswork logging.</p>
+                  <div class="entry-actions">
+                    <button class="entry-toggle" type="button" aria-expanded="false" aria-controls="ev-3">Evidence</button>
+                    <button class="entry-link" type="button" data-anchor="entry-3" aria-label="Copy permalink to this entry"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6.5 9.5l3-3M7 5l1-1a2.5 2.5 0 013.5 3.5l-1 1M9 11l-1 1A2.5 2.5 0 014.5 8.5l1-1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Link</button>
+                  </div>
                 </div>
+                <p class="entry-meta"><span class="v">ide</span>built-in</p>
               </div>
-              <p class="entry-meta"><span class="v">v0.3.x</span>added</p>
-            </div>
-            <div class="evidence" id="ev-3"><div><div class="evidence-inner">
-              <p>Breakpoints, stepping and inspection run through the Debug Adapter Protocol, so the agent debugs in the same session your editor would. No restart loop, no scattered logging.</p>
-              <figure class="exhibit">
-                <img src="assets/proof-review.webp" alt="A reviewer subagent working through a ranked code review in the Mars terminal." width="380" height="215" loading="lazy" decoding="async">
-                <figcaption>review · ranked findings, P0 first</figcaption>
-              </figure>
-            </div></div></div>
-          </article>
+              <div class="evidence" id="ev-3"><div><div class="evidence-inner">
+                <p>Set breakpoints, step frames, and inspect runtime state through the Debug Adapter Protocol — debugging inside the same protocol your IDE speaks without scattering temporary print statements.</p>
+                <figure class="exhibit">
+                  <img src="assets/proof-review.webp" alt="Mars reviewer subagent producing ranked findings." width="380" height="215" loading="lazy" decoding="async" data-zoomable="true" data-caption="review · ranked findings, P0 first">
+                  <figcaption>review · ranked findings, P0 first</figcaption>
+                </figure>
+              </div></div></div>
+            </article>
 
-          <article class="entry" id="entry-4" data-open="false" data-state="added" data-version="v0.2.x">
-            <div class="entry-row">
-              <span class="sign add" aria-hidden="true">+</span>
-              <div>
-                <p class="entry-text">Subagents run in isolated <span class="tok">worktrees</span> and hand back schema-validated results.</p>
-                <div class="entry-actions">
-                  <button class="entry-toggle" type="button" aria-expanded="false" aria-controls="ev-4">Evidence</button>
-                  <button class="entry-link" type="button" data-anchor="entry-4" aria-label="Copy a link to this register entry"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6.5 9.5l3-3M7 5l1-1a2.5 2.5 0 013.5 3.5l-1 1M9 11l-1 1A2.5 2.5 0 014.5 8.5l1-1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Link</button>
+            <article class="entry" id="entry-4" data-open="false" data-state="added" data-track="agents">
+              <div class="entry-row">
+                <span class="sign add" aria-hidden="true">+</span>
+                <div>
+                  <p class="entry-text">Subagents run in isolated <span class="tok">worktrees</span> and return schema-validated results, plus <span class="tok">/review</span> and <span class="tok">/collab</span>.</p>
+                  <div class="entry-actions">
+                    <button class="entry-toggle" type="button" aria-expanded="false" aria-controls="ev-4">Evidence</button>
+                    <button class="entry-link" type="button" data-anchor="entry-4" aria-label="Copy permalink to this entry"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6.5 9.5l3-3M7 5l1-1a2.5 2.5 0 013.5 3.5l-1 1M9 11l-1 1A2.5 2.5 0 014.5 8.5l1-1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Link</button>
+                  </div>
                 </div>
+                <p class="entry-meta"><span class="v">agents</span>built-in</p>
               </div>
-              <p class="entry-meta"><span class="v">v0.2.x</span>added</p>
-            </div>
-            <div class="evidence" id="ev-4"><div><div class="evidence-inner">
-              <p>Work is fanned out into separate worktrees, each subagent isolated, and the result comes back against a schema rather than free prose. <b>/collab</b> shares a live session; <b>/review</b> returns a ranked verdict.</p>
-              <figure class="exhibit">
-                <img src="assets/proof-arxiv.webp" alt="The Mars terminal summarising a paper from arxiv.org by URL." width="380" height="215" loading="lazy" decoding="async">
-                <figcaption>read · a URL through the same reader</figcaption>
-              </figure>
-            </div></div></div>
-          </article>
+              <div class="evidence" id="ev-4"><div><div class="evidence-inner">
+                <p>Parallel workers operate on independent worktrees and hand back structured, schema-checked outputs instead of loose prose. <b>/review</b> scores P0–P3 findings with a verdict; <b>/collab</b> shares live sessions.</p>
+                <figure class="exhibit">
+                  <img src="assets/proof-arxiv.webp" alt="Mars reading and summarising an arxiv.org paper URL directly." width="380" height="215" loading="lazy" decoding="async" data-zoomable="true" data-caption="read · URLs, PDFs &amp; internal schemes">
+                  <figcaption>read · URLs, PDFs &amp; internal schemes</figcaption>
+                </figure>
+              </div></div></div>
+            </article>
 
-          <article class="entry" id="entry-5" data-open="false" data-state="added" data-version="v0.1.x">
-            <div class="entry-row">
-              <span class="sign add" aria-hidden="true">+</span>
-              <div>
-                <p class="entry-text">Persistent <span class="tok">Python and JS cells</span> run live and can call back into the agent's tools.</p>
-                <div class="entry-actions">
-                  <button class="entry-toggle" type="button" aria-expanded="false" aria-controls="ev-5">Evidence</button>
-                  <button class="entry-link" type="button" data-anchor="entry-5" aria-label="Copy a link to this register entry"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6.5 9.5l3-3M7 5l1-1a2.5 2.5 0 013.5 3.5l-1 1M9 11l-1 1A2.5 2.5 0 014.5 8.5l1-1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Link</button>
+            <article class="entry" id="entry-5" data-open="false" data-state="added" data-track="runtime">
+              <div class="entry-row">
+                <span class="sign add" aria-hidden="true">+</span>
+                <div>
+                  <p class="entry-text">Persistent <span class="tok">Python &amp; JS cells</span>, unified <span class="tok">read</span> across archives/SQLite/PDFs, and cross-session memory.</p>
+                  <div class="entry-actions">
+                    <button class="entry-toggle" type="button" aria-expanded="false" aria-controls="ev-5">Evidence</button>
+                    <button class="entry-link" type="button" data-anchor="entry-5" aria-label="Copy permalink to this entry"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6.5 9.5l3-3M7 5l1-1a2.5 2.5 0 013.5 3.5l-1 1M9 11l-1 1A2.5 2.5 0 014.5 8.5l1-1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Link</button>
+                  </div>
                 </div>
+                <p class="entry-meta"><span class="v">runtime</span>built-in</p>
               </div>
-              <p class="entry-meta"><span class="v">v0.1.x</span>added</p>
-            </div>
-            <div class="evidence" id="ev-5"><div><div class="evidence-inner">
-              <p>An eval cell keeps its state across calls, so a plot or a data pass can be built up turn by turn and then read by the agent that asked for it. <b>read</b> also opens archives, SQLite and PDFs.</p>
-              <figure class="exhibit">
-                <img src="assets/proof-python.webp" alt="A chart rendered from a persistent Python cell inside the Mars terminal." width="380" height="215" loading="lazy" decoding="async">
-                <figcaption>python · a chart from a live cell</figcaption>
-              </figure>
-            </div></div></div>
-          </article>
+              <div class="evidence" id="ev-5"><div><div class="evidence-inner">
+                <p>Stateful eval cells call back into agent tools across turns. The unified <b>read</b> tool opens local paths, archives, SQLite databases, PDFs, URLs, and internal schemes (<b>pr://</b>, <b>issue://</b>, <b>agent://</b>, <b>skill://</b>, <b>conflict://</b>) alongside curated cross-session memory.</p>
+                <figure class="exhibit">
+                  <img src="assets/proof-python.webp" alt="Chart rendered from a persistent Python cell inside Mars." width="380" height="215" loading="lazy" decoding="async" data-zoomable="true" data-caption="python · chart from a live cell">
+                  <figcaption>python · chart from a live cell</figcaption>
+                </figure>
+              </div></div></div>
+            </article>
 
-          <article class="entry" id="entry-6" data-open="false" data-state="removed" data-version="v0.1.x">
-            <div class="entry-row">
-              <span class="sign rm" aria-hidden="true">&minus;</span>
-              <div>
-                <p class="entry-text">The external <span class="tok">find</span> fork was removed; search is wholly in-process.</p>
-                <div class="entry-actions">
-                  <button class="entry-toggle" type="button" aria-expanded="false" aria-controls="ev-6">Evidence</button>
-                  <button class="entry-link" type="button" data-anchor="entry-6" aria-label="Copy a link to this register entry"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6.5 9.5l3-3M7 5l1-1a2.5 2.5 0 013.5 3.5l-1 1M9 11l-1 1A2.5 2.5 0 014.5 8.5l1-1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Link</button>
+            <article class="entry" id="entry-6" data-open="false" data-state="removed" data-track="core">
+              <div class="entry-row">
+                <span class="sign rm" aria-hidden="true">&minus;</span>
+                <div>
+                  <p class="entry-text">External <span class="tok">WSL bridge</span> &amp; <span class="tok">find</span>/ripgrep forks eliminated — identical native behavior on every OS.</p>
+                  <div class="entry-actions">
+                    <button class="entry-toggle" type="button" aria-expanded="false" aria-controls="ev-6">Evidence</button>
+                    <button class="entry-link" type="button" data-anchor="entry-6" aria-label="Copy permalink to this entry"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6.5 9.5l3-3M7 5l1-1a2.5 2.5 0 013.5 3.5l-1 1M9 11l-1 1A2.5 2.5 0 014.5 8.5l1-1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Link</button>
+                  </div>
                 </div>
+                <p class="entry-meta"><span class="v">core</span>eliminated</p>
               </div>
-              <p class="entry-meta"><span class="v">v0.1.x</span>removed</p>
-            </div>
-            <div class="evidence" id="ev-6"><div><div class="evidence-inner">
-              <p>One less binary to find, one less version to disagree with. Removing the external dependency is the kind of entry a register keeps honest: what changed, when, and why.</p>
-              <figure class="exhibit">
-                <img src="assets/proof-lspv.webp" alt="The Mars terminal showing its in-process tooling." width="380" height="215" loading="lazy" decoding="async">
-                <figcaption>removed · the last fork</figcaption>
-              </figure>
-            </div></div></div>
-          </article>
+              <div class="evidence" id="ev-6"><div><div class="evidence-inner">
+                <p>No version drift across host utilities and no Linux VM indirection on Windows. One prebuilt binary delivers consistent search, shell, and file primitives everywhere.</p>
+                <figure class="exhibit">
+                  <img src="assets/proof-lspv.webp" alt="Mars running with its native in-process tooling." width="380" height="215" loading="lazy" decoding="async" data-zoomable="true" data-caption="core · zero external tool forks">
+                  <figcaption>core · zero external tool forks</figcaption>
+                </figure>
+              </div></div></div>
+            </article>
+          </div>
+          <p class="reg-empty" id="reg-empty" hidden>No entries match this filter.</p>
         </div>
-        <p class="reg-empty" id="reg-empty" hidden>No entries match this filter.</p>
       </div>
     </div>
   </section>
 
-  <!-- ── Instrument summary ──────────────────────────────────────────── -->
-  <section class="section" id="instrument">
-    <div class="shell">
-      <div class="sec-head">
-        <h2>The instrument, in numbers</h2>
-        <p>Counts taken from the repository, not from a pitch deck.</p>
-      </div>
-      <div class="instrument mark-in">
-        <div><span class="num">75</span><span class="unit">Providers</span><span class="gloss">One router across nine model roles.</span></div>
-        <div><span class="num">34</span><span class="unit">Built-in tools</span><span class="gloss">No fork for a single call.</span></div>
-        <div><span class="num">300k</span><span class="unit">Lines of Rust</span><span class="gloss">Twelve crates, compiled in.</span></div>
-        <div><span class="num">6</span><span class="unit">Release targets</span><span class="gloss">The same binary everywhere.</span></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── Switches ────────────────────────────────────────────────────── -->
+  <!-- ── CLI Flags & Operating Switches ──────────────────────────────── -->
   <section class="section" id="switches">
     <div class="shell">
       <div class="sec-head">
         <h2>What the agent may touch</h2>
-        <p>Each flag is passed or cleared; the consequence prints under it.</p>
+        <p>Toggle any flag to inspect its exact behavior and compose the resulting CLI invocation live.</p>
       </div>
+
+      <div class="flag-preview mark-in" aria-live="polite">
+        <span><span class="sigil" aria-hidden="true">$</span><code id="flag-cmd">mars</code></span>
+        <button type="button" class="flag-reset" id="flag-reset" hidden>Clear flags</button>
+      </div>
+
       <div class="flags mark-in">
-        <div class="flag" data-on="false">
-          <p class="flag-text"><span class="tok">--prewalk</span>The first edit hands off to a smaller model.</p>
-          <button class="switch" type="button" role="switch" aria-checked="false" aria-label="Hand the first edit to a smaller model"></button>
-          <p class="flag-why"><span>A one-shot handoff at the first eligible edit or write turn, gated on a successful <b>todo</b> call. <b>--prewalk-into</b> picks a different target than the smol role.</span></p>
+        <div class="flag" data-on="false" data-flag="--prewalk">
+          <p class="flag-text"><span class="tok">--prewalk</span>Hand off the first eligible edit turn to a smaller model.</p>
+          <button class="switch" type="button" role="switch" aria-checked="false" aria-label="Toggle --prewalk flag">Off</button>
+          <p class="flag-why"><span>A one-shot handoff at the first eligible edit or write turn, gated on a successful <b>todo</b> call. Use <b>--prewalk-into</b> to choose a target other than the smol role.</span></p>
         </div>
-        <div class="flag" data-on="false">
+        <div class="flag" data-on="false" data-flag="--plan-yolo">
           <p class="flag-text"><span class="tok">--plan-yolo</span>Plan read-only, then execute unattended.</p>
-          <button class="switch" type="button" role="switch" aria-checked="false" aria-label="Plan read-only and then execute unattended"></button>
-          <p class="flag-why"><span>Starts in read-only plan mode, auto-approves the model's own plan, then switches to the execution target to implement it.</span></p>
+          <button class="switch" type="button" role="switch" aria-checked="false" aria-label="Toggle --plan-yolo flag">Off</button>
+          <p class="flag-why"><span>Starts in read-only plan mode, auto-approves the model's own plan, then switches to the execution target to implement it end to end.</span></p>
         </div>
-        <div class="flag" data-on="false">
-          <p class="flag-text"><span class="tok">--advisor</span>A second reader watches every turn.</p>
-          <button class="switch" type="button" role="switch" aria-checked="false" aria-label="Run a second reader over every turn"></button>
-          <p class="flag-why"><span>A passive reviewer reads each turn and injects notes; it never takes the turn itself.</span></p>
+        <div class="flag" data-on="false" data-flag="--advisor">
+          <p class="flag-text"><span class="tok">--advisor</span>A second passive reader reviews every turn.</p>
+          <button class="switch" type="button" role="switch" aria-checked="false" aria-label="Toggle --advisor flag">Off</button>
+          <p class="flag-why"><span>A passive reviewer inspects each turn and injects targeted notes without taking over execution.</span></p>
         </div>
-        <div class="flag" data-on="false">
-          <p class="flag-text"><span class="tok">--no-lsp</span>Clears language servers, formatting and diagnostics.</p>
-          <button class="switch" type="button" role="switch" aria-checked="false" aria-label="Clear language servers, formatting and diagnostics"></button>
-          <p class="flag-why"><span>Left clear, LSP tools run on every write and renames go through <b>workspace/willRenameFiles</b>, so re-exports and barrel files follow before the file moves.</span></p>
+        <div class="flag" data-on="false" data-flag="--no-lsp">
+          <p class="flag-text"><span class="tok">--no-lsp</span>Disable language servers, formatting and diagnostics.</p>
+          <button class="switch" type="button" role="switch" aria-checked="false" aria-label="Toggle --no-lsp flag">Off</button>
+          <p class="flag-why"><span>Left clear, LSP tools run on every write and renames go through <b>workspace/willRenameFiles</b> so re-exports stay intact before files move.</span></p>
         </div>
-        <div class="flag" data-on="false">
-          <p class="flag-text"><span class="tok">--auto-approve</span>Force the yolo approval tier.</p>
-          <button class="switch" type="button" role="switch" aria-checked="false" aria-label="Force the yolo approval tier"></button>
-          <p class="flag-why"><span>Explicit tool and user policies still apply, and so do provider safety checks. This raises the ceiling, it does not remove the checks.</span></p>
+        <div class="flag" data-on="false" data-flag="--auto-approve">
+          <p class="flag-text"><span class="tok">--auto-approve</span>Raise the approval ceiling to the yolo tier.</p>
+          <button class="switch" type="button" role="switch" aria-checked="false" aria-label="Toggle --auto-approve flag">Off</button>
+          <p class="flag-why"><span>Explicit tool policies, user rules, and provider safety checks still apply — this raises the approval ceiling without removing guardrails.</span></p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ── Providers index ─────────────────────────────────────────────── -->
+  <!-- ── Bundled Providers ───────────────────────────────────────────── -->
   <section class="section" id="providers">
     <div class="shell">
       <div class="sec-head">
         <h2>Bundled providers</h2>
-        <p>Sixteen of the seventy-five; bring your own key for any one.</p>
+        <p>Sixteen highlights from the seventy-five bundled providers routed across nine model roles — bring your own API key or local runtime.</p>
       </div>
       <ol class="index-cols mark-in">
         <li>Anthropic</li><li>OpenAI</li><li>Google</li><li>Bedrock</li>
@@ -1349,54 +1802,27 @@
     </div>
   </section>
 
-  <!-- ── Worked examples ─────────────────────────────────────────────── -->
-  <section class="section" id="worked">
-    <div class="shell">
-      <div class="sec-head">
-        <h2>One task, four stages</h2>
-        <p>Step the ruler: read, rename, verify, ship. Each stage is the real terminal.</p>
-      </div>
-      <div class="worked mark-in">
-        <p class="prospectus-lead" id="ex-copy" style="font-size:var(--step-lead)">Mars opens the file through the same language server your editor uses, so the read is already typed.</p>
-        <div class="ruler-wrap">
-          <input class="ruler" type="range" id="ex-range" min="0" max="3" step="1" value="0"
-                 aria-label="Stage one to four: read, rename, verify, ship" aria-valuetext="Read">
-          <div class="stops" id="ex-stops" aria-hidden="true">
-            <span data-on="true">Read</span><span>Rename</span><span>Verify</span><span>Ship</span>
-          </div>
-        </div>
-        <figure class="exhibit" style="max-width:47rem">
-          <img src="assets/proof-task.webp" alt="The Mars terminal fanning out three explore agents over one packages directory." width="760" height="430" loading="lazy" decoding="async" data-step="0">
-          <img src="assets/proof-lspv.webp" alt="A rename resolved through the language server before the move." width="760" height="430" loading="lazy" decoding="async" data-step="1" hidden>
-          <img src="assets/proof-review.webp" alt="A reviewer subagent working through a ranked code review." width="760" height="430" loading="lazy" decoding="async" data-step="2" hidden>
-          <img src="assets/proof-python.webp" alt="A chart rendered from a persistent Python cell inside the agent." width="760" height="430" loading="lazy" decoding="async" data-step="3" hidden>
-          <figcaption>stage exhibit · the four stages, in order, from the same session.</figcaption>
-        </figure>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── Close + colophon ────────────────────────────────────────────── -->
+  <!-- ── Closing Plate & Colophon ────────────────────────────────────── -->
   <section class="section" aria-labelledby="close-h">
     <div class="shell">
       <div class="close mark-in">
         <h2 class="close-sentence" id="close-h">
-          Give the agent <input class="blank" type="text" id="repo" placeholder="a repo" aria-label="Repository to work on" size="8"> and <button class="close-install" type="button" id="close-install">install</button> it.
+          Point Mars at <input class="blank" type="text" id="repo" placeholder="a repo" aria-label="Repository directory to work on" size="9"> and <button class="close-install" type="button" id="close-install">install</button> it.
         </h2>
         <p class="close-note">
-          One command, <b>~/.local/bin</b>, no sudo. <a href="https://github.com/MarsAI-org/mars-agent/releases" target="_blank" rel="noopener">Or take the binary</a>.
+          One command, <b id="close-note-path">~/.local/bin</b>, <span id="close-note-priv">no sudo</span>. <a href="https://github.com/MarsAI-org/mars-agent/releases" target="_blank" rel="noopener">Browse GitHub Releases</a>.
         </p>
 
         <div class="colophon">
-          <p class="credit">Mars is a fork of <a href="https://github.com/can1357/oh-my-pi" target="_blank" rel="noopener">oh-my-pi</a> by can1357, itself a fork of <a href="https://github.com/badlogic/pi-mono" target="_blank" rel="noopener">Pi</a> by Mario Zechner. Both MIT licensed.</p>
-          <nav aria-label="Elsewhere">
+          <p class="credit">Mars is MIT licensed — a fork of <a href="https://github.com/can1357/oh-my-pi" target="_blank" rel="noopener">oh-my-pi</a> by can1357, itself a fork of <a href="https://github.com/badlogic/pi-mono" target="_blank" rel="noopener">Pi</a> by Mario Zechner.</p>
+          <nav aria-label="External links">
             <a href="https://github.com/MarsAI-org/mars-agent" target="_blank" rel="noopener">Source</a>
             <a href="https://github.com/MarsAI-org/mars-agent/releases" target="_blank" rel="noopener">Releases</a>
             <a href="https://github.com/MarsAI-org/mars-agent/blob/main/LICENSE" target="_blank" rel="noopener">Licence</a>
           </nav>
           <span class="stampcol">
             getmars.eu.cc<br>
-            static register · self-hosted type
+            static · self-hosted type
           </span>
         </div>
       </div>
@@ -1405,38 +1831,46 @@
 
 </main>
 
+<dialog class="lightbox" id="lightbox" aria-label="Full-resolution terminal capture">
+  <div class="lightbox-head">
+    <span id="lightbox-caption">Terminal capture</span>
+    <button type="button" class="lightbox-close" id="lightbox-close">Close</button>
+  </div>
+  <div class="lightbox-body">
+    <img id="lightbox-img" src="assets/proof-task.webp" alt="">
+  </div>
+</dialog>
+
 <script>
   document.documentElement.classList.add("js");
 
-  /* Every scripted scroll and reveal honours the motion preference. */
   var prefersReducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* ── The repo blank rewrites the command that is copied ──────────── */
+  /* ── Repo blank rewrites install commands safely ─────────────────── */
   (function () {
     var input = document.getElementById("repo");
     var codes = {
       "tab-posix": document.getElementById("cmd-posix"),
-      "tab-win": document.getElementById("cmd-win")
+      "tab-win": document.getElementById("cmd-win"),
+      "tab-bun": document.getElementById("cmd-bun"),
+      "tab-nix": document.getElementById("cmd-nix"),
+      "tab-mise": document.getElementById("cmd-mise")
     };
-    var suffix = {
-      "tab-posix": function (r) { return " && cd " + quotePosix(r) + " && mars"; },
-      "tab-win": function (r) { return "; cd " + quotePowerShell(r) + "; mars"; }
-    };
+    function quotePosix(v) { return "'" + v.replace(/'/g, "'\\''") + "'"; }
+    function quotePowerShell(v) { return "'" + v.replace(/'/g, "''") + "'"; }
+    function posixSuffix(r) { return " && cd " + quotePosix(r) + " && mars"; }
+    function winSuffix(r) { return "; cd " + quotePowerShell(r) + "; mars"; }
+
     Object.keys(codes).forEach(function (k) {
       if (codes[k]) codes[k].dataset.base = codes[k].textContent.trim();
     });
-
-    /* POSIX: close the quote, escape the quote, reopen. PowerShell: double the
-       quote. Both keep a repo path with spaces intact, and neither lets a ';' or
-       '&' typed into the field start a new command. */
-    function quotePosix(v) { return "'" + v.replace(/'/g, "'\\''") + "'"; }
-    function quotePowerShell(v) { return "'" + v.replace(/'/g, "''") + "'"; }
 
     window.marsRender = function () {
       var repo = input ? input.value.trim() : "";
       Object.keys(codes).forEach(function (k) {
         if (!codes[k]) return;
-        codes[k].textContent = codes[k].dataset.base + (repo ? suffix[k](repo) : "");
+        var suf = !repo ? "" : (k === "tab-win" ? winSuffix(repo) : posixSuffix(repo));
+        codes[k].textContent = codes[k].dataset.base + suf;
       });
     };
     if (input) {
@@ -1445,17 +1879,59 @@
     }
   })();
 
-  /* ── Platform detection, tabs, and the mirrored note ─────────────── */
+  /* ── 5-method install workbench tabs + platform auto-detect ──────── */
   (function () {
-    var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+    var tabs = Array.prototype.slice.call(document.querySelectorAll('.os [role="tab"]'));
     if (!tabs.length) return;
     var fileLabel = document.getElementById("install-file");
     var notePath = document.getElementById("note-path");
     var notePriv = document.getElementById("note-priv");
+    var noteVerify = document.getElementById("note-verify");
+    var closeNotePath = document.getElementById("close-note-path");
+    var closeNotePriv = document.getElementById("close-note-priv");
     var scriptLink = document.getElementById("script-link");
-    var data = {
-      "tab-posix": { file: "install.sh", path: "~/.local/bin", priv: "no sudo", script: "install" },
-      "tab-win": { file: "install.ps1", path: "%LOCALAPPDATA%\\mars", priv: "no admin", script: "install.ps1" }
+
+    var meta = {
+      "tab-posix": {
+        file: "install",
+        path: "~/.local/bin",
+        priv: "no sudo",
+        verify: "SHA-256 verified",
+        linkText: "Read script",
+        href: "https://github.com/MarsAI-org/mars-site/blob/main/install"
+      },
+      "tab-win": {
+        file: "install.ps1",
+        path: "%LOCALAPPDATA%\\mars",
+        priv: "no admin",
+        verify: "SHA-256 verified",
+        linkText: "Read script",
+        href: "https://github.com/MarsAI-org/mars-site/blob/main/install.ps1"
+      },
+      "tab-bun": {
+        file: "@marsai-org/coding-agent",
+        path: "Bun >= 1.3.14",
+        priv: "global CLI",
+        verify: "npm registry",
+        linkText: "View package",
+        href: "https://www.npmjs.com/package/@marsai-org/coding-agent"
+      },
+      "tab-nix": {
+        file: "flake.nix",
+        path: "Nix profile",
+        priv: "or nix run",
+        verify: "Home Manager module",
+        linkText: "View flake",
+        href: "https://github.com/MarsAI-org/mars-agent/blob/main/flake.nix"
+      },
+      "tab-mise": {
+        file: "github:MarsAI-org/mars-agent",
+        path: "mise shims",
+        priv: "pinned releases",
+        verify: "GitHub Releases",
+        linkText: "Browse releases",
+        href: "https://github.com/MarsAI-org/mars-agent/releases"
+      }
     };
 
     function select(tab, focus) {
@@ -1466,12 +1942,20 @@
         var panel = document.getElementById(t.getAttribute("aria-controls"));
         if (panel) panel.hidden = !on;
       });
-      var d = data[tab.id];
+      var d = meta[tab.id];
       if (d) {
         if (fileLabel) fileLabel.textContent = d.file;
         if (notePath) notePath.textContent = d.path;
         if (notePriv) notePriv.textContent = d.priv;
-        if (scriptLink) scriptLink.href = "https://github.com/MarsAI-org/mars-site/blob/main/" + d.script;
+        if (noteVerify) noteVerify.textContent = d.verify;
+        if (scriptLink) {
+          scriptLink.textContent = d.linkText;
+          scriptLink.href = d.href;
+        }
+        if (tab.id === "tab-posix" || tab.id === "tab-win") {
+          if (closeNotePath) closeNotePath.textContent = d.path;
+          if (closeNotePriv) closeNotePriv.textContent = d.priv;
+        }
       }
       if (focus) tab.focus();
     }
@@ -1489,12 +1973,20 @@
     });
 
     var ua = navigator.userAgent || "";
-    var name = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || "";
-    var auto = document.getElementById(/Win/i.test(name) || /Windows/i.test(ua) ? "tab-win" : "tab-posix");
+    var plat = (navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || "";
+    var isWin = /Win/i.test(plat) || /Windows/i.test(ua);
+    var auto = document.getElementById(isWin ? "tab-win" : "tab-posix");
     if (auto) select(auto, false);
 
-    /* Deep link: #install-windows / #install-macos picks the platform tab. */
-    var hashTab = { "install-windows": "tab-win", "install-macos": "tab-posix", "install-linux": "tab-posix" };
+    var hashTab = {
+      "install-windows": "tab-win",
+      "install-macos": "tab-posix",
+      "install-linux": "tab-posix",
+      "install-posix": "tab-posix",
+      "install-bun": "tab-bun",
+      "install-nix": "tab-nix",
+      "install-mise": "tab-mise"
+    };
     function applyHash() {
       var id = (location.hash || "").slice(1);
       var target = hashTab[id];
@@ -1505,20 +1997,26 @@
     }
     window.addEventListener("hashchange", applyHash);
     if (hashTab[(location.hash || "").slice(1)]) {
-      /* The installer plate is the deep-link target; scroll it into view. */
       var plate = document.getElementById("install");
       if (plate) plate.scrollIntoView({ block: "center", behavior: prefersReducedMotion ? "auto" : "smooth" });
     }
     applyHash();
   })();
 
-  /* ── Copy: the clipboard gets the bare command ───────────────────── */
+  /* ── Copy handler (clean async feedback) ─────────────────────────── */
   (function () {
     var status = document.getElementById("copy-status");
+    var nextSuccessMsg = "";
+    window.marsCopyWithMessage = function (btn, msg) {
+      nextSuccessMsg = msg || "";
+      btn.click();
+    };
     document.querySelectorAll(".copy").forEach(function (btn) {
       var base = btn.textContent;
       var timer = 0;
       btn.addEventListener("click", function () {
+        var customMsg = nextSuccessMsg;
+        nextSuccessMsg = "";
         var host = btn.closest(".cmd");
         var code = host && host.querySelector("code");
         var text = code ? code.textContent.trim() : "";
@@ -1527,7 +2025,7 @@
           btn.textContent = ok ? "Copied" : "Failed";
           if (status) {
             status.textContent = ok
-              ? "Command copied. Paste it in a terminal."
+              ? (customMsg || "Command copied. Paste it in a terminal.")
               : "Copy failed; select the command and copy it by hand.";
           }
           clearTimeout(timer);
@@ -1544,27 +2042,123 @@
     });
   })();
 
-  /* ── Switches ────────────────────────────────────────────────────── */
-  /* A <button role="switch"> already activates on both Enter and Space. The
-     keydown handler that used to live here cancelled Space's default action, so
-     the switch could only ever be flipped with Enter. Native activation only. */
+  /* ── Lightbox for full-res terminal captures ─────────────────────── */
   (function () {
-    document.querySelectorAll(".switch").forEach(function (sw) {
-      var row = sw.closest(".flag");
-      var why = row ? row.querySelector(".flag-why") : null;
-      /* The collapsed explanation keeps its slot in the grid for the height
-         transition, so assistive tech has to be told it is not there yet. */
-      if (why) why.setAttribute("aria-hidden", sw.getAttribute("aria-checked") === "true" ? "false" : "true");
-      sw.addEventListener("click", function () {
-        var on = sw.getAttribute("aria-checked") !== "true";
-        sw.setAttribute("aria-checked", String(on));
-        if (row) row.dataset.on = String(on);
-        if (why) why.setAttribute("aria-hidden", String(!on));
+    var dlg = document.getElementById("lightbox");
+    var imgEl = document.getElementById("lightbox-img");
+    var capEl = document.getElementById("lightbox-caption");
+    var closeBtn = document.getElementById("lightbox-close");
+    if (!dlg || !imgEl || !dlg.showModal) return;
+
+    window.marsOpenLightbox = function (src, alt, caption) {
+      imgEl.src = src;
+      imgEl.alt = alt || "";
+      if (capEl) capEl.textContent = caption || alt || "Terminal capture";
+      dlg.showModal();
+    };
+    if (closeBtn) closeBtn.addEventListener("click", function () { dlg.close(); });
+    dlg.addEventListener("click", function (e) { if (e.target === dlg) dlg.close(); });
+
+    document.querySelectorAll('img[data-zoomable="true"]').forEach(function (im) {
+      im.addEventListener("click", function () {
+        window.marsOpenLightbox(im.currentSrc || im.src, im.alt, im.getAttribute("data-caption"));
       });
     });
   })();
 
-  /* ── Register: filter, search, deep-link and copy a permalink ────── */
+  /* ── Worked stages: stage buttons + ruler + zoom ─────────────────── */
+  (function () {
+    var range = document.getElementById("ex-range");
+    var btns = Array.prototype.slice.call(document.querySelectorAll(".stage-btn"));
+    var stops = Array.prototype.slice.call(document.querySelectorAll("#ex-stops span"));
+    var shots = Array.prototype.slice.call(document.querySelectorAll("#stage-viewport img[data-step]"));
+    var copy = document.getElementById("ex-copy");
+    var chromeLabel = document.getElementById("stage-chrome-label");
+    var zoomBtn = document.getElementById("stage-zoom-btn");
+    var viewport = document.getElementById("stage-viewport");
+    if (!range || !shots.length) return;
+
+    var stages = [
+      { label: "Explore", chrome: "task · parallel explore agents", note: "Stage 01 — Parallel explore subagents over a live workspace." },
+      { label: "Refactor", chrome: "lsp · TypeScript and Biome servers", note: "Stage 02 — Language servers verify writes and workspace/willRenameFiles." },
+      { label: "Review", chrome: "review · ranked findings, P0 first", note: "Stage 03 — Structured P0–P3 code review and DAP debugging." },
+      { label: "Evaluate", chrome: "python · persistent live cell", note: "Stage 04 — Stateful Python/JS cells calling back into agent tools." }
+    ];
+    var current = 0;
+
+    function apply(i) {
+      current = Math.max(0, Math.min(stages.length - 1, i));
+      range.value = String(current);
+      range.setAttribute("aria-valuetext", stages[current].label);
+      btns.forEach(function (b, n) { b.setAttribute("aria-selected", String(n === current)); });
+      stops.forEach(function (s, n) { s.setAttribute("data-on", String(n === current)); });
+      shots.forEach(function (img, n) { img.hidden = n !== current; });
+      if (chromeLabel) chromeLabel.textContent = stages[current].chrome;
+      if (copy) copy.textContent = stages[current].note;
+    }
+
+    function openCurrentZoom() {
+      var img = shots[current];
+      if (img && window.marsOpenLightbox) {
+        window.marsOpenLightbox(img.currentSrc || img.src, img.alt, img.getAttribute("data-caption"));
+      }
+    }
+
+    range.addEventListener("input", function () { apply(Number(range.value)); });
+    btns.forEach(function (b) {
+      b.addEventListener("click", function () { apply(Number(b.getAttribute("data-stage"))); });
+    });
+    if (zoomBtn) zoomBtn.addEventListener("click", openCurrentZoom);
+    if (viewport) viewport.addEventListener("click", openCurrentZoom);
+    apply(0);
+  })();
+
+  /* ── CLI Flags: switches + live composed command preview ─────────── */
+  (function () {
+    var flagCmd = document.getElementById("flag-cmd");
+    var resetBtn = document.getElementById("flag-reset");
+    var rows = Array.prototype.slice.call(document.querySelectorAll(".flag"));
+
+    function syncPreview() {
+      var active = [];
+      rows.forEach(function (row) {
+        if (row.dataset.on === "true" && row.dataset.flag) active.push(row.dataset.flag);
+      });
+      if (flagCmd) flagCmd.textContent = active.length ? ("mars " + active.join(" ")) : "mars";
+      if (resetBtn) resetBtn.hidden = active.length === 0;
+    }
+
+    rows.forEach(function (row) {
+      var sw = row.querySelector(".switch");
+      var why = row.querySelector(".flag-why");
+      if (!sw) return;
+      if (why) why.setAttribute("aria-hidden", sw.getAttribute("aria-checked") === "true" ? "false" : "true");
+      sw.addEventListener("click", function () {
+        var on = sw.getAttribute("aria-checked") !== "true";
+        sw.setAttribute("aria-checked", String(on));
+        sw.textContent = on ? "Passed" : "Off";
+        row.dataset.on = String(on);
+        if (why) why.setAttribute("aria-hidden", String(!on));
+        syncPreview();
+      });
+    });
+
+    if (resetBtn) {
+      resetBtn.addEventListener("click", function () {
+        rows.forEach(function (row) {
+          var sw = row.querySelector(".switch");
+          var why = row.querySelector(".flag-why");
+          if (sw) { sw.setAttribute("aria-checked", "false"); sw.textContent = "Off"; }
+          row.dataset.on = "false";
+          if (why) why.setAttribute("aria-hidden", "true");
+        });
+        syncPreview();
+      });
+    }
+    syncPreview();
+  })();
+
+  /* ── Capability Register: filter, search, deep-link, keyboard ────── */
   (function () {
     var ledger = document.querySelector(".ledger");
     if (!ledger) return;
@@ -1577,7 +2171,6 @@
     var state = "all";
     var query = "";
 
-    /* Counts feed the chips so the register reports its own totals. */
     var counts = { all: entries.length, added: 0, removed: 0 };
     entries.forEach(function (e) {
       var s = e.dataset.state;
@@ -1594,18 +2187,13 @@
       btn.setAttribute("aria-expanded", on ? "true" : "false");
       btn.textContent = on ? "Close" : "Evidence";
       entry.dataset.open = on ? "true" : "false";
-      /* Collapsing is a grid-row transition, so the panel stays in the DOM and
-         has to leave the accessibility tree by hand. */
       var ev = entry.querySelector(".evidence");
       if (ev) ev.setAttribute("aria-hidden", on ? "false" : "true");
     }
 
     function matches(entry) {
       if (state !== "all" && entry.dataset.state !== state) return false;
-      if (query) {
-        var hay = entry.textContent.toLowerCase();
-        if (hay.indexOf(query) === -1) return false;
-      }
+      if (query && entry.textContent.toLowerCase().indexOf(query) === -1) return false;
       return true;
     }
 
@@ -1614,15 +2202,12 @@
       var lit = {};
       entries.forEach(function (entry) {
         var ok = matches(entry);
-        if (ok) { shown++; lit[entry.dataset.version] = true; }
+        if (ok) { shown++; lit[entry.dataset.track] = true; }
         entry.hidden = !ok;
-        entry.classList.toggle("is-out", !ok);
       });
       if (empty) empty.hidden = shown !== 0;
       ledger.hidden = shown === 0;
 
-      /* Filtering is silent for a screen reader unless the result count is
-         announced; only speak while a filter or query is actually on. */
       if (regStatus) {
         var filtered = state !== "all" || !!query;
         regStatus.textContent = !filtered
@@ -1632,18 +2217,16 @@
             : shown + (shown === 1 ? " entry shown." : " entries shown.");
       }
 
-      /* The rail reports which release lines still carry a visible entry. */
       var rail = document.querySelector(".rail");
       if (rail) {
         var filtering = state !== "all" || !!query;
         rail.dataset.filtering = filtering ? "true" : "false";
         rail.querySelectorAll(".vline").forEach(function (line) {
-          line.dataset.lit = lit[line.dataset.version] && filtering ? "true" : "false";
+          line.dataset.lit = lit[line.dataset.track] && filtering ? "true" : "false";
         });
       }
     }
 
-    /* Deep link: #entry-2 opens and flares the entry it names. */
     function revealFromHash(smooth) {
       var id = decodeURIComponent((location.hash || "").slice(1));
       var entry = id ? document.getElementById(id) : null;
@@ -1655,7 +2238,7 @@
       applyFilter();
       open(entry, true);
       entry.classList.remove("flare");
-      void entry.offsetWidth; /* restart the flare */
+      void entry.offsetWidth;
       entry.classList.add("flare");
       if (smooth) entry.scrollIntoView({ block: "center", behavior: prefersReducedMotion ? "auto" : "smooth" });
       return true;
@@ -1683,20 +2266,29 @@
       });
     });
 
-    /* A permalink writes the entry id onto the URL and into the clipboard. */
     ledger.querySelectorAll(".entry-link").forEach(function (btn) {
+      var timer = 0;
       btn.addEventListener("click", function () {
         var id = btn.getAttribute("data-anchor");
         var base = location.href.split("#")[0];
         var url = base + "#" + id;
         try { history.replaceState(null, "", "#" + id); } catch (e) { location.hash = id; }
+        function setLabel(text) {
+          for (var i = btn.childNodes.length - 1; i >= 0; i--) {
+            if (btn.childNodes[i].nodeType === 3 && btn.childNodes[i].textContent.trim()) {
+              btn.childNodes[i].textContent = text;
+              return;
+            }
+          }
+        }
         function done(ok) {
           btn.setAttribute("data-state", ok ? "copied" : "");
-          btn.lastChild.textContent = ok ? "Copied" : "Link";
+          setLabel(ok ? "Copied" : "Link");
           if (status) status.textContent = ok ? "Link copied to this entry." : "Copy failed; the URL now points here.";
-          setTimeout(function () {
+          clearTimeout(timer);
+          timer = setTimeout(function () {
             btn.removeAttribute("data-state");
-            btn.lastChild.textContent = "Link";
+            setLabel("Link");
             if (status) status.textContent = "";
           }, 2400);
         }
@@ -1706,7 +2298,6 @@
       });
     });
 
-    /* Keyboard: "/" jumps to the filter, arrows step the register, Esc clears. */
     document.addEventListener("keydown", function (e) {
       var tag = (e.target && e.target.tagName) || "";
       var typing = tag === "INPUT" || tag === "TEXTAREA" || (e.target && e.target.isContentEditable);
@@ -1748,52 +2339,22 @@
     revealFromHash(true);
   })();
 
-  /* ── Worked stages: the ruler drives copy and exhibit ────────────── */
-  (function () {
-    var range = document.getElementById("ex-range");
-    if (!range) return;
-    var copy = document.getElementById("ex-copy");
-    var stops = Array.prototype.slice.call(document.querySelectorAll("#ex-stops span"));
-    var shots = Array.prototype.slice.call(document.querySelectorAll("figure img[data-step]"));
-    var text = [
-      "Mars opens the file through the same language server your editor uses, so the read is already typed.",
-      "A rename hits workspace/willRenameFiles, so re-exports and barrel files follow before the move.",
-      "Subagents verify in isolated worktrees and hand back ranked findings, P0 first.",
-      "The change lands with tests run and a debugger attach one keystroke away."
-    ];
-    var labels = ["Read", "Rename", "Verify", "Ship"];
-
-    function apply(i) {
-      if (copy) copy.textContent = text[i];
-      stops.forEach(function (s, n) { s.setAttribute("data-on", String(n === i)); });
-      shots.forEach(function (img, n) { img.hidden = n !== i; });
-      range.setAttribute("aria-valuetext", labels[i]);
-    }
-    range.addEventListener("input", function () { apply(Number(range.value)); });
-    apply(0);
-  })();
-
-  /* ── Instrument counts: tick up once, from a readable default ────── */
+  /* ── Instrument counts: tick up once on reveal ───────────────────── */
   (function () {
     var nums = Array.prototype.slice.call(document.querySelectorAll(".instrument .num"));
-    if (!nums.length) return;
-    var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce || !("IntersectionObserver" in window)) return;
+    if (!nums.length || prefersReducedMotion || !("IntersectionObserver" in window)) return;
 
     function run(el) {
       var raw = el.textContent.trim();
       var m = raw.match(/^([^0-9]*)(\d+)([^0-9]*)$/);
       if (!m) return;
       var prefix = m[1], target = parseInt(m[2], 10), suffix = m[3];
-      var width = m[2].length;
-      var start = null, dur = 900;
+      var start = null, dur = 820;
       function frame(ts) {
         if (start === null) start = ts;
         var t = Math.min(1, (ts - start) / dur);
         var eased = 1 - Math.pow(1 - t, 3);
-        var val = String(Math.round(target * eased));
-        while (val.length < width) val = "0" + val;
-        el.textContent = prefix + val + suffix;
+        el.textContent = prefix + String(Math.round(target * eased)) + suffix;
         if (t < 1) requestAnimationFrame(frame);
         else el.textContent = prefix + String(target) + suffix;
       }
@@ -1809,40 +2370,28 @@
     nums.forEach(function (el) { io.observe(el); });
   })();
 
-  /* ── Close: run means install, land in the repo, and start ───────── */
+  /* ── Close panel install button ──────────────────────────────────── */
   (function () {
     var input = document.getElementById("repo");
     var btn = document.getElementById("close-install");
-    var status = document.getElementById("copy-status");
     if (!btn) return;
 
     btn.addEventListener("click", function () {
       var repo = input && input.value.trim();
       if (window.marsRender) window.marsRender();
-      /* Follow the tab the platform detection already selected: hard-coding the
-         POSIX tab handed Windows visitors a `curl … | sh` command. */
-      var posixTab = document.getElementById("tab-posix");
-      var winTab = document.getElementById("tab-win");
-      var onWindows = !!(
-        winTab &&
-        winTab.getAttribute("aria-selected") === "true" &&
-        !(posixTab && posixTab.getAttribute("aria-selected") === "true")
-      );
-      var chosenTab = onWindows ? winTab : posixTab;
-      if (chosenTab) chosenTab.click();
-      document.getElementById("install").scrollIntoView({ block: "center", behavior: prefersReducedMotion ? "auto" : "smooth" });
-      var panel = document.getElementById(onWindows ? "panel-win" : "panel-posix");
+      var activeTab = document.querySelector('.os [role="tab"][aria-selected="true"]');
+      var panelId = activeTab ? activeTab.getAttribute("aria-controls") : "panel-posix";
+      var panel = document.getElementById(panelId);
+      var installEl = document.getElementById("install");
+      if (installEl) installEl.scrollIntoView({ block: "center", behavior: prefersReducedMotion ? "auto" : "smooth" });
       var copyBtn = panel && panel.querySelector(".copy");
       if (copyBtn) {
         copyBtn.focus({ preventScroll: true });
-        copyBtn.click();
-        if (status) {
-          setTimeout(function () {
-            status.textContent = repo
-              ? "Copied. It installs Mars, enters " + repo + ", and starts it."
-              : "Command copied. Paste it in a terminal.";
-          }, 0);
-        }
+        var msg = repo
+          ? "Copied. It installs Mars, enters " + repo + ", and starts it."
+          : "Command copied. Paste it in a terminal.";
+        if (window.marsCopyWithMessage) window.marsCopyWithMessage(copyBtn, msg);
+        else copyBtn.click();
       }
     });
 
@@ -1853,11 +2402,10 @@
     }
   })();
 
-  /* ── Entrance: one authored reveal from a visible default ────────── */
+  /* ── Entrance reveals ────────────────────────────────────────────── */
   (function () {
-    var reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    var targets = document.querySelectorAll(".mark-in");
-    if (reduce || !("IntersectionObserver" in window)) {
+    var targets = Array.prototype.slice.call(document.querySelectorAll(".mark-in"));
+    if (prefersReducedMotion || !("IntersectionObserver" in window)) {
       targets.forEach(function (el) { el.classList.add("in"); });
       return;
     }
@@ -1865,10 +2413,23 @@
       entries.forEach(function (e) {
         if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
       });
-    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
+    }, { rootMargin: "0px 0px 120px 0px", threshold: 0.01 });
     targets.forEach(function (el) { io.observe(el); });
+
+    function revealThroughViewport() {
+      var cutoff = window.innerHeight + 120;
+      targets.forEach(function (el) {
+        if (el.classList.contains("in")) return;
+        if (el.getBoundingClientRect().top <= cutoff) {
+          el.classList.add("in");
+          io.unobserve(el);
+        }
+      });
+    }
+    window.addEventListener("scroll", revealThroughViewport, { passive: true });
+    window.addEventListener("resize", revealThroughViewport, { passive: true });
+    revealThroughViewport();
   })();
 </script>
 </body>
 </html>
-

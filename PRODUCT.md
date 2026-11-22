@@ -74,9 +74,10 @@ Constraints:
   craters, two square eyes, two feet). The supplied PNG is the identity reference.
 - Upstream credits (oh-my-pi, Pi, their authors, MIT) must remain visible.
 - A visual world is already shipped in `index.html` and documented in
-  `DESIGN.md` (the "Public Register": light ground, violet accent, Hanken
-  Grotesk + Spline Sans Mono). The surface brief, design token system, and
-  implementation are aligned. The logo and name are fixed.
+  `DESIGN.md` (the "Editorial Instrument": warm alabaster light ground,
+  logo-rooted Mars terracotta orange accent, obsidian ink, Hanken Grotesk +
+  Spline Sans Mono). The surface brief, design token system, and implementation
+  are aligned. The logo and name are fixed.
 
 ## Evidence on Hand
 

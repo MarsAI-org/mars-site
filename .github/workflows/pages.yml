@@ -31,6 +31,7 @@ jobs:
           cp index.html install install.ps1 CNAME LICENSE \
              favicon.ico favicon.svg favicon-32x32.png _site/
           cp -R assets _site/
+          rm -f _site/assets/*.webp.json _site/assets/paper-grain.webp _site/assets/skyline.svg
 
       - name: Setup Pages
         uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5.0.0

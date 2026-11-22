@@ -2,185 +2,226 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>OG card</title>
+<title>Mars OG Card</title>
 <style>
   @font-face {
-    font-family: "Archivo";
+    font-family: "Hanken Grotesk";
     font-style: normal;
-    font-weight: 100 900;
-    font-stretch: 62% 125%;
-    src: url("assets/fonts/archivo-var.woff2") format("woff2");
+    font-weight: 400 800;
+    src: url("assets/fonts/hanken-grotesk-latin.woff2") format("woff2");
+  }
+  @font-face {
+    font-family: "Spline Sans Mono";
+    font-style: normal;
+    font-weight: 400 700;
+    src: url("assets/fonts/spline-sans-mono-latin.woff2") format("woff2");
   }
   :root {
-    --paper: #f2efe7;
-    --paper-2: #faf8f3;
-    --ink: #131110;
-    --soft: #57504a;
-    --rule: #c9c3b6;
-    --stamp: #bf2f1c;
-    --sans: "Archivo", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --ground: #faf8f5;
+    --plate: #ffffff;
+    --plate-2: #f2eee8;
+    --ink: #161419;
+    --body: #4a4440;
+    --soft: #6b625c;
+    --mars: #d64a27;
+    --mars-deep: #b43618;
+    --hair: #e8e2d9;
+    --hair-hard: #d4cbc0;
+    --sans: "Hanken Grotesk", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --mono: "Spline Sans Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   }
   * { box-sizing: border-box; margin: 0; }
   body {
-    width: 1200px; height: 630px;
-    background: var(--paper) url("assets/paper-grain.webp") 0 0 / 180px 180px;
+    width: 1200px;
+    height: 630px;
+    background: var(--ground);
     color: var(--ink);
     font-family: var(--sans);
     overflow: hidden;
-    padding: 40px 56px 26px;
+    position: relative;
+    padding: 48px 60px 42px;
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    justify-content: space-between;
   }
-
-  .block {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: end;
-    gap: 36px;
-    border-bottom: 3px solid var(--ink);
-    padding-bottom: 12px;
+  .orbit {
+    position: absolute;
+    top: -60px;
+    right: -80px;
+    width: 680px;
+    height: 680px;
+    pointer-events: none;
   }
-  h1 {
-    font-size: 132px;
-    line-height: 0.78;
-    font-weight: 800;
-    font-stretch: 62%;
-    letter-spacing: -0.038em;
+  .top {
+    position: relative;
+    z-index: 1;
     display: flex;
-    align-items: baseline;
-    gap: 0.1em;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--hair-hard);
   }
-  h1 span { font-size: 38px; font-weight: 500; font-stretch: 100%; letter-spacing: 0; }
-  .meta {
-    display: grid;
-    grid-template-columns: auto auto;
-    gap: 2px 14px;
-    border-left: 1px solid var(--rule);
-    padding-left: 16px;
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .brand img {
+    width: 48px;
+    height: 48px;
+    image-rendering: pixelated;
+  }
+  .brand-name {
+    font-size: 32px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .brand-sub {
+    display: block;
     font-family: var(--mono);
     font-size: 12px;
-    line-height: 1.45;
-    letter-spacing: 0.11em;
-    text-transform: uppercase;
-  }
-  .meta b { font-weight: 700; }
-  .meta i { font-style: normal; color: var(--soft); }
-
-  .row { display: grid; grid-template-columns: 108px minmax(0, 1fr); gap: 0; }
-  .lbl {
-    text-align: right;
-    padding-right: 16px;
-    border-right: 1px solid var(--ink);
-    font-family: var(--mono);
-    font-size: 11px;
-    font-weight: 700;
     letter-spacing: 0.16em;
     text-transform: uppercase;
+    color: var(--soft);
+    margin-top: 5px;
   }
-  .val { padding-left: 20px; }
-
-  .name { display: flex; align-items: baseline; gap: 0.28em; font-size: 27px; letter-spacing: -0.018em; }
-  .name b { font-weight: 800; font-stretch: 82%; }
-  .name span { color: var(--soft); font-weight: 500; }
-
-  .plate { border: 2px solid var(--ink); background: var(--paper-2); margin-top: 12px; }
-  .plate-head {
-    display: flex; justify-content: space-between; align-items: center;
-    border-bottom: 1px solid var(--ink);
-    font-family: var(--mono); font-size: 11px; font-weight: 700;
-    letter-spacing: 0.15em; text-transform: uppercase;
-    padding: 8px 14px;
+  .meta {
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--soft);
+    display: flex;
+    gap: 22px;
   }
-  .plate-head .file { color: var(--soft); font-weight: 500; }
+  .meta b { color: var(--ink); font-weight: 600; }
+
+  .mid {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  h1 {
+    font-size: 74px;
+    font-weight: 600;
+    line-height: 0.98;
+    letter-spacing: -0.036em;
+    max-width: 16ch;
+  }
+  h1 .accent { color: var(--mars); }
+
+  .plate {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+    background: var(--plate);
+    border: 1px solid var(--hair-hard);
+    border-radius: 12px;
+    padding: 18px 22px;
+    box-shadow: 0 2px 6px rgba(22, 20, 25, 0.05), 0 22px 46px -26px rgba(22, 20, 25, 0.22);
+  }
   .cmd {
-    display: flex; align-items: center; gap: 12px;
-    padding: 16px 14px;
-    font-family: var(--mono); font-size: 26px; font-weight: 400;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-family: var(--mono);
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--ink);
   }
-  .cmd .sigil { color: var(--stamp); font-weight: 700; }
-
-  .params { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 4px; }
-  .params div { padding: 10px 14px 0 0; }
-  .params div + div { border-left: 1px solid var(--rule); padding-left: 14px; }
-  .params b { display: block; font-size: 30px; font-weight: 800; font-stretch: 74%; letter-spacing: -0.02em; line-height: 1; }
-  .params i {
-    display: block; margin-top: 4px;
-    font-family: var(--mono); font-style: normal; font-size: 12px; font-weight: 500;
-    letter-spacing: 0.12em; text-transform: uppercase; color: var(--soft);
+  .cmd .sigil { color: var(--mars-deep); font-weight: 700; }
+  .pill {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #fff;
+    background: var(--mars-deep);
+    padding: 10px 16px;
+    border-radius: 8px;
   }
 
-  .stamp { width: 74px; height: 74px; flex: none; }
-  .stamp .disc { fill: none; stroke: var(--stamp); stroke-width: 4; }
-  .stamp .block { fill: var(--stamp); }
-  .stamp .knock { fill: var(--paper); }
-  .stamp text { fill: var(--stamp); font-family: var(--mono); font-weight: 700; }
-
-  .foot {
-    margin-top: auto;
-    display: flex; justify-content: space-between; align-items: center;
-    border-top: 1px solid var(--rule);
-    padding-top: 8px;
-    font-family: var(--mono); font-size: 11px; font-weight: 500;
-    letter-spacing: 0.13em; text-transform: uppercase;
+  .bottom {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
+    align-items: end;
+    gap: 18px;
+    padding-top: 20px;
+    border-top: 1px solid var(--hair-hard);
+  }
+  .stat b {
+    display: block;
+    font-size: 32px;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    color: var(--ink);
+  }
+  .stat span {
+    display: block;
+    margin-top: 6px;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--mars-deep);
+  }
+  .domain {
+    font-family: var(--mono);
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
     color: var(--soft);
   }
-  .foot b { color: var(--ink); }
 </style>
 </head>
 <body>
-  <div class="block">
-    <h1>mars<span>(1)</span></h1>
+  <svg class="orbit" viewBox="0 0 680 680" fill="none" aria-hidden="true">
+    <g stroke="#d4cbc0" stroke-width="1" opacity="0.55">
+      <circle cx="460" cy="340" r="140"/>
+      <circle cx="460" cy="340" r="230"/>
+      <circle cx="460" cy="340" r="320"/>
+    </g>
+    <circle cx="460" cy="340" r="230" stroke="#d64a27" stroke-width="1.5" stroke-dasharray="6 9" opacity="0.4"/>
+    <circle cx="622" cy="502" r="5.5" fill="#d64a27" opacity="0.72"/>
+  </svg>
+
+  <div class="top">
+    <div class="brand">
+      <img src="assets/mars-mark.svg" alt="Mars">
+      <div>
+        <span class="brand-name">Mars</span>
+        <span class="brand-sub">Coding Agent CLI</span>
+      </div>
+    </div>
     <div class="meta">
-      <b>issue</b><i>reference sheet</i>
-      <b>licence</b><i>MIT</i>
-      <b>targets</b><i>macOS · Linux · Windows</i>
-      <b>core</b><i>Rust, in-process</i>
+      <span>Targets <b>macOS · Linux · Windows</b></span>
+      <span>Licence <b>MIT</b></span>
     </div>
   </div>
 
-  <div class="row">
-    <div class="lbl">name</div>
-    <div class="val">
-      <p class="name"><b>mars</b><span>— a coding agent with the IDE wired in</span></p>
+  <div class="mid">
+    <h1>A coding agent with the IDE <span class="accent">wired in.</span></h1>
+    <div class="plate">
+      <div class="cmd"><span class="sigil">$</span>curl -fsSL https://getmars.eu.cc/install | sh</div>
+      <div class="pill">SHA-256 Verified</div>
     </div>
   </div>
 
-  <div class="row">
-    <div class="lbl">synopsis</div>
-    <div class="val">
-      <div class="plate">
-        <div class="plate-head"><span>macOS &amp; Linux</span><span class="file">install.sh</span></div>
-        <div class="cmd"><span class="sigil">$</span>curl -fsSL getmars.eu.cc/install | sh</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="lbl">parameters</div>
-    <div class="val">
-      <div class="params">
-        <div><b>75</b><i>providers</i></div>
-        <div><b>36</b><i>built-in tools</i></div>
-        <div><b>300k</b><i>rust lines</i></div>
-        <div><b>6</b><i>targets</i></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="foot">
-    <span><b>mars</b> — one binary, no WSL bridge, MIT licensed</span>
-    <span style="display:flex;align-items:center;gap:14px">
-      <span>getmars.eu.cc</span>
-      <svg class="stamp" viewBox="0 0 100 100" aria-hidden="true">
-        <circle class="disc" cx="50" cy="50" r="46"/>
-        <text x="50" y="27" font-size="9" text-anchor="middle" letter-spacing="1.5">CONTROLLED</text>
-        <rect class="block" x="25" y="34" width="50" height="30" rx="15"/>
-        <path class="knock" d="M34 41h7v16h-7zM44 41h7v5h1v-5h7v16h-7v-5h-1v5h-7z"/>
-        <text x="50" y="78" font-size="8" text-anchor="middle" letter-spacing="1.2">REV 4</text>
-      </svg>
-    </span>
+  <div class="bottom">
+    <div class="stat"><b>75</b><span>Providers</span></div>
+    <div class="stat"><b>34</b><span>Built-in tools</span></div>
+    <div class="stat"><b>300k</b><span>Lines of Rust</span></div>
+    <div class="stat"><b>6</b><span>Native targets</span></div>
+    <div class="domain">getmars.eu.cc</div>
   </div>
 </body>
 </html>
