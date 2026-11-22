@@ -122,17 +122,27 @@ version_ge() {
     current="$1"
     minimum="$2"
 
-    current_major="${current%%.*}"
-    current_rest="${current#*.}"
-    current_minor="${current_rest%%.*}"
-    current_patch="${current_rest#*.}"
-    current_patch="${current_patch%%.*}"
+    # Missing components count as 0, so "1.4" is 1.4.0. The old derivation read the
+    # patch out of the minor when the version had only two components, which made
+    # "1.4" compare as 1.4.4 (version_ge 1.4.0 1.4 was false).
+    saved_ifs="$IFS"
+    IFS=.
+    set -- $current
+    current_major="${1:-0}"
+    current_minor="${2:-0}"
+    current_patch="${3:-0}"
+    set -- $minimum
+    minimum_major="${1:-0}"
+    minimum_minor="${2:-0}"
+    minimum_patch="${3:-0}"
+    IFS="$saved_ifs"
 
-    minimum_major="${minimum%%.*}"
-    minimum_rest="${minimum#*.}"
-    minimum_minor="${minimum_rest%%.*}"
-    minimum_patch="${minimum_rest#*.}"
-    minimum_patch="${minimum_patch%%.*}"
+    # A version string that is not three integers (a -canary tag that survived
+    # the trim, a vendor suffix) compares as older than the minimum instead of
+    # making `test` fail and aborting the installer with a shell error.
+    case "${current_major}${current_minor}${current_patch}${minimum_major}${minimum_minor}${minimum_patch}" in
+        ''|*[!0-9]*) return 1 ;;
+    esac
 
     if [ "$current_major" -ne "$minimum_major" ]; then
         [ "$current_major" -gt "$minimum_major" ]
@@ -160,6 +170,16 @@ require_bun_version() {
         echo "Upgrade Bun at https://bun.sh/docs/installation"
         exit 1
     fi
+}
+
+# Host is Android (Termux, Android shell). `uname -s` says Linux there, but the
+# released binaries link the glibc loader Android does not ship, so the download
+# only fails later with a relocation error.
+is_android() {
+    if [ -n "${TERMUX_VERSION:-}" ] || [ -n "${ANDROID_ROOT:-}" ]; then
+        return 0
+    fi
+    [ "$(uname -o 2>/dev/null || echo)" = "Android" ]
 }
 
 # Check if git is available
@@ -232,6 +252,12 @@ install_via_bun() {
 
 # Install binary from GitHub releases
 install_binary() {
+    if is_android; then
+        echo "Android/Termux has no prebuilt binary: the Linux builds link the glibc loader, which Android does not ship."
+        echo "Re-run without --binary to install from source instead."
+        exit 1
+    fi
+
     # Detect platform
     OS="$(uname -s)"
     ARCH="$(host_arch)"
@@ -436,6 +462,17 @@ case "$MODE" in
         # Default: prefer prebuilt binary for supported platforms
         OS="$(uname -s)"
         ARCH="$(host_arch)"
+
+        if is_android; then
+            echo "Android/Termux detected: no prebuilt binary matches (the Linux builds link the glibc loader)."
+            echo "Installing from source instead..."
+            if ! has_bun; then
+                install_bun
+            fi
+            require_bun_version
+            install_via_bun
+            exit 0
+        fi
 
         case "$OS-$ARCH" in
             Linux-x64|Linux-arm64|Darwin-x64|Darwin-arm64)

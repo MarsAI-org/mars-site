@@ -135,19 +135,44 @@ function Test-GitLfsInstalled {
 }
 
 function Find-BashShell {
-    # Check Git Bash first (most common on Windows)
-    $gitBash = "C:\Program Files\Git\bin\bash.exe"
-    if (Test-Path $gitBash) {
-        return $gitBash
+    # Git Bash first (most common on Windows), including per-user installs that sit
+    # neither under C:\Program Files nor on PATH.
+    $candidates = @(
+        "C:\Program Files\Git\bin\bash.exe",
+        "C:\Program Files (x86)\Git\bin\bash.exe",
+        (Join-Path $env:LOCALAPPDATA "Programs\Git\bin\bash.exe")
+    )
+    foreach ($candidate in $candidates) {
+        if ($candidate -and (Test-Path -LiteralPath $candidate)) {
+            return $candidate
+        }
     }
 
-    # Check bash.exe on PATH (Cygwin, MSYS2, WSL)
+    # Ask git where it lives: <Git>\mingw64\libexec\git-core -> <Git>\bin\bash.exe.
+    if (Test-GitInstalled) {
+        $execPath = [string](Invoke-Native { git --exec-path } | Select-Object -First 1)
+        if ($execPath) {
+            $gitRoot = Split-Path -Parent (Split-Path -Parent (Split-Path -Parent $execPath.Trim()))
+            $gitBash = Join-Path $gitRoot "bin\bash.exe"
+            if (Test-Path -LiteralPath $gitBash) {
+                return $gitBash
+            }
+        }
+    }
+
+    # Then bash.exe on PATH, but never the WSL shim: `C:\Windows\System32\bash.exe`
+    # launches a Linux distribution whose filesystem namespace is not the one the
+    # agent will be editing, so handing it to settings.json made every shell call
+    # see a different tree (and fail outright with no distro installed).
     try {
-        $bashCmd = Get-Command bash.exe -ErrorAction Stop
-        return $bashCmd.Source
+        $bashCmd = Get-Command bash.exe -ErrorAction Stop | Select-Object -First 1
+        if ($bashCmd -and $bashCmd.Source -and $bashCmd.Source -notmatch '(?i)\\Windows\\System32\\') {
+            return $bashCmd.Source
+        }
     } catch {
         return $null
     }
+    return $null
 }
 
 function Configure-BashShell {
@@ -360,6 +385,15 @@ function Install-Binary {
             Write-Host "[WARN] $VerifyProblem; continuing because MARS_ALLOW_UNVERIFIED=1." -ForegroundColor Yellow
         } else {
             throw "$VerifyProblem. Refusing to install an unverified binary. Set MARS_ALLOW_UNVERIFIED=1 to override.`nThe staged download was discarded; $OutPath was left untouched."
+        }
+
+        # Prove the binary starts before it replaces anything. The POSIX installer
+        # has done this for a while; without it a Windows run reported success for
+        # an .exe that immediately failed, and the previously working install was
+        # already gone by then.
+        $SmokeOutput = Invoke-Native { & $StagedPath --version 2>&1 }
+        if ($LASTEXITCODE -ne 0) {
+            throw "mars.exe downloaded and verified, but cannot start:`n$SmokeOutput`nThe staged download was discarded; $OutPath was left untouched."
         }
 
         Move-Item -LiteralPath $StagedPath -Destination $OutPath -Force

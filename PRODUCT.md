@@ -41,8 +41,8 @@ mise. Installers verify checksums, install to `~/.local/bin` or
 Confirmed product facts:
 
 - 75 providers in the bundled catalog, routed across nine model roles.
-- 36 built-in tools.
-- Roughly 240k lines of Rust core across twelve crates, with ~50k more vendored
+- 34 built-in tools (31 selectable, three internal).
+- Roughly 300k lines of Rust core across twelve crates, with ~69k more vendored
   in-process.
 - Six release targets: linux-x64, linux-arm64, darwin-x64, darwin-arm64,
   win32-x64, win32-arm64.
