@@ -325,22 +325,39 @@ function Install-Binary {
     Write-Host ("Downloaded {0} ({1:N0} bytes)" -f $BinaryName, $DownloadedInfo.Length)
 
     Write-Host "Verifying checksum..."
+    # Fail closed. SHA256SUMS.txt ships in the same release as the binary, so it
+    # proves the download was not corrupted or swapped in transit — skipping it
+    # silently removes even that. This block must not run inside one big `try`:
+    # the checksum-mismatch `throw` below used to be caught by the same `catch`
+    # that reports a fetch failure, so a corrupted binary only produced a
+    # warning and stayed installed.
+    $AllowUnverified = $env:MARS_ALLOW_UNVERIFIED -eq "1"
+    $ExpectedSha = $null
+    $VerifyProblem = $null
     try {
         $ChecksumsText = Invoke-RestMethod -Uri $ChecksumUrl -TimeoutSec 30
         $Match = $ChecksumsText -split "`r?`n" | Where-Object { $_ -match "\s+([\\/].*[\\/])?$([regex]::Escape($BinaryName))$" } | Select-Object -First 1
         if ($Match) {
             $ExpectedSha = ($Match -split "\s+")[0].Trim().ToLowerInvariant()
-            $ActualSha = (Get-FileHash -Path $OutPath -Algorithm SHA256).Hash.ToLowerInvariant()
-            if ($ExpectedSha -ne $ActualSha) {
-                Remove-Item -Force $OutPath -ErrorAction SilentlyContinue
-                throw "Checksum verification failed for $BinaryName!`nExpected: $ExpectedSha`nActual:   $ActualSha"
-            }
-            Write-Host "[OK] Checksum verified ($ExpectedSha)" -ForegroundColor Green
         } else {
-            Write-Host "[WARN] Binary $BinaryName not found in SHA256SUMS.txt; proceeding without checksum verification." -ForegroundColor Yellow
+            $VerifyProblem = "binary $BinaryName is not listed in SHA256SUMS.txt"
         }
     } catch {
-        Write-Host "[WARN] Could not verify checksum: $_" -ForegroundColor Yellow
+        $VerifyProblem = "could not fetch SHA256SUMS.txt: $_"
+    }
+
+    if (-not $VerifyProblem) {
+        $ActualSha = (Get-FileHash -Path $OutPath -Algorithm SHA256).Hash.ToLowerInvariant()
+        if ($ExpectedSha -ne $ActualSha) {
+            Remove-Item -Force $OutPath -ErrorAction SilentlyContinue
+            throw "Checksum verification failed for $BinaryName!`nExpected: $ExpectedSha`nActual:   $ActualSha"
+        }
+        Write-Host "[OK] Checksum verified ($ExpectedSha)" -ForegroundColor Green
+    } elseif ($AllowUnverified) {
+        Write-Host "[WARN] $VerifyProblem; continuing because MARS_ALLOW_UNVERIFIED=1." -ForegroundColor Yellow
+    } else {
+        Remove-Item -Force $OutPath -ErrorAction SilentlyContinue
+        throw "$VerifyProblem. Refusing to install an unverified binary. Set MARS_ALLOW_UNVERIFIED=1 to override."
     }
 
     Write-Host ""

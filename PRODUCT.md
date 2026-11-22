@@ -93,10 +93,6 @@ Constraints:
 - `assets/paper-grain.webp` — a procedural grain tile retained from an earlier
   visual world; the current shipped `index.html` does not reference it. No
   photographic hero exists.
-- `mars-router` (`Veldris88/mars-router`) — a related local OpenAI-compatible
-  routing gateway. The Providers section names it as a companion and links its
-  repo and `ghcr.io/veldris88/mars-router` image. This is a project reference,
-  not an invented claim: link only, no benchmarks or adoption numbers.
 
 ## Product Principles
 
