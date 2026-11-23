@@ -344,7 +344,7 @@
   }
   .hero-facts b { color: var(--ink); font-weight: 700; }
 
-  /* ── Install Workbench (5-method plate) ────────────────────────────── */
+  /* ── Install Workbench (4-method plate) ────────────────────────────── */
   .hero-side { display: flex; flex-direction: column; gap: 0.85rem; }
   .install {
     position: relative;
@@ -1382,7 +1382,7 @@
 
 <main id="main">
 
-  <!-- ── Hero Prospectus & 5-Method Install Workbench ────────────────── -->
+  <!-- ── Hero Prospectus & 4-Method Install Workbench ────────────────── -->
   <section class="hero">
     <svg class="hero-orbit" viewBox="0 0 900 760" fill="none" aria-hidden="true">
       <g stroke="#d4cbc0" stroke-width="1" opacity="0.65">
@@ -1423,11 +1423,10 @@
               <span id="install-file">install</span>
             </div>
             <div class="os" role="tablist" aria-label="Install method">
-              <button type="button" role="tab" id="tab-posix" aria-controls="panel-posix" aria-selected="true">macOS &amp; Linux</button>
-              <button type="button" role="tab" id="tab-win" aria-controls="panel-win" aria-selected="false">Windows</button>
-              <button type="button" role="tab" id="tab-bun" aria-controls="panel-bun" aria-selected="false">Bun</button>
-              <button type="button" role="tab" id="tab-nix" aria-controls="panel-nix" aria-selected="false">Nix</button>
-              <button type="button" role="tab" id="tab-mise" aria-controls="panel-mise" aria-selected="false">mise</button>
+              <button type="button" role="tab" id="tab-posix" aria-controls="panel-posix" aria-selected="true" tabindex="0">macOS &amp; Linux</button>
+              <button type="button" role="tab" id="tab-win" aria-controls="panel-win" aria-selected="false" tabindex="-1">Windows</button>
+              <button type="button" role="tab" id="tab-nix" aria-controls="panel-nix" aria-selected="false" tabindex="-1">Nix</button>
+              <button type="button" role="tab" id="tab-mise" aria-controls="panel-mise" aria-selected="false" tabindex="-1">mise</button>
             </div>
 
             <div class="cmd" role="tabpanel" id="panel-posix" aria-labelledby="tab-posix">
@@ -1439,11 +1438,6 @@
               <span class="sigil" aria-hidden="true">&gt;</span>
               <code id="cmd-win">irm https://getmars.eu.cc/install.ps1 | iex</code>
               <button class="copy" type="button" aria-describedby="copy-status" aria-label="Copy the Windows install command">Copy</button>
-            </div>
-            <div class="cmd" role="tabpanel" id="panel-bun" aria-labelledby="tab-bun" hidden>
-              <span class="sigil" aria-hidden="true">$</span>
-              <code id="cmd-bun">bun install -g @marsai-org/coding-agent</code>
-              <button class="copy" type="button" aria-describedby="copy-status" aria-label="Copy the Bun install command">Copy</button>
             </div>
             <div class="cmd" role="tabpanel" id="panel-nix" aria-labelledby="tab-nix" hidden>
               <span class="sigil" aria-hidden="true">$</span>
@@ -1483,9 +1477,9 @@
 
       <div class="worked-grid mark-in">
         <div>
-          <ul class="stage-list" role="tablist" aria-label="Walkthrough stages">
-            <li>
-              <button class="stage-btn" type="button" role="tab" data-stage="0" aria-selected="true">
+          <ul class="stage-list" role="tablist" aria-label="Walkthrough stages" aria-orientation="vertical">
+            <li role="presentation">
+              <button class="stage-btn" type="button" role="tab" id="stage-tab-0" aria-controls="stage-viewport" data-stage="0" aria-selected="true" tabindex="0">
                 <span class="stage-num">01</span>
                 <span>
                   <span class="stage-title">Explore in parallel</span>
@@ -1493,8 +1487,8 @@
                 </span>
               </button>
             </li>
-            <li>
-              <button class="stage-btn" type="button" role="tab" data-stage="1" aria-selected="false">
+            <li role="presentation">
+              <button class="stage-btn" type="button" role="tab" id="stage-tab-1" aria-controls="stage-viewport" data-stage="1" aria-selected="false" tabindex="-1">
                 <span class="stage-num">02</span>
                 <span>
                   <span class="stage-title">Refactor via language servers</span>
@@ -1502,8 +1496,8 @@
                 </span>
               </button>
             </li>
-            <li>
-              <button class="stage-btn" type="button" role="tab" data-stage="2" aria-selected="false">
+            <li role="presentation">
+              <button class="stage-btn" type="button" role="tab" id="stage-tab-2" aria-controls="stage-viewport" data-stage="2" aria-selected="false" tabindex="-1">
                 <span class="stage-num">03</span>
                 <span>
                   <span class="stage-title">Verify with ranked review</span>
@@ -1511,8 +1505,8 @@
                 </span>
               </button>
             </li>
-            <li>
-              <button class="stage-btn" type="button" role="tab" data-stage="3" aria-selected="false">
+            <li role="presentation">
+              <button class="stage-btn" type="button" role="tab" id="stage-tab-3" aria-controls="stage-viewport" data-stage="3" aria-selected="false" tabindex="-1">
                 <span class="stage-num">04</span>
                 <span>
                   <span class="stage-title">Evaluate in persistent cells</span>
@@ -1537,7 +1531,7 @@
             <span id="stage-chrome-label">task · parallel explore agents</span>
             <button type="button" class="zoom-btn" id="stage-zoom-btn" aria-label="Inspect current terminal capture at full size">Zoom</button>
           </div>
-          <div class="terminal-viewport" id="stage-viewport">
+          <div class="terminal-viewport" id="stage-viewport" role="tabpanel" aria-labelledby="stage-tab-0">
             <img src="assets/proof-task.webp" alt="The Mars terminal fanning out three explore agents over one packages directory." width="760" height="430" loading="eager" decoding="async" data-step="0" data-caption="task · parallel explore agents">
             <img src="assets/proof-lspv.webp" alt="TypeScript and Biome language servers both active in the Mars terminal." width="760" height="430" loading="lazy" decoding="async" data-step="1" data-caption="lsp · TypeScript and Biome servers on one write" hidden>
             <img src="assets/proof-review.webp" alt="A reviewer subagent working through a ranked P0-P3 code review in the Mars terminal." width="760" height="430" loading="lazy" decoding="async" data-step="2" data-caption="review · ranked findings, P0 first" hidden>
@@ -1852,7 +1846,6 @@
     var codes = {
       "tab-posix": document.getElementById("cmd-posix"),
       "tab-win": document.getElementById("cmd-win"),
-      "tab-bun": document.getElementById("cmd-bun"),
       "tab-nix": document.getElementById("cmd-nix"),
       "tab-mise": document.getElementById("cmd-mise")
     };
@@ -1879,7 +1872,7 @@
     }
   })();
 
-  /* ── 5-method install workbench tabs + platform auto-detect ──────── */
+  /* ── 4-method install workbench tabs + platform auto-detect ──────── */
   (function () {
     var tabs = Array.prototype.slice.call(document.querySelectorAll('.os [role="tab"]'));
     if (!tabs.length) return;
@@ -1907,14 +1900,6 @@
         verify: "SHA-256 verified",
         linkText: "Read script",
         href: "https://github.com/MarsAI-org/mars-site/blob/main/install.ps1"
-      },
-      "tab-bun": {
-        file: "@marsai-org/coding-agent",
-        path: "Bun >= 1.3.14",
-        priv: "global CLI",
-        verify: "npm registry",
-        linkText: "View package",
-        href: "https://www.npmjs.com/package/@marsai-org/coding-agent"
       },
       "tab-nix": {
         file: "flake.nix",
@@ -1983,7 +1968,6 @@
       "install-macos": "tab-posix",
       "install-linux": "tab-posix",
       "install-posix": "tab-posix",
-      "install-bun": "tab-bun",
       "install-nix": "tab-nix",
       "install-mise": "tab-mise"
     };
@@ -2003,10 +1987,34 @@
     applyHash();
   })();
 
-  /* ── Copy handler (clean async feedback) ─────────────────────────── */
+  /* ── Copy handler (clean async feedback + non-HTTPS fallback) ────── */
   (function () {
     var status = document.getElementById("copy-status");
     var nextSuccessMsg = "";
+    function fallbackCopy(text) {
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      ta.style.pointerEvents = "none";
+      document.body.appendChild(ta);
+      ta.select();
+      var ok = false;
+      try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+      document.body.removeChild(ta);
+      return ok;
+    }
+    window.marsCopyText = function (text, done) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(
+          function () { done(true); },
+          function () { done(fallbackCopy(text)); }
+        );
+      } else {
+        done(fallbackCopy(text));
+      }
+    };
     window.marsCopyWithMessage = function (btn, msg) {
       nextSuccessMsg = msg || "";
       btn.click();
@@ -2035,9 +2043,7 @@
             if (status) status.textContent = "";
           }, 2600);
         }
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(false); });
-        } else { done(false); }
+        window.marsCopyText(text, done);
       });
     });
   })();
@@ -2079,22 +2085,36 @@
     if (!range || !shots.length) return;
 
     var stages = [
-      { label: "Explore", chrome: "task · parallel explore agents", note: "Stage 01 — Parallel explore subagents over a live workspace." },
-      { label: "Refactor", chrome: "lsp · TypeScript and Biome servers", note: "Stage 02 — Language servers verify writes and workspace/willRenameFiles." },
-      { label: "Review", chrome: "review · ranked findings, P0 first", note: "Stage 03 — Structured P0–P3 code review and DAP debugging." },
-      { label: "Evaluate", chrome: "python · persistent live cell", note: "Stage 04 — Stateful Python/JS cells calling back into agent tools." }
+      { label: "Explore", chrome: "task · parallel explore agents", prefix: "Stage 01", note: "Parallel explore subagents over a live workspace." },
+      { label: "Refactor", chrome: "lsp · TypeScript and Biome servers", prefix: "Stage 02", note: "Language servers verify writes and workspace/willRenameFiles." },
+      { label: "Review", chrome: "review · ranked findings, P0 first", prefix: "Stage 03", note: "Structured P0–P3 code review and DAP debugging." },
+      { label: "Evaluate", chrome: "python · persistent live cell", prefix: "Stage 04", note: "Stateful Python/JS cells calling back into agent tools." }
     ];
     var current = 0;
 
-    function apply(i) {
+    function apply(i, focus) {
       current = Math.max(0, Math.min(stages.length - 1, i));
       range.value = String(current);
       range.setAttribute("aria-valuetext", stages[current].label);
-      btns.forEach(function (b, n) { b.setAttribute("aria-selected", String(n === current)); });
+      btns.forEach(function (b, n) {
+        var on = n === current;
+        b.setAttribute("aria-selected", String(on));
+        b.tabIndex = on ? 0 : -1;
+      });
+      if (viewport && btns[current] && btns[current].id) {
+        viewport.setAttribute("aria-labelledby", btns[current].id);
+      }
       stops.forEach(function (s, n) { s.setAttribute("data-on", String(n === current)); });
       shots.forEach(function (img, n) { img.hidden = n !== current; });
       if (chromeLabel) chromeLabel.textContent = stages[current].chrome;
-      if (copy) copy.textContent = stages[current].note;
+      if (copy) {
+        copy.textContent = "";
+        var b = document.createElement("b");
+        b.textContent = stages[current].prefix;
+        copy.appendChild(b);
+        copy.appendChild(document.createTextNode(" — " + stages[current].note));
+      }
+      if (focus && btns[current]) btns[current].focus();
     }
 
     function openCurrentZoom() {
@@ -2104,13 +2124,21 @@
       }
     }
 
-    range.addEventListener("input", function () { apply(Number(range.value)); });
-    btns.forEach(function (b) {
-      b.addEventListener("click", function () { apply(Number(b.getAttribute("data-stage"))); });
+    range.addEventListener("input", function () { apply(Number(range.value), false); });
+    btns.forEach(function (b, idx) {
+      b.addEventListener("click", function () { apply(Number(b.getAttribute("data-stage")), false); });
+      b.addEventListener("keydown", function (e) {
+        var next = null;
+        if (e.key === "ArrowDown" || e.key === "ArrowRight") next = (idx + 1) % btns.length;
+        if (e.key === "ArrowUp" || e.key === "ArrowLeft") next = (idx - 1 + btns.length) % btns.length;
+        if (e.key === "Home") next = 0;
+        if (e.key === "End") next = btns.length - 1;
+        if (next !== null) { e.preventDefault(); apply(next, true); }
+      });
     });
     if (zoomBtn) zoomBtn.addEventListener("click", openCurrentZoom);
     if (viewport) viewport.addEventListener("click", openCurrentZoom);
-    apply(0);
+    apply(0, false);
   })();
 
   /* ── CLI Flags: switches + live composed command preview ─────────── */
@@ -2228,7 +2256,8 @@
     }
 
     function revealFromHash(smooth) {
-      var id = decodeURIComponent((location.hash || "").slice(1));
+      var id = "";
+      try { id = decodeURIComponent((location.hash || "").slice(1)); } catch (e) { return false; }
       var entry = id ? document.getElementById(id) : null;
       if (!entry || !entry.classList.contains("entry")) return false;
       state = "all";
@@ -2292,8 +2321,8 @@
             if (status) status.textContent = "";
           }, 2400);
         }
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(url).then(function () { done(true); }, function () { done(false); });
+        if (window.marsCopyText) {
+          window.marsCopyText(url, done);
         } else { done(false); }
       });
     });

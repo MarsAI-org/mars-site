@@ -114,7 +114,7 @@ components:
 
 Mars is a native coding agent CLI with an in-process Rust core, real language servers, and a real debugger. Its site is a disciplined light editorial specification sheet built directly from the colors of the pixel-art Mars mark (`#d64a27`, `#9b3220`, `#161419`) — warm gallery alabaster ground, pure white elevated plates, obsidian ink, hairline architectural rules, and a single Mars terracotta accent.
 
-It avoids both generic dark-neon developer templates and mismatched decorative palettes. Every section proves the mechanism: a 5-method one-command install workbench above the fold, real zoomable TUI captures, a searchable capability ledger, live CLI flag composition, and honest counts taken directly from the repository.
+It avoids both generic dark-neon developer templates and mismatched decorative palettes. Every section proves the mechanism: a 4-method one-command install workbench above the fold, real zoomable TUI captures, a searchable capability ledger, live CLI flag composition, and honest counts taken directly from the repository.
 
 ## Colors
 
@@ -148,7 +148,7 @@ It avoids both generic dark-neon developer templates and mismatched decorative p
 ## Layout & Components
 
 - **Sticky Masthead + Spec Ribbon:** Clean navigation with high-contrast `Install` CTA and a hairline architectural spec bar directly beneath.
-- **Hero + 5-Method Install Workbench:** Two-column editorial prospectus paired with a tabbed install plate covering `macOS & Linux`, `Windows`, `Bun`, `Nix`, and `mise` with platform auto-detection, deep links (`#install-posix`, `#install-windows`, `#install-bun`, `#install-nix`, `#install-mise`), SHA-256 verification metadata, and clipboard feedback.
+- **Hero + 4-Method Install Workbench:** Two-column editorial prospectus paired with a tabbed install plate covering `macOS & Linux`, `Windows`, `Nix`, and `mise` with platform auto-detection, deep links (`#install-posix`, `#install-windows`, `#install-nix`, `#install-mise`), SHA-256 verification metadata, and clipboard feedback.
 - **4-Stage TUI Walkthrough + Lightbox:** Interactive stage list, synchronized range ruler, dark obsidian terminal bezel, and native `<dialog>` zoom lightbox for full-resolution inspection of real captures (`proof-task`, `proof-lspv`, `proof-review`, `proof-python`).
 - **Capability Ledger:** Filter chips (`All / Built-in / Eliminated`), `/` keyboard search, `↑`/`↓` entry navigation, `Esc` reset, sticky subsystem rail, expandable grid-row evidence exhibits, and copyable `#entry-N` permalinks.
 - **Live CLI Flags:** Toggle switches (`--prewalk`, `--plan-yolo`, `--advisor`, `--no-lsp`, `--auto-approve`) that compose a live `$ mars ...` preview bar and reveal exact flag semantics.

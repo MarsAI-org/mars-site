@@ -23,7 +23,7 @@ inside one viewport.
 
 Primary action: the working install command, switchable between POSIX and
 Windows, pre-selected from the platform, with copy feedback. Secondary: Releases,
-npm, Bun, Nix, mise. Proof is the real product: TUI captures plus repository
+Nix, mise. Proof is the real product: TUI captures plus repository
 facts (75 providers, 36 tools, ~240k Rust lines, 12 crates, 6 targets, MIT).
 
 ## Constraints

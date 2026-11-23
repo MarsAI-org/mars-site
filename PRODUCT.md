@@ -16,10 +16,10 @@ one command.
 
 ## Product Purpose
 
-Mars is a coding agent CLI distributed as a prebuilt binary (and via npm, Bun,
-Nix, and mise). This site exists to get the visitor from "what is this?" to a
-running `mars` binary with the fewest possible steps. Success is a copied or
-executed install command.
+Mars is a coding agent CLI distributed as a prebuilt binary (plus Nix, mise,
+and building from source). This site exists to get the visitor from "what is
+this?" to a running `mars` binary with the fewest possible steps. Success is a
+copied or executed install command.
 
 ## Positioning
 
@@ -32,8 +32,8 @@ same behavior on macOS, Linux, and Windows, with no WSL bridge.
 
 Visitors evaluate in a browser tab while their terminal is open. They copy a
 POSIX `curl | sh` command or a PowerShell `irm | iex` command, or download an
-archive from GitHub Releases. Advanced paths include `bun install -g`, Nix, and
-mise. Installers verify checksums, install to `~/.local/bin` or
+archive from GitHub Releases. Advanced paths include Nix, mise, and building
+from source. Installers verify checksums, install to `~/.local/bin` or
 `%LOCALAPPDATA%\mars`, and report PATH state.
 
 ## Capabilities and Constraints
@@ -63,9 +63,8 @@ Constraints:
   by GitHub Pages from `.github/workflows/pages.yml`.
 - Installer commands, URLs, and paths are product truth and must stay exact.
 - No fabricated customers, benchmarks, prices, or testimonials.
-- Version numbers in the UI must come from a verifiable source. GitHub Releases
-  and the npm registry currently disagree, so the page should not lead with a
-  version claim.
+- Version numbers in the UI must come from a verifiable source (such as GitHub
+  Releases), so the static page should not hardcode a version claim.
 
 ## Brand Commitments
 

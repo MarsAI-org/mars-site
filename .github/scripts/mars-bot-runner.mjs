@@ -424,6 +424,29 @@ function assertCommandAllowed(command) {
   }
 }
 
+function getPorcelainChangedPaths(cwd = process.cwd()) {
+  const raw = execFileSync("git", ["status", "--porcelain", "-z"], {
+    cwd,
+    encoding: "utf8",
+    stdio: ["pipe", "pipe", "pipe"],
+    maxBuffer: 10 * 1024 * 1024,
+  });
+  const tokens = raw.split("\0").filter(Boolean);
+  const paths = [];
+  for (let i = 0; i < tokens.length; i++) {
+    const entry = tokens[i];
+    if (entry.length < 4) continue;
+    const status = entry.slice(0, 2);
+    const filePath = entry.slice(3);
+    paths.push(filePath);
+    if (status.includes("R") || status.includes("C")) {
+      const origPath = tokens[++i];
+      if (origPath) paths.push(origPath);
+    }
+  }
+  return paths;
+}
+
 function collectFullReviewDiff() {
   const trackedDiff = run("git diff", process.cwd(), true);
   const untracked = runFile("git", ["ls-files", "--others", "--exclude-standard"], { ignoreError: true });
@@ -743,6 +766,10 @@ ${repoGuidance}`,
           name: fnName,
           content: JSON.stringify(result),
         });
+
+        // Stop immediately once submit_task passes verification and self-review
+        // so no subsequent tool calls in the same turn can execute unverified.
+        if (finalResult) break;
       }
     }
 
@@ -795,11 +822,20 @@ ${repoGuidance}`,
   }
 
   // Reject any changes to protected paths (even if introduced via execute_command).
-  const changedPaths = gitStatus
-    .split("\n")
-    .filter(Boolean)
-    .map((line) => line.slice(3).trim().replace(/^.* -> /, ""));
-  const forbiddenTouched = changedPaths.filter((p) => PROTECTED_WRITE_RE.test(p));
+  // Use `git status --porcelain -z` (no .trim()) so leading status spaces are
+  // never stripped and renames/symlinks cannot bypass PROTECTED_WRITE_RE.
+  const changedPaths = getPorcelainChangedPaths(process.cwd());
+  const rootReal = fs.realpathSync(path.resolve(process.cwd()));
+  const forbiddenTouched = changedPaths.filter((changedPath) => {
+    if (PROTECTED_WRITE_RE.test(changedPath)) return true;
+    try {
+      const resolved = resolveThroughExistingAncestor(path.resolve(rootReal, changedPath));
+      if (!resolved.startsWith(rootReal + path.sep) && resolved !== rootReal) return true;
+      return PROTECTED_WRITE_RE.test(path.relative(rootReal, resolved));
+    } catch {
+      return true;
+    }
+  });
   if (forbiddenTouched.length > 0) {
     throw new Error(`Refusing to commit modifications to protected paths: ${forbiddenTouched.join(", ")}`);
   }
@@ -819,13 +855,18 @@ ${repoGuidance}`,
   if (GITHUB_TOKEN) {
     console.log("Pushing branch to remote...");
     const basicAuth = Buffer.from(`x-access-token:${GITHUB_TOKEN}`).toString("base64");
-    runFile("git", [
-      "-c",
-      `http.https://github.com/.extraheader=AUTHORIZATION: basic ${basicAuth}`,
-      "push",
-      "origin",
-      branchName,
-    ]);
+    execFileSync("git", ["push", "origin", branchName], {
+      cwd: process.cwd(),
+      encoding: "utf8",
+      stdio: ["pipe", "pipe", "pipe"],
+      maxBuffer: 10 * 1024 * 1024,
+      env: {
+        ...process.env,
+        GIT_CONFIG_COUNT: "1",
+        GIT_CONFIG_KEY_0: "http.https://github.com/.extraheader",
+        GIT_CONFIG_VALUE_0: `AUTHORIZATION: basic ${basicAuth}`,
+      },
+    });
 
     // Report the check that actually ran, and what it actually said.
     const verificationLine = `- \`${verificationRecord.command}\`: **${verificationRecord.passed ? "passed" : "failed"}** (${verificationRecord.note})`;
